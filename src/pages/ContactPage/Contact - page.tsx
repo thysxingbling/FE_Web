@@ -1,7 +1,7 @@
 const ContactPage: React.FC =()=>{
     return(
         <div>
-
+hello
         </div>
     )
 }

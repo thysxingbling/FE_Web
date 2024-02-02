@@ -1,12 +1,15 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
 import './index.css'
 import Siderbar from './components/layouts/siderbar.tsx'
+import Search from './components/layouts/search.tsx'
+import Router from './routers/Router.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     {/* <App /> */}
-    <Siderbar></Siderbar>
+    {/* <Siderbar></Siderbar> */}
+    {/* <Search></Search> */}
+    <Router/>
   </React.StrictMode>,
 )

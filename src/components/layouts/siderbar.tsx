@@ -12,14 +12,6 @@ import {
 import {
   Menu,
   Avatar,
-  Modal,
-  Col,
-  Row,
-  Flex,
-  Radio,
-  Space,
-  DatePicker,
-  Input,
 } from "antd";
 
 const Siderbar: React.FC = () => {
@@ -60,7 +52,7 @@ const Siderbar: React.FC = () => {
           theme="dark"
           style={{ background: "#3a98ff", justifyContent: "center" }}
         >
-          <Menu.Item key={2}>
+          <Menu.Item key={2} >
             <MessageOutlined
               style={{ fontSize: "25px", color: "#fff", margin: 10 }}
             />
