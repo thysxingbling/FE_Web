@@ -5,13 +5,14 @@ const Search: React.FC = () => {
   const { Search } = Input;
   return (
     <div>
-      <Search placeholder="Tìm kiếm" style={{ width: 150, color: "red" }} />
+      <Search placeholder="Tìm kiếm" style={{ width: 150, color: "red" ,marginLeft:100}} />
       <UserAddOutlined
         style={{
           marginLeft: 5,
           width: 30,
           height: 30,
           color: "gray",
+   
         }}
       />
       <UsergroupAddOutlined style={{ width: 30, height: 30, color: "gray" }} />

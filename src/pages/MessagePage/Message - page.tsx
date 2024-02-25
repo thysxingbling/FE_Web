@@ -1,6 +1,6 @@
 const MessagePage: React.FC =()=>{
     return(
-        <div></div>
+        <div>aaaa</div>
     )
 }
 export default MessagePage;
