@@ -14,9 +14,9 @@ import {
   Menu,
   Avatar,
 } from "antd";
-import {  Route, Link , Routes} from 'react-router-dom';
-import MessagePage from "../../pages/MessagePage/Message - page";
-import ContactPage from "../../pages/ContactPage/Contact - page";
+import {Link} from 'react-router-dom';
+
+import Router from "../../routers/Router";
 
 const Siderbar: React.FC = () => {
   return (
@@ -96,14 +96,10 @@ const Siderbar: React.FC = () => {
 
      
       <div>
-      <Routes>
-          {/* <Route path="/" element={<HomePage/>}/> */}
-          <Route path="/mess" element={<MessagePage/>}/>
-          <Route path="/contact" element={<ContactPage/>}/>
-      </Routes>
+    
       </div>
     
-        
+        <Router/>
         
       </div>
       

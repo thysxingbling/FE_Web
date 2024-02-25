@@ -7,7 +7,9 @@ import Siderbar from './components/layouts/siderbar.tsx';
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
       
-       <BrowserRouter><Siderbar/></BrowserRouter>
+       <BrowserRouter>
+       <Siderbar/>
+       </BrowserRouter>
         
      
 
