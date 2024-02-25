@@ -9,11 +9,11 @@ import {
   UserOutlined,
   VideoCameraOutlined,
 } from "@ant-design/icons";
-import { Menu, Avatar } from "antd";
-import "./siderbar.css";
-import { Link, Route, Routes } from "react-router-dom";
-import MessagePage from "../../../pages/MessagePage/Message - page";
-import ContactPage from "../../../pages/ContactPage/Contact - page";
+import {
+  Menu,
+  Avatar,
+} from "antd";
+
 const Siderbar: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
@@ -30,11 +30,10 @@ const Siderbar: React.FC = () => {
 
   return (
     <div
-      className="sidebar"
       style={{
         width: "100px",
         background: "#3a98ff",
-        height: "1000px",
+        height: "700px",
         marginLeft: -8,
         marginTop: -8,
         position: "fixed",
@@ -53,21 +52,15 @@ const Siderbar: React.FC = () => {
           theme="dark"
           style={{ background: "#3a98ff", justifyContent: "center" }}
         >
-          <Menu.Item key={2}>
-            <Link to="/mess">
-              {" "}
-              <MessageOutlined
-                style={{ fontSize: "25px", color: "#fff", margin: 10 }}
-              />{" "}
-            </Link>
+          <Menu.Item key={2} >
+            <MessageOutlined
+              style={{ fontSize: "25px", color: "#fff", margin: 10 }}
+            />
           </Menu.Item>
           <Menu.Item key={3}>
-            <Link to="/contact">
-              {" "}
-              <ContactsOutlined
-                style={{ fontSize: "25px", color: "#fff", margin: 10 }}
-              />{" "}
-            </Link>
+            <ContactsOutlined
+              style={{ fontSize: "25px", color: "#fff", margin: 10 }}
+            />
           </Menu.Item>
           <Menu.Item key={4}>
             <CheckSquareOutlined
@@ -99,13 +92,6 @@ const Siderbar: React.FC = () => {
             />
           </Menu.Item>
         </Menu>
-      </div>
-      <div>
-        <Routes>
-          {/* <Route path="/" element={<HomePage/>}/> */}
-          <Route path="/mess" element={<MessagePage />} />
-          <Route path="/contact" element={<ContactPage />} />
-        </Routes>
       </div>
     </div>
   );
