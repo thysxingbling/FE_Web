@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+// import React, { useState } from "react";
+import React from "react";
 import {
   CheckSquareOutlined,
   CloudOutlined,
@@ -13,21 +14,11 @@ import {
   Menu,
   Avatar,
 } from "antd";
+import {  Route, Link , Routes} from 'react-router-dom';
+import MessagePage from "../../pages/MessagePage/Message - page";
+import ContactPage from "../../pages/ContactPage/Contact - page";
 
 const Siderbar: React.FC = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
   return (
     <div
       style={{
@@ -36,7 +27,7 @@ const Siderbar: React.FC = () => {
         height: "700px",
         marginLeft: -8,
         marginTop: -8,
-        position: "fixed",
+        
       }}
     >
       <div style={{ width: 100 }}>
@@ -47,27 +38,36 @@ const Siderbar: React.FC = () => {
           <UserOutlined style={{ fontSize: "30px", color: "#fff" }} />
         </Avatar>
       </div>
+      <div style={{flexDirection:"row" , flex:1}}>
+      
       <div>
-        <Menu
+      <Menu
           theme="dark"
           style={{ background: "#3a98ff", justifyContent: "center" }}
         >
-          <Menu.Item key={2} >
-            <MessageOutlined
+          <Menu.Item key={1} >
+           
+           
+
+           <Link to="/mess"> <MessageOutlined
               style={{ fontSize: "25px", color: "#fff", margin: 10 }}
-            />
+            /></Link>
+           
+         
           </Menu.Item>
-          <Menu.Item key={3}>
+          <Menu.Item key={2}>
+            <Link to="/contact">
             <ContactsOutlined
               style={{ fontSize: "25px", color: "#fff", margin: 10 }}
             />
+            </Link>
           </Menu.Item>
-          <Menu.Item key={4}>
+          <Menu.Item key={3}>
             <CheckSquareOutlined
               style={{ fontSize: "25px", color: "#fff", margin: 10 }}
             />
           </Menu.Item>
-          <Menu.Item key={5}>
+          <Menu.Item key={4}>
             <VideoCameraOutlined
               style={{ fontSize: "25px", color: "#fff", margin: 10 }}
             />
@@ -75,24 +75,38 @@ const Siderbar: React.FC = () => {
 
           <div style={{ height: 320 }}></div>
 
-          <Menu.Item key={6} onClick={() => showModal()}>
+          <Menu.Item key={5}>
             <CloudOutlined
               style={{ fontSize: "25px", color: "#fff", margin: 10 }}
             />
           </Menu.Item>
 
-          <Menu.Item key={7}>
+          <Menu.Item key={6}>
             <ShopOutlined
               style={{ fontSize: "25px", color: "#fff", margin: 10 }}
             />
           </Menu.Item>
-          <Menu.Item key={8}>
+          <Menu.Item key={7}>
             <SettingOutlined
               style={{ fontSize: "25px", color: "#fff", margin: 10 }}
             />
           </Menu.Item>
         </Menu>
       </div>
+
+     
+      <div>
+      <Routes>
+          {/* <Route path="/" element={<HomePage/>}/> */}
+          <Route path="/mess" element={<MessagePage/>}/>
+          <Route path="/contact" element={<ContactPage/>}/>
+      </Routes>
+      </div>
+    
+        
+        
+      </div>
+      
     </div>
   );
 };

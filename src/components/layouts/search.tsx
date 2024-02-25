@@ -8,6 +8,7 @@ const Search: React.FC = () => {
       <Search placeholder="Tìm kiếm" style={{ width: 150, color: "red" }} />
       <UserAddOutlined
         style={{
+          marginTop:"10px",
           marginLeft: 5,
           width: 30,
           height: 30,

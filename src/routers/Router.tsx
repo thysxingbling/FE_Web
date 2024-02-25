@@ -5,7 +5,7 @@ import ContactPage from "../pages/ContactPage/Contact - page";
 
 const Router: React.FC=()=>{
     return (
-        <Routes>
+      <Routes>
         <Route path='/' element={<Siderbar />} />
         <Route path='/message' element={<MessagePage />} />
         <Route path='/contact' element={<ContactPage />} />
