@@ -4,8 +4,11 @@ import { Input } from "antd";
 const Search: React.FC = () => {
   const { Search } = Input;
   return (
-    <div>
-      <Search placeholder="Tìm kiếm" style={{ width: 150, color: "red" ,marginLeft:100}} />
+    <div style={{flexDirection:'row' , height:50,marginLeft:-50,marginTop:10,position:'fixed'}}>
+      
+    
+      <Search placeholder="Tìm kiếm" style={{ width: 150, color: "red" ,marginLeft:10,marginTop:5}} />
+      
       <UserAddOutlined
         style={{
           marginTop:"10px",
@@ -16,7 +19,7 @@ const Search: React.FC = () => {
    
         }}
       />
-      <UsergroupAddOutlined style={{ width: 40, height: 50, color: "gray"}} />
+      <UsergroupAddOutlined style={{ width: 40, height: 50, color: "gray" }} />
     </div>
   );
 };

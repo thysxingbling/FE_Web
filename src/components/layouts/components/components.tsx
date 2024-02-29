@@ -5,7 +5,7 @@ import "./compenent.css";
 const Component: React.FC = () => {
   return (
     <div className="full-screen-sidebar-layout">
-      <Siderbar  />
+      <Siderbar/>
       <Search />
      
     </div>

@@ -9,20 +9,17 @@ import {
     Input,
   } from "antd";
 import { useState } from "react";
-const ModalUpdateInfo: React.FC = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const handleOk = () => {
-        setIsModalOpen(false);
-      };
-      const handleCancel = () => {
-        setIsModalOpen(false);
-      };
+
+  const ModalUpdateInfo: React.FC =()=>{
+    const [open,isModalOpen]=useState(false);
+  
     return (
         <Modal
         title="Cập nhật thông tin cá nhân"
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        open={open}
+        onOk={()=> isModalOpen(false)}
+        onCancel={()=> isModalOpen(false)}
+      
       >
         <div>
           <Row>
