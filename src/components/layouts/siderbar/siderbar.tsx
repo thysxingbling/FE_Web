@@ -12,6 +12,7 @@ import {
 import { Menu, Avatar } from "antd";
 import { Link } from "react-router-dom";
 import Router from "../../../routers/Router";
+import ModalUpdateInfo from "../../modals/ModalUpdateInfo";
 const Siderbar: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
@@ -28,10 +29,11 @@ const Siderbar: React.FC = () => {
 
   return (
     <div
+    className="siderbar"
       style={{
         width: "100px",
         background: "#3a98ff",
-        height: "700px",
+        height: "729px",
         marginLeft: -8,
         marginTop: -8,
         position: "fixed",
@@ -98,7 +100,7 @@ const Siderbar: React.FC = () => {
         </Menu>
     <Router/>
       </div>
-      
+     
     </div>
     
   );

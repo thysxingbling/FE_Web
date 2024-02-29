@@ -16,7 +16,7 @@ const Search: React.FC = () => {
    
         }}
       />
-      <UsergroupAddOutlined style={{ width: 40, height: 50, color: "gray" }} />
+      <UsergroupAddOutlined style={{ width: 40, height: 50, color: "gray"}} />
     </div>
   );
 };
