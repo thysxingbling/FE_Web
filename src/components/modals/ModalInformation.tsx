@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 
-import { Modal, Image, Row, Col, Space, Button, Avatar } from "antd";
+import { Modal, Image, Row, Col, Space, Button, Avatar, ModalProps } from "antd";
 import { UserOutlined, EditOutlined } from "@ant-design/icons";
 import ModalUpdateInfo from "./ModalUpdateInfo";
 
-const ModalInformation = ({ isOpen, onClose, onOK }) => {
+const ModalInformation:React.FC<ModalProps>= ({ open, onCancel, onOk }) => {
  
+
  const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
  const openModalUpdateInfo = () => {
     setIsOpenModalUpdateInfo(true);
@@ -22,11 +23,11 @@ const ModalInformation = ({ isOpen, onClose, onOK }) => {
     <div>
       <Modal 
       title="Thông tin tài khoản" 
-      open={isOpen}
+      open={open}
     //   visible={isOpen}
       
-      onCancel={onClose}
-      onOk={onOK}
+      onCancel={onCancel}
+      onOk={onOk}
       >
         <div>
           <div>
@@ -85,7 +86,7 @@ const ModalInformation = ({ isOpen, onClose, onOK }) => {
         </div>
       </Modal>
       <div>
-            <ModalUpdateInfo isModalOpen={isOpenModalUpdateInfo} onCancel={handleCancel} onOK={handleOk}/>
+         <ModalUpdateInfo open={isOpenModalUpdateInfo} onCancel={handleOk} onOk={handleCancel}/>
       </div>
     </div>
   );

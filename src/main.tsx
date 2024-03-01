@@ -3,12 +3,12 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import { BrowserRouter } from 'react-router-dom'
-import Siderbar from './components/layouts/siderbar/siderbar.tsx'
+import Component from './components/layouts/components/components.tsx'
 
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
    
-    <BrowserRouter><Siderbar/></BrowserRouter>
+    <BrowserRouter><Component/></BrowserRouter>
   </React.StrictMode>,
 )
