@@ -52,7 +52,11 @@ const ModalInformation:React.FC<ModalProps>= ({ open, onCancel, onOk }) => {
               <Col span={18}>
                 <p>
                   asuna{" "}
-                  <Button onClick={openModalUpdateInfo}>
+                  <Button onClick={
+                    openModalUpdateInfo
+                    
+                  }>
+                  
                     <EditOutlined />
                   </Button>
                 </p>{" "}

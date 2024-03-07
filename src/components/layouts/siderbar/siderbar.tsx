@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import {  Menu, theme , Avatar } from 'antd';
+import {  Menu,  Avatar } from 'antd';
 import {
   CheckSquareOutlined,
   CloudOutlined,
@@ -17,9 +17,7 @@ import Router from "../../../routers/Router";
 import SubMenu from "antd/es/menu/SubMenu";
 import ModalInformation from "../../modals/ModalInformation";
 const Siderbar: React.FC = () => {
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
+ 
 
     const [isOpenModalInfo, setIsOpenModalInfo] = useState(false);
 
@@ -33,6 +31,7 @@ const Siderbar: React.FC = () => {
   const handleCancel = () => {
     setIsOpenModalInfo(false);
   };
+  
   return (
     <div
       style={{
@@ -46,7 +45,7 @@ const Siderbar: React.FC = () => {
     >
       <div>
         <Menu
-          style={{ background: "#3a98ff", justifyContent: "center" ,marginTop: 40}}
+          style={{ background: "#3a98ff", justifyContent: "center" ,marginTop: 0}}
         >
           <SubMenu key="information" icon={ <Avatar
           size={40}
@@ -60,7 +59,7 @@ const Siderbar: React.FC = () => {
           openModalInfo()
         }}>Hồ sơ của bạn</Menu.Item>
           {/* modal */}
-        <ModalInformation isOpen={isOpenModalInfo} onClose={handleCancel} onOK={handleOk}/>
+        <ModalInformation open={isOpenModalInfo} onCancel={handleCancel} onOk={handleOk}/>
         <Menu.Item key="cd">Cài đặt</Menu.Item>
         <Menu.Item key="dx">Đăng xuất</Menu.Item>
       
