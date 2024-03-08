@@ -18,16 +18,17 @@ const ModalInformation:React.FC<ModalProps>= ({ open, onCancel, onOk }) => {
 
   const handleCancel = () => {
     setIsOpenModalUpdateInfo(false);
+ 
   };
+ 
   return (
     <div>
       <Modal 
       title="Thông tin tài khoản" 
       open={open}
-    //   visible={isOpen}
-      
       onCancel={onCancel}
       onOk={onOk}
+      
       >
         <div>
           <div>
@@ -52,7 +53,7 @@ const ModalInformation:React.FC<ModalProps>= ({ open, onCancel, onOk }) => {
               <Col span={18}>
                 <p>
                   asuna{" "}
-                  <Button onClick={openModalUpdateInfo}>
+                  <Button onClick={openModalUpdateInfo} >
                     <EditOutlined />
                   </Button>
                 </p>{" "}
@@ -81,12 +82,12 @@ const ModalInformation:React.FC<ModalProps>= ({ open, onCancel, onOk }) => {
             </Row>
           </div>
           <div>
-            <Button type="default" onClick={openModalUpdateInfo}>Cập nhật</Button>
+            <Button type="default" onClick={openModalUpdateInfo} >Cập nhật</Button>
           </div>
         </div>
       </Modal>
       <div>
-         <ModalUpdateInfo open={isOpenModalUpdateInfo} onCancel={handleOk} onOk={handleCancel}/>
+         <ModalUpdateInfo open={isOpenModalUpdateInfo} onCancel={handleOk} onOk={handleCancel} />
       </div>
     </div>
   );

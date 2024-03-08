@@ -15,13 +15,9 @@ const ModalUpdateInfo:React.FC<ModalProps> =({open,onCancel,onOk} )=>{
   return (
       <Modal
       title="Cập nhật thông tin cá nhân"
-      // open={isOpen}
-      // onOk={onOK}
-      // onCancel={onClose}
       open={open}
       onCancel={onCancel}
       onOk={onOk}
-      
      
     >
       <div>

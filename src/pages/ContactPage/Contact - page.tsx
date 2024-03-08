@@ -1,6 +1,7 @@
 import { MailOutlined, TeamOutlined, UserAddOutlined } from "@ant-design/icons";
 import { Menu } from "antd";
 import Sider from "antd/es/layout/Sider";
+import Layout, { Content, Header } from "antd/es/layout/layout";
 
 const ContactPage: React.FC = () => {
   return (
@@ -11,7 +12,7 @@ const ContactPage: React.FC = () => {
         width: 1490,
         display: "flex",
         position: "fixed",
-        height:"100px",
+        height: "100px",
       }}
     >
       <Sider>
@@ -19,28 +20,63 @@ const ContactPage: React.FC = () => {
           style={{
             justifyContent: "center",
             marginTop: 40,
-            width:280,
-            height:"100px"
-         
+            width: 294,
           }}
         >
           <Menu.Item key={1}>
-          <UserAddOutlined style={{ fontSize: "25px", color: "gray", margin: 10,marginLeft:0 }} />
+            <UserAddOutlined
+              style={{
+                fontSize: "25px",
+                color: "gray",
+                margin: 10,
+                marginLeft: 0,
+              }}
+            />
             Danh sách bạn bè
           </Menu.Item>
           <Menu.Item key={2}>
             {" "}
-            <TeamOutlined style={{ fontSize: "25px", color: "gray", margin: 10,marginLeft:0 }} />
+            <TeamOutlined
+              style={{
+                fontSize: "25px",
+                color: "gray",
+                margin: 10,
+                marginLeft: 0,
+              }}
+            />
             Danh sách nhóm
           </Menu.Item>
-         
+
           <Menu.Item key={3}>
             {" "}
-            <MailOutlined style={{ fontSize: "25px", color: "gray", margin: 10,marginLeft:0 }} />
-           Lời mời kết bạn
+            <MailOutlined
+              style={{
+                fontSize: "25px",
+                color: "gray",
+                margin: 10,
+                marginLeft: 0,
+              }}
+            />
+            Lời mời kết bạn
           </Menu.Item>
         </Menu>
       </Sider>
+     
+      <Header
+        style={{
+          marginLeft: 95,
+          marginTop: -25,
+          width: "80%",
+          borderBottom: "0.1px solid #ededee",
+          background: "white",
+        }}
+      >
+        <UserAddOutlined
+          style={{ fontSize: "25px", color: "gray", marginLeft: -40 }}
+        />
+        Danh sách bạn bè
+      </Header>
+      
     </div>
   );
 };

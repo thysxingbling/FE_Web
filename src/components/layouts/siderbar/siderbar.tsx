@@ -60,7 +60,7 @@ const Siderbar: React.FC = () => {
           openModalInfo()
         }}>Hồ sơ của bạn</Menu.Item>
           {/* modal */}
-        <ModalInformation isOpen={isOpenModalInfo} onClose={handleCancel} onOK={handleOk}/>
+        <ModalInformation open={isOpenModalInfo} onCancel={handleCancel} onOk={handleOk}/>
         <Menu.Item key="cd">Cài đặt</Menu.Item>
         <Menu.Item key="dx">Đăng xuất</Menu.Item>
       

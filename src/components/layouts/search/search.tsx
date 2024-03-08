@@ -4,7 +4,7 @@ import { Input } from "antd";
 const Search: React.FC = () => {
   const { Search } = Input;
   return (
-    <div style={{flexDirection:'row' , height:50,marginLeft:100,marginTop:30,position:'fixed'}}>
+    <div style={{flexDirection:'row' , height:70,marginLeft:100,marginTop:30,position:'fixed',borderRight:"0.5px solid #ededee"}}>
       
     
       <Search placeholder="Tìm kiếm" style={{ width: 200, color: "red" ,marginLeft:10,marginTop:10}} />
