@@ -12,10 +12,12 @@ import {
   VideoCameraOutlined,
 
 } from "@ant-design/icons";
-import { Link } from "react-router-dom";
-import Router from "../../../routers/Router";
+import {  Link  } from "react-router-dom";
 import SubMenu from "antd/es/menu/SubMenu";
 import ModalInformation from "../../modals/ModalInformation";
+
+
+
 const Siderbar: React.FC = () => {
   const {
     token: { colorBgContainer },
@@ -34,6 +36,7 @@ const Siderbar: React.FC = () => {
     setIsOpenModalInfo(false);
   };
   return (
+  
     <div
       style={{
         width: "100px",
@@ -112,10 +115,13 @@ const Siderbar: React.FC = () => {
             />
           </Menu.Item>
         </Menu>
-    <Router/>
+        
       </div>
-      
+     
+        
+    
     </div>
+
     
   );
 };

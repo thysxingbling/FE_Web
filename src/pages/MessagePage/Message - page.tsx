@@ -1,34 +1,24 @@
 import { Avatar, Layout } from "antd";
 import Search from "../../components/layouts/search/search";
 import { UserOutlined } from "@ant-design/icons";
+import Siderbar from "../../components/layouts/siderbar/siderbar";
 const {Header, Content, Sider} = Layout;
 
 const MessagePage: React.FC = () => {
-  // return <div>
-  //   <div
-  //     style={{
-  //       marginLeft: 200,
-  //       marginTop: -680,
-  //       backgroundColor: "red",
-  //       width: 100,
-  //       height: 100,
-  //     }}
-  //   >
-  //     Conksdkjfsdkjlfjklfdkjldfkjlfde
-  //   </div>
-  // </div>;
+
   return(
     <Layout
     style={{
-            marginLeft: 100,
-            marginTop: -680,
+
+            marginLeft: 0,
+            marginTop: 0,
             backgroundColor: "red",
             width:1490,
             display:"flex",
             position:'fixed',
           }}>
         
-       
+        <Siderbar/>
    
           <Sider width={250} style={{backgroundColor:"#ffffff"}}>
           

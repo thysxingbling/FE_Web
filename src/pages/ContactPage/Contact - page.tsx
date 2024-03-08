@@ -1,11 +1,14 @@
 import { MailOutlined, TeamOutlined, UserAddOutlined } from "@ant-design/icons";
 import { Menu } from "antd";
 import Sider from "antd/es/layout/Sider";
-import Layout, { Content, Header } from "antd/es/layout/layout";
+import Layout, { Header } from "antd/es/layout/layout";
+
 
 const ContactPage: React.FC = () => {
   return (
     <div
+    
+
       style={{
         marginLeft: 100,
         marginTop: -650,
@@ -15,6 +18,8 @@ const ContactPage: React.FC = () => {
         height: "100px",
       }}
     >
+
+      
       <Sider>
         <Menu
           style={{

@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button, Checkbox, Form, type FormProps, Input, Image } from 'antd';
-import { Link } from 'react-router-dom';
+import { Button, Form, type FormProps, Input, Image } from 'antd';
+import { Link, Router} from 'react-router-dom';
+
 
 type FieldType = {
   phoneNumber?: string;
@@ -15,6 +16,8 @@ const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
 const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
   console.log('Failed:', errorInfo);
 };
+
+
 
 const Login: React.FC = () => (
    <div style={{justifyContent:"center",display:"flex",padding:100}}>
@@ -52,9 +55,11 @@ const Login: React.FC = () => (
       <Input.Password />
     </Form.Item>
     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-      <Button type="primary" htmlType="submit" style={{width:150}}>
+        <Link to="/home">
+        <Button type="primary" htmlType="submit" style={{width:150}}>
         Đăng nhập
       </Button>
+        </Link>
     </Form.Item>
     <div style={{marginLeft:120}}>
     <a  className="login-form-forgot" href="">
@@ -73,10 +78,11 @@ const Login: React.FC = () => (
     </a>
     </Link>
    </div>
-    
   </Form>
-  
+   
+      
   </div>
+  
 );
 
 export default Login;

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Button, Checkbox, Form, Input } from "antd";
+import { Link } from "react-router-dom";
 
 const formItemLayout = {
   labelCol: {
@@ -112,9 +113,11 @@ const Register: React.FC = () => {
         </Form.Item>
 
         <Form.Item {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit" style={{width:200,marginLeft:15}}>
+            <Link to="/">
+            <Button type="primary" htmlType="submit" style={{width:200,marginLeft:15}}>
           ĐĂNG KÝ
           </Button>
+            </Link>
         </Form.Item>
       </Form>
     </div>
