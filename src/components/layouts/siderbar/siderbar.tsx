@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import {  Menu, theme , Avatar } from 'antd';
+import {  Menu , Avatar } from 'antd';
 import {
   CheckSquareOutlined,
   CloudOutlined,
@@ -19,9 +19,7 @@ import ModalInformation from "../../modals/ModalInformation";
 
 
 const Siderbar: React.FC = () => {
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
+ 
 
     const [isOpenModalInfo, setIsOpenModalInfo] = useState(false);
 
@@ -43,7 +41,7 @@ const Siderbar: React.FC = () => {
         background: "#3a98ff",
         height: "700px",
         marginLeft: -8,
-        marginTop: -8,
+        marginTop: -30,
         position: "fixed",
       }}
     >
