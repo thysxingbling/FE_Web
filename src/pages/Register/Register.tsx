@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Checkbox, Form, Input } from "antd";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const formItemLayout = {
   labelCol: {
@@ -28,9 +29,24 @@ const tailFormItemLayout = {
 
 const Register: React.FC = () => {
   const [form] = Form.useForm();
+  const [password,setPassword]=useState("");
+  const [email,setPhoneNumber]=useState("");
+  const [name,setName]=useState("");
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
+  const handleRegister = async () => {
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+    try {
+      const response = await axios.post('http://localhost:8080/auth/signup', { email, password ,name});
+      const token = response.data.token;
+      localStorage.setItem('token', token);
+    } catch (error) {
+      setError('Registration failed');
+    }
   };
 
   return (
@@ -39,13 +55,12 @@ const Register: React.FC = () => {
         {...formItemLayout}
         form={form}
         name="register"
-        onFinish={onFinish}
         style={{ maxWidth: 400 }}
         scrollToFirstError
       >
         <h1 style={{ marginBottom: 30,marginLeft:150 }}>Đăng ký tài khoản</h1>
         <Form.Item
-          name="phone"
+          name="email"
           label="Phone Number"
           rules={[
             {
@@ -57,7 +72,7 @@ const Register: React.FC = () => {
             },
           ]}
         >
-          <Input />
+          <Input onChange={(e)=>setPhoneNumber(e.target.value)}/>
         </Form.Item>
         <Form.Item
           name="name"
@@ -70,7 +85,7 @@ const Register: React.FC = () => {
             },
           ]}
         >
-          <Input />
+          <Input onChange={(e)=>setName(e.target.value)} />
         </Form.Item>
 
         <Form.Item
@@ -84,7 +99,7 @@ const Register: React.FC = () => {
           ]}
           hasFeedback
         >
-          <Input.Password />
+          <Input.Password  onChange={(e)=> setPassword(e.target.value)}/>
         </Form.Item>
 
         <Form.Item
@@ -109,12 +124,12 @@ const Register: React.FC = () => {
             }),
           ]}
         >
-          <Input.Password />
+          <Input.Password  onChange={(e)=> setConfirmPassword(e.target.value)}/>
         </Form.Item>
 
         <Form.Item {...tailFormItemLayout}>
             <Link to="/">
-            <Button type="primary" htmlType="submit" style={{width:200,marginLeft:15}}>
+            <Button onClick={handleRegister} type="primary" htmlType="submit" style={{width:200,marginLeft:15}}>
           ĐĂNG KÝ
           </Button>
             </Link>

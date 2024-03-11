@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Form, type FormProps, Input, Image } from 'antd';
-import { Link, Router} from 'react-router-dom';
+import { Link} from 'react-router-dom';
+import axios from 'axios';
 
 
 type FieldType = {
@@ -9,27 +10,37 @@ type FieldType = {
   remember?: string;
 };
 
-const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-  console.log('Success:', values);
+const Login: React.FC = () => {
+const [password,setPassword]=useState("");
+const [email,setEmail]=useState("");
+const [token, setToken] = useState('');
+
+const handleLogin = async () => {
+  try {
+    const response = await axios.post(
+      'http://localhost:8080/auth/login',
+      { email, password },
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+    setToken(response.data.token);
+    console.log(token);
+    
+  } catch (error) {
+    console.error('Login failed:', error);
+  }
 };
-
-const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
-  console.log('Failed:', errorInfo);
-};
-
-
-
-const Login: React.FC = () => (
-   <div style={{justifyContent:"center",display:"flex",padding:100}}>
-   
+  return (
+<div style={{justifyContent:"center",display:"flex",padding:100}}>
   <Form
     name="basic"
     labelCol={{ span: 8 }}
     wrapperCol={{ span: 16 }}
     style={{ maxWidth: 600 }}
     initialValues={{ remember: true }}
-    onFinish={onFinish}
-    onFinishFailed={onFinishFailed}
     autoComplete="off"
 
   >
@@ -44,7 +55,8 @@ const Login: React.FC = () => (
       name="phoneNumber"
       rules={[{ required: true, message: 'Please input your phonenumber!' }]}
     >
-      <Input />
+      <Input onChange={(e)=>setEmail(e.target.value)} />
+      {/* <Input/> */}
     </Form.Item>
 
     <Form.Item<FieldType>
@@ -52,11 +64,12 @@ const Login: React.FC = () => (
       name="password"
       rules={[{ required: true, message: 'Please input your password!' }]}
     >
-      <Input.Password />
+      <Input.Password onChange={(e)=> setPassword(e.target.value)}/>
+      {/* <Input.Password /> */}
     </Form.Item>
     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Link to="/home">
-        <Button type="primary" htmlType="submit" style={{width:150}}>
+        <Button onClick={handleLogin} type="primary" htmlType="submit" style={{width:150}}>
         Đăng nhập
       </Button>
         </Link>
@@ -82,7 +95,9 @@ const Login: React.FC = () => (
    
       
   </div>
+  );
+   
   
-);
+  }
 
 export default Login;
