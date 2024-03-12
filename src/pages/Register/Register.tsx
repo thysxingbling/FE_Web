@@ -30,18 +30,20 @@ const tailFormItemLayout = {
 const Register: React.FC = () => {
   const [form] = Form.useForm();
   const [password,setPassword]=useState("");
-  const [email,setPhoneNumber]=useState("");
+  const [phoneNumber,setPhoneNumber]=useState("");
   const [name,setName]=useState("");
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleRegister = async () => {
+    debugger
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
     try {
-      const response = await axios.post('http://localhost:8080/auth/signup', { email, password ,name});
+      const response = await axios.post('http://localhost:8080/auth/signup', { phoneNumber, password});
+      console.log(response.data);
       const token = response.data.token;
       localStorage.setItem('token', token);
     } catch (error) {
@@ -49,6 +51,30 @@ const Register: React.FC = () => {
     }
   };
 
+  const validatePhoneNumber = (rule: any, value: string, callback: (message?: string) => void) => {
+    const phoneNumberRegex = /^(0|\+84)[1-9][0-9]{8}$/;
+    if (!phoneNumberRegex.test(value)) {
+      callback("Invalid phone number (Ex: 0384492920)");
+    } else {
+      callback();
+    }
+  };
+
+  const validatePassword = (rule: any, value: string, callback: (message?: string) => void) => {
+    if (value.length < 9) {
+      callback("Password must be at least 9 characters (Ex: 123456789)");
+    } else {
+      callback();
+    }
+  };
+  const validateName = (rule: any, value: string, callback: (message?: string) => void) => {
+    const nameRegex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1 ]{2,30}$/;
+    if (!nameRegex.test(value)) {
+      callback("Invalid name");
+    } else {
+      callback();
+    }
+  };
   return (
     <div style={{ justifyContent: "center", padding: 50, marginLeft: 500}}>
       <Form
@@ -60,28 +86,33 @@ const Register: React.FC = () => {
       >
         <h1 style={{ marginBottom: 30,marginLeft:150 }}>Đăng ký tài khoản</h1>
         <Form.Item
-          name="email"
+          name="phoneNumber"
           label="Phone Number"
           rules={[
+            {
+              validator: validatePhoneNumber,
+            },
             {
               message: "The input is not valid Phone Number",
             },
             {
               required: true,
-              message: "Please input your Phone Number",
+              message: "Phone number not null",
             },
           ]}
         >
-          <Input onChange={(e)=>setPhoneNumber(e.target.value)}/>
+          <Input value ={phoneNumber} onChange={(e)=>setPhoneNumber(e.target.value)}/>
         </Form.Item>
         <Form.Item
           name="name"
           label="Name"
           rules={[
             {
+              validator: validateName,
+            },
+            {
               required: true,
-              message: "Please input your name!",
-              whitespace: true,
+              message: "Name not null!",
             },
           ]}
         >
@@ -93,8 +124,11 @@ const Register: React.FC = () => {
           label="Password"
           rules={[
             {
+              validator: validatePassword,
+            },
+            {
               required: true,
-              message: "Please input your password!",
+              message: "Password not null!",
             },
           ]}
           hasFeedback
@@ -108,6 +142,7 @@ const Register: React.FC = () => {
           dependencies={["password"]}
           hasFeedback
           rules={[
+           
             {
               required: true,
               message: "Please confirm your password!",

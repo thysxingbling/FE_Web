@@ -11,23 +11,24 @@ type FieldType = {
 };
 
 const Login: React.FC = () => {
+const [phoneNumber,setPhoneNumber]=useState("");
 const [password,setPassword]=useState("");
-const [email,setEmail]=useState("");
 const [token, setToken] = useState('');
 
 const handleLogin = async () => {
+  debugger
   try {
     const response = await axios.post(
       'http://localhost:8080/auth/login',
-      { email, password },
+      { phoneNumber, password },
       {
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        // headers: {
+        //   'Content-Type': 'application/json',
+        //   "token":"Bearr" + token
+        // }
       }
     );
     setToken(response.data.token);
-    console.log(token);
     
   } catch (error) {
     console.error('Login failed:', error);
@@ -55,8 +56,7 @@ const handleLogin = async () => {
       name="phoneNumber"
       rules={[{ required: true, message: 'Please input your phonenumber!' }]}
     >
-      <Input onChange={(e)=>setEmail(e.target.value)} />
-      {/* <Input/> */}
+      <Input onChange={(e)=>setPhoneNumber(e.target.value)} />
     </Form.Item>
 
     <Form.Item<FieldType>
@@ -65,7 +65,6 @@ const handleLogin = async () => {
       rules={[{ required: true, message: 'Please input your password!' }]}
     >
       <Input.Password onChange={(e)=> setPassword(e.target.value)}/>
-      {/* <Input.Password /> */}
     </Form.Item>
     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Link to="/home">
