@@ -39,7 +39,7 @@ const Siderbar: React.FC = () => {
       style={{
         width: "100px",
         background: "#3a98ff",
-        height: "700px",
+        height: "750px",
         marginLeft: -8,
         marginTop: -30,
         position: "fixed",

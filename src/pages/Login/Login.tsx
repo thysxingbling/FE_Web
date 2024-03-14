@@ -10,11 +10,14 @@ const Login: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState(false);
 
   const handleLogin = async () => {
+    debugger
     try {
       const response = await axios.post(
         'http://localhost:8080/auth/login',
         { phoneNumber, password }
       );
+       // Lưu token vào local storage
+       localStorage.setItem('token', response.data.token);
       // Xử lý đăng nhập thành công
       setLoggedIn(true); 
       // chuyển hướng đến trang home 
