@@ -4,6 +4,7 @@ import ContactPage from "../pages/ContactPage/Contact - page";
 import Register from "../pages/Register/Register";
 import Login from "../pages/Login/Login";
 import Component from "../components/layouts/components/components";
+import ListFriends from "../pages/ContactPage/ListGroups";
 
 
 const Router: React.FC=()=>{
@@ -14,6 +15,7 @@ const Router: React.FC=()=>{
         <Route path='/message' element={<MessagePage />} />
         <Route path='/contact' element={<ContactPage />} />
         <Route path='/register' element={<Register />} />
+        <Route path='/listFriends' element={<ListFriends />} />
       </Routes>
     )
    
