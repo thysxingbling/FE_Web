@@ -10,7 +10,6 @@ const Login: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState(false);
 
   const handleLogin = async () => {
-    debugger
     try {
       const response = await axios.post(
         'http://localhost:8080/auth/login',

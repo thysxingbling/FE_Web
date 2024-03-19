@@ -1,21 +1,22 @@
 import { MailOutlined, TeamOutlined, UserAddOutlined } from "@ant-design/icons";
 import { Avatar, Layout, List, Menu } from "antd";
 import { Content, Header } from "antd/es/layout/layout";
-import { Link } from "react-router-dom";
+
 import Component from "../../components/layouts/components/components";
 import { Col, Row } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import ListFriends from "./ListFriends";
 
 const ContactPage: React.FC = () => {
   const [token, setToken] = useState("");
   const [friends, setFriends] = useState([]);
   useEffect(() => {
     const getList = async () => {
-      debugger;
+
       try {
         const token =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwaG9uZU51bWJlciI6IjAzMjYzOTI0MzgiLCJ1c2VySWQiOiI2NWYyNzBkZWY0NTkzY2Y1MGMyOTIzNTAiLCJpYXQiOjE3MTA0MzU2NzMsImV4cCI6MTcxMDQzOTI3M30.I8TI8jrNLiBcoJ4HRi5kjsk8YS92G0q3bKAVMxigTbE";
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwaG9uZU51bWJlciI6IjAzODQ0OTI5MjAiLCJ1c2VySWQiOiI2NWY5YTM3ZmVmNDdkMmNiNWIwNmIwM2QiLCJpYXQiOjE3MTA4NjM5MTcsImV4cCI6MTcxMDkwNzExN30.nxU-jJiPrI3MRVdOiH50CYrCSOjrqWY2eqfkJ3BQqho";
         // Gửi yêu cầu API với token được đặt
         const response = await axios.get("http://localhost:8080/friend/list", {
           headers: {
@@ -23,6 +24,7 @@ const ContactPage: React.FC = () => {
           },
         });
         setFriends(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -118,21 +120,20 @@ const ContactPage: React.FC = () => {
               Danh sách bạn bè{" "}
             </p>
           </Header>
-          <Content style={{ backgroundColor: "gray", height: 640 }}>
-            <List
+          <Content style={{ backgroundColor: "#fffff", height: 640 }}>
+            {/* <List
               itemLayout="horizontal"
               dataSource={friends}
               renderItem={(friend: any) => (
                 <List.Item>
                   <List.Item.Meta
-                    title={
-                      <Link to={`/profile/${friend._id}`}>{friend.name}</Link>
-                    }
+                    title={friend.name}
                     avatar={<Avatar src={friend.avatar} />}
                   />
                 </List.Item>
               )}
-            />
+            /> */}
+            <ListFriends/>
           </Content>
         </Layout>
       </Col>
