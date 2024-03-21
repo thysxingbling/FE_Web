@@ -31,18 +31,7 @@ const ModalInformation:React.FC<ModalProps>= ({ open, onCancel, onOk }) => {
       
       >
         <div>
-          <div>
-            <p style={{ fontWeight: "bold", fontSize: "16px" }}>
-              Thông tin cá nhân
-            </p>
-          </div>
-          <div>
-            <Image
-              src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-              width={400}
-              height={200}
-            ></Image>
-          </div>
+          
           <div>
             <Row style={{ marginTop: 10 }}>
               <Col span={6}>
@@ -59,6 +48,11 @@ const ModalInformation:React.FC<ModalProps>= ({ open, onCancel, onOk }) => {
                 </p>{" "}
               </Col>
             </Row>
+          </div>
+          <div>
+            <p style={{ fontWeight: "bold", fontSize: "16px" }}>
+              Thông tin cá nhân
+            </p>
           </div>
           <div>
             <Row>

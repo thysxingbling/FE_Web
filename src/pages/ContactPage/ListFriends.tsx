@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Layout, List, Row, Col, Menu , Input , Select  } from "antd";
+import { Avatar, Layout, List, Row, Col, Menu, Input, Select } from "antd";
 
 import { MailOutlined, UserAddOutlined, TeamOutlined } from "@ant-design/icons";
 import { Content, Header } from "antd/es/layout/layout";
 import { Link } from "react-router-dom";
 import Component from "../../components/layouts/components/components";
 import axios from "axios";
-const {Search} = Input ;
-
+import { IFriends } from "../../components/modals/friends/friends";
+const { Search } = Input;
 const ListFriends: React.FC = () => {
-   const [friends, setFriends] = useState([]);
+
+  const [friends, setFriends] = useState<IFriends[]>([]);
 
   useEffect(() => {
     const getList = async () => {
@@ -20,8 +21,8 @@ const ListFriends: React.FC = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        setFriends(response.data);
-        console.log(response.data);
+        setFriends(response.data.users);
+        console.log(response.data.users);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -61,19 +62,18 @@ const ListFriends: React.FC = () => {
             </Link>
           </Menu.Item>
           <Menu.Item key={2}>
-           <Link to="/listGroups">
-           
-           {" "}
-            <TeamOutlined
-              style={{
-                fontSize: "25px",
-                color: "gray",
-                margin: 10,
-                marginLeft: 0,
-              }}
-            />
-            Danh sách nhóm
-           </Link>
+            <Link to="/listGroups">
+              {" "}
+              <TeamOutlined
+                style={{
+                  fontSize: "25px",
+                  color: "gray",
+                  margin: 10,
+                  marginLeft: 0,
+                }}
+              />
+              Danh sách nhóm
+            </Link>
           </Menu.Item>
 
           <Menu.Item key={3}>
@@ -123,7 +123,9 @@ const ListFriends: React.FC = () => {
             </p>
           </Header>
           <Content style={{ backgroundColor: "gray", height: 640 }}>
-            <Layout style={{ maxHeight: 640, overflowY: "auto",position:'fixed' }}>
+            <Layout
+              style={{ maxHeight: 640, overflowY: "auto", position: "fixed" }}
+            >
               <Header style={{ backgroundColor: "#ffffff" }}>Bạn bè</Header>
               <Content>
                 <Header
@@ -133,28 +135,39 @@ const ListFriends: React.FC = () => {
                     flexDirection: "row",
                   }}
                 >
-                  {/* chen  */}
-                  <Search placeholder="Tìm bạn" style={{width:400}}/>
-                  <Select placeholder="Tên(A->Z)" style={{width:300, marginLeft:20}}/>
-                  <Select placeholder="Tên(Z->A)" style={{width:300, marginLeft:20}}/>
+                  <Search placeholder="Tìm bạn" style={{ width: 400 }} />
+                  <Select
+                    placeholder="Tên(A->Z)"
+                    style={{ width: 300, marginLeft: 20 }}
+                  />
+                  <Select
+                    placeholder="Tên(Z->A)"
+                    style={{ width: 300, marginLeft: 20 }}
+                  />
                 </Header>
                 <Content>
                   <List
-              itemLayout="horizontal"
-              dataSource={friends}
-              renderItem={(friend: any) => (
-                <List.Item>
-                  <List.Item.Meta
-                    title={friend.name}
-                    avatar={<Avatar src={friend.avatar} />}
+                    style={{
+                      backgroundColor: "#ffffff",
+                      width: 1130,
+                      marginLeft: 0,
+                    }}
+                    itemLayout="horizontal"
+                    dataSource={friends}
+                    renderItem={(
+                      item 
+                    ) => (
+                      <List.Item style={{ marginLeft: 40 }}>
+                        <List.Item.Meta
+                          avatar={<Avatar src={item.avatar} />} 
+                          title={item.name} 
+                        />
+                      </List.Item>
+                    )}
                   />
-                </List.Item>
-              )}
-            />
                 </Content>
               </Content>
             </Layout>
-            
           </Content>
         </Layout>
       </Col>
