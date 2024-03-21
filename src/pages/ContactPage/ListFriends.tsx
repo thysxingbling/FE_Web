@@ -22,7 +22,7 @@ const ListFriends: React.FC = () => {
           },
         });
         setFriends(response.data.users);
-        console.log(response.data.users);
+        // console.log(response.data.users);
       } catch (error) {
         console.error("Error fetching data:", error);
       }

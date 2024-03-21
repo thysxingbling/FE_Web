@@ -31,15 +31,9 @@ const Siderbar: React.FC = () => {
           },
         })
         .then((response) => {
-          // debugger;
           setUser(response.data.user); 
-          // console.log(response.data);
-          console.log(user);
-          console.log(response.data.user);
-          // console.log(response.data.message);
-        
-          
-          
+          // console.log(user);
+          // console.log(response.data.user);
         })
         .catch((error) => {
           console.error("Error getting user:", error);
