@@ -7,13 +7,18 @@ import {
   Space,
   Button,
   Avatar,
-  ModalProps,
   Upload,
 } from "antd";
 import { UserOutlined, UploadOutlined } from "@ant-design/icons";
 import ModalUpdateInfo from "./ModalUpdateInfo";
+interface ModalInformationProps {
+  open:boolean;
+  onCancel: () => void ;
+  onOk: () => void;
+  user:any;
+}
 
-const ModalInformation: React.FC<ModalProps> = ({ open, onCancel, onOk }) => {
+const ModalInformation: React.FC<ModalInformationProps> = ({ open, onCancel, onOk,user }) => {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
   // const [user, setUser] = useState<any>(null);
@@ -69,13 +74,10 @@ const ModalInformation: React.FC<ModalProps> = ({ open, onCancel, onOk }) => {
               <Col span={8}>
                 <Space wrap size={16}>
                   <Avatar
-                    size={100}
+                    size={150}
                     shape="square"
                     icon={<UserOutlined />}
-                    // src={user ? user.avatar : ""}
-                    // src={
-                    //   avatarUrl == null || avatarUrl == "" ? null : avatarUrl
-                    // }
+                    src={user ? user.avatar : ""}
                   />
                   <Upload
                     showUploadList={false}
@@ -89,6 +91,7 @@ const ModalInformation: React.FC<ModalProps> = ({ open, onCancel, onOk }) => {
                         backgroundColor: "#8c82f3",
                         color: "#fff",
                         fontWeight: 400,
+                        marginLeft:20
                       }}
                       icon={<UploadOutlined />}
                     >
@@ -99,7 +102,7 @@ const ModalInformation: React.FC<ModalProps> = ({ open, onCancel, onOk }) => {
                 </Space>
               </Col>
               <Col span={16}>
-                <p>aaaaaaaaaaa</p>
+                <p style={{fontWeight:"bold",fontSize:18}}>{user ? user.name : ""}</p>
               </Col>
             </Row>
           </div>
@@ -119,7 +122,7 @@ const ModalInformation: React.FC<ModalProps> = ({ open, onCancel, onOk }) => {
             </Row>
             <Row>
               <Col span={6}>Điện thoai</Col>
-              <Col span={18}>+84 789 224 335</Col>
+              <Col span={18}>{user ? user.phoneNumber : ""}</Col>
             </Row>
             <Row>
               <Col span={24}>
@@ -141,7 +144,7 @@ const ModalInformation: React.FC<ModalProps> = ({ open, onCancel, onOk }) => {
           open={isOpenModalUpdateInfo}
           onCancel={handleOk}
           onOk={handleCancel}
-          // user={user}
+      
         />
       </div>
     </div>

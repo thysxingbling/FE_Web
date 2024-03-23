@@ -105,6 +105,7 @@ const Siderbar: React.FC = () => {
               open={isOpenModalInfo}
               onCancel={handleCancel}
               onOk={handleOk}
+              user={user}
             />
             <Menu.Item key="cd">Cài đặt</Menu.Item>
             {/* <Menu.Item key="dx" onClick={handleLogout}>Đăng xuất</Menu.Item> */}
