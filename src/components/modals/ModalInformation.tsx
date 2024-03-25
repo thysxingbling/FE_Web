@@ -1,24 +1,21 @@
 import React, { useState } from "react";
 
-import {
-  Modal,
-  Row,
-  Col,
-  Space,
-  Button,
-  Avatar,
-  Upload,
-} from "antd";
+import { Modal, Row, Col, Space, Button, Avatar, Upload } from "antd";
 import { UserOutlined, UploadOutlined } from "@ant-design/icons";
 import ModalUpdateInfo from "./ModalUpdateInfo";
 interface ModalInformationProps {
-  open:boolean;
-  onCancel: () => void ;
+  open: boolean;
+  onCancel: () => void;
   onOk: () => void;
-  user:any;
+  user: any;
 }
 
-const ModalInformation: React.FC<ModalInformationProps> = ({ open, onCancel, onOk,user }) => {
+const ModalInformation: React.FC<ModalInformationProps> = ({
+  open,
+  onCancel,
+  onOk,
+  user,
+}) => {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
   // const [user, setUser] = useState<any>(null);
@@ -34,24 +31,27 @@ const ModalInformation: React.FC<ModalInformationProps> = ({ open, onCancel, onO
   const handleCancel = () => {
     setIsOpenModalUpdateInfo(false);
   };
+
   const handleFileUpload = async (file: File) => {
-    debugger
+    debugger;
     const token = localStorage.getItem("token");
     try {
       const formData = new FormData();
-      formData.append("avatar", file);
+      formData.append("image", file);
 
       const response = await fetch("http://localhost:8080/auth/update", {
         method: "PUT",
         body: formData,
         headers: {
-          Authorization: `Bearer ${token}`, 
+          Authorization: `Bearer ${token}`,
         },
       });
 
       if (response.ok) {
+        debugger;
         const data = await response.json();
-        setAvatarUrl(data.avatarUrl);
+        setAvatarUrl(data.user.avatar);
+        console.log(data.user.avatar);
       } else {
         console.error("Failed to upload avatar");
       }
@@ -77,13 +77,14 @@ const ModalInformation: React.FC<ModalInformationProps> = ({ open, onCancel, onO
                     size={150}
                     shape="square"
                     icon={<UserOutlined />}
-                    src={user ? user.avatar : ""}
+                    // src={user ? user.avatar : ""}
+                    src={avatarUrl || (user && user.avatar)}
                   />
                   <Upload
                     showUploadList={false}
                     beforeUpload={(file) => {
                       handleFileUpload(file);
-                      return false; 
+                      return false;
                     }}
                   >
                     <Button
@@ -91,18 +92,19 @@ const ModalInformation: React.FC<ModalInformationProps> = ({ open, onCancel, onO
                         backgroundColor: "#8c82f3",
                         color: "#fff",
                         fontWeight: 400,
-                        marginLeft:20
+                        marginLeft: 20,
                       }}
                       icon={<UploadOutlined />}
                     >
                       Upload
                     </Button>
-                   
                   </Upload>
                 </Space>
               </Col>
               <Col span={16}>
-                <p style={{fontWeight:"bold",fontSize:18}}>{user ? user.name : ""}</p>
+                <p style={{ fontWeight: "bold", fontSize: 18 }}>
+                  {user ? user.name : ""}
+                </p>
               </Col>
             </Row>
           </div>
@@ -144,7 +146,6 @@ const ModalInformation: React.FC<ModalInformationProps> = ({ open, onCancel, onO
           open={isOpenModalUpdateInfo}
           onCancel={handleOk}
           onOk={handleCancel}
-      
         />
       </div>
     </div>

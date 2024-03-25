@@ -6,7 +6,7 @@ import { Content, Header } from "antd/es/layout/layout";
 import { Link } from "react-router-dom";
 import Component from "../../components/layouts/components/components";
 import axios from "axios";
-import { IFriends } from "../../components/modals/friends/friends";
+import { IFriends } from "../../components/modals/friends";
 const { Search } = Input;
 const ListFriends: React.FC = () => {
 

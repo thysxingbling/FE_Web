@@ -99,7 +99,7 @@ const MessagePage: React.FC = () => {
             >
               Nguyễn Ngọc Tuấn
             </p>
-            <p
+            {/* <p
               style={{
                 marginTop: -15,
                 color: "gray",
@@ -107,7 +107,7 @@ const MessagePage: React.FC = () => {
               }}
             >
               Truy cập 1 giờ trước
-            </p>
+            </p> */}
           </div>
 
           <div
@@ -122,9 +122,6 @@ const MessagePage: React.FC = () => {
               marginTop: 0,
             }}
           >
-            <Button type="text">
-              <UsergroupAddOutlined style={{ color: "gray", height: 30 }} />
-            </Button>
             <Button type="text">
               <SearchOutlined style={{ color: "gray", height: 30 }} />
             </Button>

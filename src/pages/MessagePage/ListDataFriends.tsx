@@ -6,58 +6,8 @@ const ListDataFriends: React.FC = () => {
       userName: "Nguyễn Ngọc Tuấn",
       chat:'Bạn : Hello'
     },
-    {
-      userName: "Nguyễn Ngọc Ánh",
-      chat:'Bạn : Hello'
-    },
-    {
-      userName: "Nguyễn Ngọc Chính",
-      chat:'Bạn : Hello'
-    },
-    {
-      userName: "Nguyễn Ngọc Tuấn",
-      chat:'Bạn : Hello'
-    },
-    {
-      userName: "Nguyễn Ngọc Ánh",
-      chat:'Bạn : Hello'
-    },
-    {
-      userName: "Nguyễn Ngọc Chính",
-      chat:'Bạn : Hello'
-    },
-    {
-      userName: "Nguyễn Ngọc Tuấn",
-      chat:'Bạn : Hello'
-    },
-    {
-      userName: "Nguyễn Ngọc Ánh",
-      chat:'Bạn : Hello'
-    },
-    {
-      userName: "Nguyễn Ngọc Chính",
-      chat:'Bạn : Hello'
-    },
-    {
-      userName: "Nguyễn Ngọc Tuấn",
-      chat:'Bạn : Hello'
-    },
-    {
-      userName: "Nguyễn Ngọc Ánh",
-      chat:'Bạn : Hello'
-    },
-    {
-      userName: "Nguyễn Ngọc Chính",
-      chat:'Bạn : Hello'
-    },
-    {
-      userName: "Nguyễn Ngọc Tuấn",
-      chat:'Bạn : Hello'
-    },
-    {
-      userName: "Nguyễn Ngọc Ánh",
-      chat:'Bạn : Hello'
-    },
+   
+   
     {
       userName: "Nguyễn Ngọc Chính",
       chat:'Bạn : Hello'
@@ -78,8 +28,6 @@ const ListDataFriends: React.FC = () => {
        
         renderItem={(item, index) => (
           <List.Item>
-        
-          
               <List.Item.Meta
               avatar={
                 <Avatar
@@ -89,9 +37,6 @@ const ListDataFriends: React.FC = () => {
               title={item.userName}
               description={item.chat}
             />
-          
-          
-            
           </List.Item>
         )}
       />
