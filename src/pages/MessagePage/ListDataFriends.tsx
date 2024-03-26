@@ -1,8 +1,9 @@
 import React from "react";
 import { Avatar, List } from "antd";
 interface IUsersResponse {
-  userName: string;
-  chat:string
+  name: string;
+  chat:string;
+  avatar:string;
 }
 interface ModalListFriends {
   users: IUsersResponse[];
@@ -41,11 +42,11 @@ const ListDataFriends: React.FC<ModalListFriends> = ({
               <List.Item.Meta
               avatar={
                 <Avatar
-                  src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`}
+                  src={item.avatar}
                 />
               }
-              title={item.userName}
-              description={item.chat}
+              title={item.name}
+             
             />
           </List.Item>
         )}

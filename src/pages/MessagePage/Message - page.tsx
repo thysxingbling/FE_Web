@@ -25,26 +25,15 @@ const { Header, Content, Sider, Footer } = Layout;
 const MessagePage: React.FC = () => {
   const data = [
     {
-      userName: "Nguyễn Ngọc Tuấn",
+      name: "Nguyễn Ngọc Tuấn",
       chat:'Bạn : Hello'
     },
    
     {
-      userName: "Nguyễn Ngọc Chính",
+      name: "Nguyễn Ngọc Chính",
       chat:'Bạn : Hello'
     },
-    {
-      userName: "Nguyễn Ngọc Chính",
-      chat:'Bạn : Hello'
-    },
-    {
-      userName: "Nguyễn Ngọc Chính",
-      chat:'Bạn : Hello'
-    },
-    {
-      userName: "Nguyễn Ngọc Chính",
-      chat:'Bạn : Hello'
-    },
+
   ];
   return (
     <Layout
