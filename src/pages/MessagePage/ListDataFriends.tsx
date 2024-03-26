@@ -1,18 +1,28 @@
 import React from "react";
 import { Avatar, List } from "antd";
-const ListDataFriends: React.FC = () => {
-  const data = [
-    {
-      userName: "Nguyễn Ngọc Tuấn",
-      chat:'Bạn : Hello'
-    },
+interface IUsersResponse {
+  userName: string;
+  chat:string
+}
+interface ModalListFriends {
+  users: IUsersResponse[];
+}
+
+const ListDataFriends: React.FC<ModalListFriends> = ({
+ users
+}) => {
+  // const data = [
+  //   {
+  //     userName: "Nguyễn Ngọc Tuấn",
+  //     chat:'Bạn : Hello'
+  //   },
    
    
-    {
-      userName: "Nguyễn Ngọc Chính",
-      chat:'Bạn : Hello'
-    },
-  ];
+  //   {
+  //     userName: "Nguyễn Ngọc Chính",
+  //     chat:'Bạn : Hello'
+  //   },
+  // ];
   return (
    
       <List
@@ -24,7 +34,7 @@ const ListDataFriends: React.FC = () => {
         
         }}
         itemLayout="horizontal"
-        dataSource={data}
+        dataSource={users}
        
         renderItem={(item, index) => (
           <List.Item>

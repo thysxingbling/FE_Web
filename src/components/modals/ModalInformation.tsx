@@ -33,7 +33,7 @@ const ModalInformation: React.FC<ModalInformationProps> = ({
   };
 
   const handleFileUpload = async (file: File) => {
-    debugger;
+
     const token = localStorage.getItem("token");
     try {
       const formData = new FormData();
@@ -48,7 +48,6 @@ const ModalInformation: React.FC<ModalInformationProps> = ({
       });
 
       if (response.ok) {
-        debugger;
         const data = await response.json();
         setAvatarUrl(data.user.avatar);
         console.log(data.user.avatar);

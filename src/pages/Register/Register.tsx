@@ -38,7 +38,6 @@ const Register: React.FC = () => {
 
 
   const handleRegister = async () => {
-    debugger
     if (password !== confirmPassword) {
       message.error('Passwords do not match');
       return;

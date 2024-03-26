@@ -23,6 +23,29 @@ import Component from "../../components/layouts/components/components";
 const { Header, Content, Sider, Footer } = Layout;
 
 const MessagePage: React.FC = () => {
+  const data = [
+    {
+      userName: "Nguyễn Ngọc Tuấn",
+      chat:'Bạn : Hello'
+    },
+   
+    {
+      userName: "Nguyễn Ngọc Chính",
+      chat:'Bạn : Hello'
+    },
+    {
+      userName: "Nguyễn Ngọc Chính",
+      chat:'Bạn : Hello'
+    },
+    {
+      userName: "Nguyễn Ngọc Chính",
+      chat:'Bạn : Hello'
+    },
+    {
+      userName: "Nguyễn Ngọc Chính",
+      chat:'Bạn : Hello'
+    },
+  ];
   return (
     <Layout
       style={{
@@ -59,7 +82,7 @@ const MessagePage: React.FC = () => {
             marginLeft: 10,
           }}
         >
-          <ListDataFriends />
+          <ListDataFriends users={data}/>
         </Content>
       </Sider>
 
@@ -99,15 +122,6 @@ const MessagePage: React.FC = () => {
             >
               Nguyễn Ngọc Tuấn
             </p>
-            {/* <p
-              style={{
-                marginTop: -15,
-                color: "gray",
-                height: 25,
-              }}
-            >
-              Truy cập 1 giờ trước
-            </p> */}
           </div>
 
           <div
