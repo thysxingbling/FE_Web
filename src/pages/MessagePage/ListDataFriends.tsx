@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Avatar, Button, List, message } from "antd";
 import axios from "axios";
-import { IFriends } from "../../components/modals/friends";
+import { IFriends } from "../../components/models/friends";
 import { Link } from "react-router-dom";
 
 interface ModalListFriends {

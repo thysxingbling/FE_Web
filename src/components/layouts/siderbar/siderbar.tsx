@@ -13,7 +13,7 @@ import {
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import SubMenu from "antd/es/menu/SubMenu";
-import ModalInformation from "../../modals/ModalInformation";
+import ModalInformation from "../../formModals/ModalInformation";
 import axios from "axios";
 
 const Siderbar: React.FC = () => {

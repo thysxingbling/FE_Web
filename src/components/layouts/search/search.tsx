@@ -3,7 +3,7 @@ import { Input, message } from "antd";
 import ListDataFriends from "../../../pages/MessagePage/ListDataFriends";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { IFriends } from "../../modals/friends";
+import { IFriends } from "../../models/friends";
 
 const Search: React.FC = () => {
 
