@@ -1,5 +1,4 @@
 import { Avatar, Button, Layout, Input, List } from "antd";
-import ListDataFriends from "./ListDataFriends";
 import React from "react";
 import {
   SearchOutlined,
@@ -18,23 +17,10 @@ import {
 } from "@ant-design/icons";
 import Component from "../../components/layouts/components/components";
 
-
-
 const { Header, Content, Sider, Footer } = Layout;
 
 const MessagePage: React.FC = () => {
-  const data = [
-    {
-      name: "Nguyễn Ngọc Tuấn",
-      chat:'Bạn : Hello'
-    },
-   
-    {
-      name: "Nguyễn Ngọc Chính",
-      chat:'Bạn : Hello'
-    },
-
-  ];
+ 
   return (
     <Layout
       style={{
@@ -71,7 +57,7 @@ const MessagePage: React.FC = () => {
             marginLeft: 10,
           }}
         >
-          <ListDataFriends users={data}/>
+          {/* <ListDataFriends users={friends}/> */}
         </Content>
       </Sider>
 
@@ -232,12 +218,12 @@ const MessagePage: React.FC = () => {
           </div>
         </Footer>
       </Content>
-      <Sider width={400} style={{ backgroundColor: "#ffffff" }}>
+      <Sider width={400} style={{ backgroundColor: "#ffff" }}>
         <Header
           style={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
+            // justifyContent: "center",
             borderBottom: "1px solid #000",
             backgroundColor: "#fff",
             width: 450,

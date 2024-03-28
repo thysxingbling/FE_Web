@@ -1,27 +1,36 @@
 import { UserAddOutlined, UsergroupAddOutlined } from "@ant-design/icons";
 import { Input, message } from "antd";
 import ListDataFriends from "../../../pages/MessagePage/ListDataFriends";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import { IFriends } from "../../modals/friends";
 
 const Search: React.FC = () => {
-  // const data = [
-  //   {
-  //     userName: "Nguyễn Ngọc Tuấn",
-  //     chat: "Bạn : Hello",
-  //   },
 
-  //   {
-  //     userName: "Nguyễn Ngọc Chính",
-  //     chat: "Bạn : Hello",
-  //   },
-  // ];
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [friend, setFriend] = useState(null);
+  const [friends, setFriends] = useState<IFriends[]>([]);
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    const getList = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get("http://localhost:8080/friend/list", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setFriends(response.data.users);
+        // console.log(response.data.users);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    getList();
+  }, []);
+  
   const handleSearch = () => {
-    debugger
     setLoading(true);
     const token = localStorage.getItem("token"); 
     
@@ -37,12 +46,14 @@ const Search: React.FC = () => {
         console.log(data);
         
         if (data.friend) {
-          setFriend(data.friend);
-          console.log(data.friend);
+          setFriends([data.friend]);
+          console.log([data.friend]);
+        
         } else {
           message.info("Friend not found.");
         }
       })
+
       .catch((error) => {
         console.error("Error searching friend:", error);
         message.error("Failed to search for friend.");
@@ -51,6 +62,8 @@ const Search: React.FC = () => {
         setLoading(false);
       });
   };
+ 
+
 
   return (
     <div
@@ -84,7 +97,7 @@ const Search: React.FC = () => {
         }}
       />
       <UsergroupAddOutlined style={{ width: 40, height: 50, color: "gray" }} />
-      <ListDataFriends users={friend ? [friend] : []} />
+      <ListDataFriends users={friends ? friends : []} />
     </div>
   );
 };
