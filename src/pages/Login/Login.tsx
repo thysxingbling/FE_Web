@@ -8,24 +8,18 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
-
   const handleLogin = async () => {
     try {
       const response = await axios.post(
         'http://localhost:8080/auth/login',
         { phoneNumber, password }
       );
-       // Lưu token vào local storage
        localStorage.setItem('token', response.data.token);
-      // Xử lý đăng nhập thành công
-      setLoggedIn(true); 
-      // chuyển hướng đến trang home 
+      setLoggedIn(true);  
       window.location.href = '/home'; 
 
     } catch (error) {
       console.error('Login failed:', error);
-
-      // Xử lý đăng nhập thất bại
       setErrorMessage("Login failed. Check again");
     }
   };
@@ -54,6 +48,7 @@ const Login: React.FC = () => {
         >
           <Input value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
         </Form.Item>
+        
 
         <Form.Item
           label="Password"

@@ -12,6 +12,7 @@ const Search: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+ 
     const getList = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -22,6 +23,7 @@ const Search: React.FC = () => {
         });
         setFriends(response.data.users);
         // console.log(response.data.users);
+        
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -31,6 +33,7 @@ const Search: React.FC = () => {
   }, []);
   
   const handleSearch = () => {
+    debugger
     setLoading(true);
     const token = localStorage.getItem("token"); 
     

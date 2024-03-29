@@ -91,11 +91,10 @@ const MessagePage: React.FC = () => {
               style={{
                 marginTop: 0,
                 fontWeight: "bold",
-
                 height: 25,
               }}
             >
-              Nguyễn Ngọc Tuấn
+             Thuy
             </p>
           </div>
 
@@ -181,18 +180,9 @@ const MessagePage: React.FC = () => {
               <PaperClipOutlined style={{ color: "grey" }} />
             </Button>
             <Button type="text">
-              {" "}
               <ContactsOutlined style={{ color: "grey" }} />
             </Button>
-            <Button type="text">
-              <ExclamationOutlined style={{ color: "grey" }} />
-            </Button>
-            <Button type="text">
-              <ClockCircleOutlined style={{ color: "grey" }} />
-            </Button>
-            <Button type="text">
-              <ExclamationOutlined style={{ color: "grey" }} />
-            </Button>
+
           </div>
 
           <div
@@ -208,7 +198,7 @@ const MessagePage: React.FC = () => {
             }}
           >
             <Input
-              placeholder="Nhập tin nhắn @ Tên người dùng "
+              placeholder="Nhập tin nhắn  "
               style={{ borderRadius: "0px", height: 60 , width:510}}
             />
             <Button type="text">
@@ -223,7 +213,7 @@ const MessagePage: React.FC = () => {
           style={{
             display: "flex",
             alignItems: "center",
-            // justifyContent: "center",
+  
             borderBottom: "1px solid #000",
             backgroundColor: "#fff",
             width: 450,
@@ -255,33 +245,25 @@ const MessagePage: React.FC = () => {
             src={`https://api.dicebear.com/7.x/miniavs/svg?seed=`}
             />
               <div style={{display:"flex",flexDirection:"row"}}>
-                <p style={{fontFamily:"Time new Roman",fontSize:20,fontWeight:"bold"}}>Tuấn</p>
-                <Button type="text" style={{marginTop:10,height:50 , borderRadius:25}}>
-                    <Avatar><EditOutlined/></Avatar>
-                </Button>
+                <p style={{fontFamily:"Time new Roman",fontSize:20,fontWeight:"bold"}}>Thuy</p>
               </div>
 
               <div style={{display:"flex",flexDirection:"row" }}>
                 
-                <Button type="text" style={{marginTop:10,height:50 , borderRadius:25}}>
+                <Button type="text" style={{marginTop:10,height:50 , borderRadius:10}}>
                     <Avatar><BellOutlined/></Avatar>
-                    <p>Tắt thông </p>
-                    <p>Báo</p>
+                    <p>Tắt thông báo</p>
                 </Button>
-                <Button type="text" style={{marginTop:10,height:50 , borderRadius:25,marginLeft:20}}>
+                <Button type="text" style={{marginTop:10,height:50 , borderRadius:10,marginLeft:20}}>
                     <Avatar><PushpinOutlined/></Avatar>
-                    <p>Ghim hội </p>
-                    <p>Thoại</p>
+                    <p>Ghim hội thoại</p>
                 </Button>
-                <Button type="text" style={{marginTop:10,height:50 , borderRadius:25,marginLeft:20}}>
+                <Button type="text" style={{marginTop:10,height:50 , borderRadius:10,marginLeft:20}}>
                     <Avatar><UsergroupAddOutlined/></Avatar>
                     <p>Tạo nhóm </p>
-                    <p>trò chuyện</p>
+                    
                 </Button>
               </div>
-
-             
-
             </div>
             <div style={{width:450 , height:150 , borderBottom:'6px solid gray', display:'flex', flexDirection:'column'}}>
                   <Button type="text" style={{display:"flex",flexDirection:"row",width:350,height:75 ,alignItems:"center"}}>

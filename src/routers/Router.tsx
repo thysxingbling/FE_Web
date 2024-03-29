@@ -6,6 +6,7 @@ import Login from "../pages/Login/Login";
 import Component from "../components/layouts/components/components";
 import ListFriends from "../pages/ContactPage/ListFriends";
 import ListGroups from "../pages/ContactPage/ListGroups";
+import ListRequest from "../pages/ContactPage/ListRequest";
 
 const Router: React.FC=()=>{
     return (
@@ -17,7 +18,7 @@ const Router: React.FC=()=>{
         <Route path='/contact' element={<ContactPage />} />
         <Route path='/listFriends' element={<ListFriends />} />
         <Route path='/listGroups' element={<ListGroups />} />
-       
+        <Route path='/friendsRequest' element={<ListRequest/>} />
      
       
       </Routes>

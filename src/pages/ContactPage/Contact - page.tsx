@@ -41,8 +41,6 @@ const ContactPage: React.FC = () => {
           </Menu.Item>
           <Menu.Item key={2}>
            <Link to="/listGroups">
-           
-           {" "}
             <TeamOutlined
               style={{
                 fontSize: "25px",
@@ -56,7 +54,7 @@ const ContactPage: React.FC = () => {
           </Menu.Item>
 
           <Menu.Item key={3}>
-            {" "}
+              <Link to="/friendsRequest">
             <MailOutlined
               style={{
                 fontSize: "25px",
@@ -66,6 +64,7 @@ const ContactPage: React.FC = () => {
               }}
             />
             Lời mời kết bạn
+            </Link>
           </Menu.Item>
         </Menu>
 
