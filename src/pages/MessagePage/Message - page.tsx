@@ -32,31 +32,6 @@ const MessagePage: React.FC = () => {
     >
       <Component/>
       <Sider width={300} style={{ backgroundColor: "#ffffff", marginLeft:100, marginTop:100 }}>
-        {/* <Header
-          style={{
-            flexDirection: "row",
-            marginTop: 0,
-            display: "flex",
-            backgroundColor: "#ffffff",
-            height: "40px",
-            marginLeft: 5,
-            width: 350,
-          }}
-        >
-          <Button type="text" style={{ marginLeft: -50 }}>
-            Tất cả
-          </Button>
-          <Button type="text">Chưa đọc</Button>
-          <Button type="text">Phân loại</Button>
-        </Header> */}
-        {/* <Content
-          style={{
-            marginTop: 0,
-            marginLeft: 10,
-          }}
-        > */}
-          {/* <ListDataFriends users={friends}/> */}
-        {/* {/* </Content> */}
       </Sider> 
 
       <Content

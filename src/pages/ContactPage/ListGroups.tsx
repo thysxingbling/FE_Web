@@ -1,10 +1,9 @@
 import React from "react";
-import { Avatar, Layout, List, Row, Col, Menu , Input , Select  } from "antd";
+import { Avatar, Layout, List, Row, Col,Input} from "antd";
 
-import { MailOutlined, UserAddOutlined, TeamOutlined, UsergroupAddOutlined } from "@ant-design/icons";
 import { Content, Header } from "antd/es/layout/layout";
-import { Link } from "react-router-dom";
 import Component from "../../components/layouts/components/components";
+import MenuItem from "./Menu";
 const {Search} = Input ;
 const ListGroups: React.FC = () => {
   const data = [
@@ -30,59 +29,7 @@ const ListGroups: React.FC = () => {
         <Component />
       </Col>
       <Col span={7}>
-        <Menu
-          style={{
-            justifyContent: "center",
-            marginTop: 50,
-            width: 294,
-            marginLeft: 100,
-
-            position: "fixed",
-
-            height: 300,
-          }}
-        >
-          <Menu.Item key={1}>
-            <Link to="/listFriends">
-              <UserAddOutlined
-                style={{
-                  fontSize: "25px",
-                  color: "gray",
-                  margin: 10,
-                  marginLeft: 0,
-                }}
-              />
-              Danh sách bạn bè
-            </Link>
-          </Menu.Item>
-          <Menu.Item key={2}>
-           <Link to="/listGroups">
-            <TeamOutlined
-              style={{
-                fontSize: "25px",
-                color: "gray",
-                margin: 10,
-                marginLeft: 0,
-              }}
-            />
-            Danh sách nhóm
-           </Link>
-          </Menu.Item>
-
-          <Menu.Item key={3}>
-          <Link to="/friendsRequest">
-            <MailOutlined
-              style={{
-                fontSize: "25px",
-                color: "gray",
-                margin: 10,
-                marginLeft: 0,
-              }}
-            />
-            Lời mời kết bạn
-            </Link>
-          </Menu.Item>
-        </Menu>
+        <MenuItem/>
       </Col>
       <Col span={16}>
         <Layout
@@ -141,10 +88,7 @@ const ListGroups: React.FC = () => {
                       </List.Item>
                     )}
                   ></List>
-                </Content>
-           
-      
-            
+                </Content>    
           </Content>
         </Layout>
       </Col>
