@@ -77,7 +77,7 @@ const ListFriends: React.FC = () => {
           </Menu.Item>
 
           <Menu.Item key={3}>
-            {" "}
+          <Link to="/friendsRequest">
             <MailOutlined
               style={{
                 fontSize: "25px",
@@ -87,6 +87,7 @@ const ListFriends: React.FC = () => {
               }}
             />
             Lời mời kết bạn
+            </Link>
           </Menu.Item>
         </Menu>
       </Col>
@@ -107,48 +108,26 @@ const ListFriends: React.FC = () => {
               flexDirection: "row",
             }}
           >
-            <UserAddOutlined
-              style={{ fontSize: "25px", color: "gray", marginLeft: -40 }}
-            />
             <p
               style={{
-                color: "gray",
+                color: "black",
                 fontFamily: "Time new Roman",
-                marginTop: 0,
+                marginTop: 10,
                 marginLeft: 10,
-                fontSize: 16,
+                fontSize: 25,
+               fontWeight:"bold",
+               
               }}
             >
-              Danh sách bạn bè{" "}
+              Danh sách bạn bè
             </p>
           </Header>
-          <Content style={{ backgroundColor: "gray", height: 640 }}>
-            <Layout
-              style={{ maxHeight: 640, overflowY: "auto", position: "fixed" }}
-            >
-              <Header style={{ backgroundColor: "#ffffff" }}>Bạn bè</Header>
-              <Content>
-                <Header
-                  style={{
-                    backgroundColor: "#ffffff",
-                    display: "flex",
-                    flexDirection: "row",
-                  }}
-                >
-                  <Search placeholder="Tìm bạn" style={{ width: 400 }} />
-                  <Select
-                    placeholder="Tên(A->Z)"
-                    style={{ width: 300, marginLeft: 20 }}
-                  />
-                  <Select
-                    placeholder="Tên(Z->A)"
-                    style={{ width: 300, marginLeft: 20 }}
-                  />
-                </Header>
+          <Content style={{ backgroundColor: "white", height: 640,padding:20 }}>
+            
                 <Content>
                   <List
                     style={{
-                      backgroundColor: "#ffffff",
+                      backgroundColor: "#ffff",
                       width: 1130,
                       marginLeft: 0,
                     }}
@@ -166,8 +145,8 @@ const ListFriends: React.FC = () => {
                     )}
                   />
                 </Content>
-              </Content>
-            </Layout>
+              
+        
           </Content>
         </Layout>
       </Col>

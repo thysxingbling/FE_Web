@@ -3,6 +3,7 @@ import {  Menu } from "antd";
 import {   Link } from "react-router-dom";
 import Component from "../../components/layouts/components/components";
 import {Col,Row} from "antd"
+import Sider from "antd/es/layout/Sider";
 
 
 
@@ -10,7 +11,11 @@ const ContactPage: React.FC = () => {
   return (
     <Row>
        <Col span={1} style={{position:'fixed'}}>
+        {/* <div className="full-screen-sidebar-layout">
+          <Sider/>
+        </div> */}
           <Component/>
+          
        </Col>
       <Col span={7}  >
       <Menu
@@ -18,7 +23,7 @@ const ContactPage: React.FC = () => {
             justifyContent: "center",
             marginTop: 50,
             width: 294,
-            marginLeft:100,
+            marginLeft:110,
             
             position:"fixed",
 
@@ -54,7 +59,7 @@ const ContactPage: React.FC = () => {
           </Menu.Item>
 
           <Menu.Item key={3}>
-              <Link to="/friendsRequest">
+           <Link to="/friendsRequest">
             <MailOutlined
               style={{
                 fontSize: "25px",

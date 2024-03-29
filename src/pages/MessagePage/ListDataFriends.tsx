@@ -44,9 +44,10 @@ const ListDataFriends: React.FC<ModalListFriends> = ({users}) => {
       <List
         style={{
           backgroundColor:'#ffffff',
-          width:350,
+          width:300,
           maxHeight:600,
-          overflowY: "auto",
+          // overflowY: "auto",
+          marginLeft:10
         
         }}
         itemLayout="horizontal"

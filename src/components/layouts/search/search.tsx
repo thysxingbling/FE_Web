@@ -33,7 +33,6 @@ const Search: React.FC = () => {
   }, []);
   
   const handleSearch = () => {
-    debugger
     setLoading(true);
     const token = localStorage.getItem("token"); 
     

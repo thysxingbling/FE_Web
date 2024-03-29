@@ -3,67 +3,71 @@ import axios from "axios";
 import { useState } from "react";
 
 const formItemLayout = {
-    labelCol: {
-      xs: { span: 24 },
-      sm: { span: 8 },
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 8 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 16 },
+  },
+};
+const tailFormItemLayout = {
+  wrapperCol: {
+    xs: {
+      span: 24,
+      offset: 0,
     },
-    wrapperCol: {
-      xs: { span: 24 },
-      sm: { span: 16 },
+    sm: {
+      span: 16,
+      offset: 8,
     },
-  };
-  const tailFormItemLayout = {
-    wrapperCol: {
-      xs: {
-        span: 24,
-        offset: 0,
-      },
-      sm: {
-        span: 16,
-        offset: 8,
-      },
-    },
-  };
-const Verify: React.FC = () => {
-    const [form] = Form.useForm();
-    const[verify,setVerify]=useState("");
-    const [errorMessage, setErrorMessage] = useState("");
+  },
+};
 
-    // const handleRegister = async () => {
+const Verify: React.FC = () => {
+  const [form] = Form.useForm();
+  const [otp, setOtp] = useState("");
+
+  const handleRegister = async () => {
+    try {
+      const urlSearchParams = new URLSearchParams(window.location.search);
+      const verifyEmail = urlSearchParams.get("verify");
+
+      const response = await axios.put(
+        `http://localhost:8080/auth/verify/${verifyEmail}`,
+        {
+          otp,
+        }
+      );
+   
+      message.success("Đăng ký thành công");
+      console.log(response);
+
+      window.location.href = "/";
+    } catch (error: any) {
     
-    //     try {
-    //       const response = await axios.put("http://localhost:8080/auth/signup", {
-    //         phoneNumber,
-    //         password,
-    //         name,
-    //         email,
-    //       });
-    //       message.success("Đăng ký thành công");
-    //       window.location.href = "/";
-    //     } catch (error: any) {
-    //       if (
-    //         error.response &&
-    //         error.response.data &&
-    //         error.response.data.message
-    //       ) {
-    //         message.error("Đăng ký không thành công");
-    //       } else {
-    //         message.error("Đã có lỗi xảy ra. Vui lòng thử lại sau.");
-    //       }
-    //     }
-    //   };
-    
-      
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        message.error("Đăng ký không thành công");
+      } else {
+        message.error("Đã có lỗi xảy ra. Vui lòng thử lại sau.");
+      }
+    }
+  };
+
   return (
     <div>
-        <Form
+      <Form
         {...formItemLayout}
         form={form}
         name="register"
-        style={{ maxWidth: 400, marginTop:150,marginLeft:500 }}
+        style={{ maxWidth: 400, marginTop: 150, marginLeft: 500 }}
         scrollToFirstError
       >
-        
         <Image
           style={{
             justifyContent: "center",
@@ -75,35 +79,42 @@ const Verify: React.FC = () => {
           width={150}
           src="/images/logo.png"
         />
-        <h1 style={{ marginBottom: 30, marginLeft: 100,textTransform:"uppercase" }}>Nhập mã xác thực </h1>
+        <h1
+          style={{
+            marginBottom: 30,
+            marginLeft: 100,
+            textTransform: "uppercase",
+          }}
+        >
+          Nhập mã xác thực{" "}
+        </h1>
         <Form.Item
-          name="verify"
+          name="otp"
           label="Nhập mã"
           rules={[
             {
               // validator: validateEmail,
             },
             {
-              required: true,
-              message: "Verify not null!",
+              // required: true,
+              // message: "Verify not null!",
             },
           ]}
         >
-          <Input onChange={(e) => setVerify(e.target.value)} />
+          <Input onChange={(e) => setOtp(e.target.value)} />
         </Form.Item>
         <Form.Item {...tailFormItemLayout}>
-          
           <Button
-            // onClick={handleRegister}
+            onClick={handleRegister}
             type="primary"
             htmlType="submit"
-          style={{ width: 200, marginLeft: 15,textTransform:"uppercase" }}
+            style={{ width: 200, marginLeft: 15, textTransform: "uppercase" }}
           >
             ĐĂNG KÝ
           </Button>
         </Form.Item>
-     </Form>
+      </Form>
     </div>
-  )
-}
+  );
+};
 export default Verify;

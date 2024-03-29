@@ -31,7 +31,7 @@ const MessagePage: React.FC = () => {
       }}
     >
       <Component/>
-      <Sider width={300} style={{ backgroundColor: "#ffffff", marginLeft:100, marginTop:50 }}>
+      <Sider width={300} style={{ backgroundColor: "#ffffff", marginLeft:100, marginTop:100 }}>
         {/* <Header
           style={{
             flexDirection: "row",

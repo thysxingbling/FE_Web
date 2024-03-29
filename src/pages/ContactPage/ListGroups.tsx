@@ -8,14 +8,7 @@ import Component from "../../components/layouts/components/components";
 const {Search} = Input ;
 const ListGroups: React.FC = () => {
   const data = [
-    {
-      userName: "Nguyễn Ngọc Tuấn",
-      chat: "Bạn : Hello",
-    },
-    {
-      userName: "Nguyễn Ngọc Ánh",
-      chat: "Bạn : Hello",
-    },
+   
     {
       userName: "Nguyễn Ngọc Chính",
       chat: "Bạn : Hello",
@@ -24,50 +17,12 @@ const ListGroups: React.FC = () => {
       userName: "Nguyễn Ngọc Tuấn",
       chat: "Bạn : Hello",
     },
-    {
-      userName: "Nguyễn Ngọc Ánh",
-      chat: "Bạn : Hello",
-    },
-    {
-      userName: "Nguyễn Ngọc Chính",
-      chat: "Bạn : Hello",
-    },
+    
     {
       userName: "Nguyễn Ngọc Tuấn",
       chat: "Bạn : Hello",
     },
-    {
-      userName: "Nguyễn Ngọc Ánh",
-      chat: "Bạn : Hello",
-    },
-    {
-      userName: "Nguyễn Ngọc Chính",
-      chat: "Bạn : Hello",
-    },
-    {
-      userName: "Nguyễn Ngọc Tuấn",
-      chat: "Bạn : Hello",
-    },
-    {
-      userName: "Nguyễn Ngọc Ánh",
-      chat: "Bạn : Hello",
-    },
-    {
-      userName: "Nguyễn Ngọc Chính",
-      chat: "Bạn : Hello",
-    },
-    {
-      userName: "Nguyễn Ngọc Tuấn",
-      chat: "Bạn : Hello",
-    },
-    {
-      userName: "Nguyễn Ngọc Ánh",
-      chat: "Bạn : Hello",
-    },
-    {
-      userName: "Nguyễn Ngọc Chính",
-      chat: "Bạn : Hello",
-    },
+   
   ];
   return (
     <Row>
@@ -102,8 +57,6 @@ const ListGroups: React.FC = () => {
           </Menu.Item>
           <Menu.Item key={2}>
            <Link to="/listGroups">
-           
-           {" "}
             <TeamOutlined
               style={{
                 fontSize: "25px",
@@ -117,7 +70,7 @@ const ListGroups: React.FC = () => {
           </Menu.Item>
 
           <Menu.Item key={3}>
-            {" "}
+          <Link to="/friendsRequest">
             <MailOutlined
               style={{
                 fontSize: "25px",
@@ -127,6 +80,7 @@ const ListGroups: React.FC = () => {
               }}
             />
             Lời mời kết bạn
+            </Link>
           </Menu.Item>
         </Menu>
       </Col>
@@ -142,49 +96,28 @@ const ListGroups: React.FC = () => {
         >
           <Header
             style={{
-              backgroundColor: "#ffffff",
+              backgroundColor: "#ffff",
               display: "flex",
               flexDirection: "row",
             }}
           >
-            <UsergroupAddOutlined
-              style={{ fontSize: "25px", color: "gray", marginLeft: -40 }}
-            />
+           
             <p
               style={{
-                color: "gray",
+                color: "black",
                 fontFamily: "Time new Roman",
-                marginTop: 0,
+                marginTop: 10,
                 marginLeft: 10,
-                fontSize: 16,
+                fontSize: 25,
+               fontWeight:"bold",
+               
               }}
             >
-              Danh sách nhóm{" "}
+              Danh sách nhóm
             </p>
           </Header>
-          <Content style={{ backgroundColor: "gray", height: 640 }}>
-            <Layout style={{ maxHeight: 640, overflowY: "auto",position:'fixed' }}>
-              <Header style={{ backgroundColor: "#ffffff" }}>Nhóm</Header>
-              <Content>
-                <Header
-                  style={{
-                    backgroundColor: "#ffffff",
-                    display: "flex",
-                    flexDirection: "row",
-                  }}
-                >
-                  {/* chen  */}
-                  <Search placeholder="Tìm kiếm..." style={{width:400}}/>
-                  <Select placeholder="Hoạt động (Mới -> Cũ)" style={{width:300, marginLeft:20}}> 
-                       <Select value="option1">
-                            Hoat động Mới - Cũ
-                       </Select>
-                       <Select value="option2">
-                            Hoat động Cũ - Mới
-                       </Select>
-                  </Select>
-                  <Select placeholder="Tất cả" style={{width:300, marginLeft:20}}/>
-                </Header>
+          <Content style={{ backgroundColor: "white", height: 640 ,padding:20 }}>
+         
                 <Content>
                   <List
                     style={{
@@ -209,8 +142,8 @@ const ListGroups: React.FC = () => {
                     )}
                   ></List>
                 </Content>
-              </Content>
-            </Layout>
+           
+      
             
           </Content>
         </Layout>

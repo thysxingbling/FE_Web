@@ -36,55 +36,33 @@ const Register: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-
-  // const handleRegister = async () => {
-  //   if (password !== confirmPassword) {
-  //     message.error("Passwords do not match");
-  //     return;
-  //   }
-
-  //   try {
-  //     const response = await axios.put("http://localhost:8080/auth/signup", {
-  //       phoneNumber,
-  //       password,
-  //       name,
-  //       email,
-  //     });
-  //     message.success("Đăng ký thành công");
-  //     window.location.href = "/";
-  //   } catch (error: any) {
-  //     if (
-  //       error.response &&
-  //       error.response.data &&
-  //       error.response.data.message
-  //     ) {
-  //       message.error("Đăng ký không thành công");
-  //     } else {
-  //       message.error("Đã có lỗi xảy ra. Vui lòng thử lại sau.");
-  //     }
-  //   }
-  // };
-  const verifyByEmail = async () => {
+  const handleRegister = async () => {
     try {
-      // Kiểm tra xem địa chỉ email có hợp lệ không
-      // if (!isValidEmail(email)) {
-      //    Xử lý khi địa chỉ email không hợp lệ
-      //   return;
-      // }
-  
-      // Gửi yêu cầu đến máy chủ để gửi mã xác thực
-      const response = await axios.post('YOUR_API_ENDPOINT', { email });
+      const response = await axios.put("http://localhost:8080/auth/signup", {
+        phoneNumber,
+        password,
+        name,
+        email,
+        confirmPassword
+      });
+      // message.success("Đăng ký thành công");
+      console.log(response);
       
-      // Xử lý phản hồi từ máy chủ (nếu cần)
-      console.log('Response:', response.data);
-  
-      // Hiển thị thông báo cho người dùng
-      alert('Mã xác thực đã được gửi đến địa chỉ email của bạn.');
-    } catch (error) {
-      console.error('Error sending verification code:', error);
-      alert('Đã xảy ra lỗi khi gửi mã xác thực.');
+      window.location.href = "/auth?verify=" + email;
+
+    } catch (error: any) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        message.error("Đăng ký không thành công");
+      } else {
+        message.error("Đã có lỗi xảy ra. Vui lòng thử lại sau.");
+      }
     }
   };
+
   const validatePhoneNumber = (
     rule: any,
     value: string,
@@ -98,17 +76,17 @@ const Register: React.FC = () => {
     }
   };
 
-  const validatePassword = (
-    rule: any,
-    value: string,
-    callback: (message?: string) => void
-  ) => {
-    if (value.length < 9) {
-      callback("Password must be at least 9 characters (Ex: 123456789)");
-    } else {
-      callback();
-    }
-  };
+  // const validatePassword = (
+  //   rule: any,
+  //   value: string,
+  //   callback: (message?: string) => void
+  // ) => {
+  //   if (value.length < 9) {
+  //     callback("Password must be at least 9 characters (Ex: 123456789)");
+  //   } else {
+  //     callback();
+  //   }
+  // };
   const validateName = (
     rule: any,
     value: string,
@@ -197,7 +175,7 @@ const Register: React.FC = () => {
           label="Password"
           rules={[
             {
-              validator: validatePassword,
+              // validator: validatePassword,
             },
             {
               required: true,
@@ -248,9 +226,9 @@ const Register: React.FC = () => {
             },
           ]}
         >
-            <Input onChange={(e) => setEmail(e.target.value)} />
+          <Input onChange={(e) => setEmail(e.target.value)} />
         </Form.Item>
-       
+
         <Form.Item
           name="agreement"
           valuePropName="checked"
@@ -267,16 +245,16 @@ const Register: React.FC = () => {
           <Checkbox>Tôi đồng ý với tất cả những điều trên</Checkbox>
         </Form.Item>
         <Form.Item {...tailFormItemLayout}>
-          <Link to="/auth">
-          <Button
-            onClick={verifyByEmail}
-            type="primary"
-            htmlType="submit"
-            style={{ width: 200, marginLeft: 15,textTransform:"uppercase" }}
-          >
-           đăng ký
-          </Button>
-          </Link>
+          {/* <Link to="/auth"> */}
+            <Button
+              onClick={handleRegister}
+              type="primary"
+              htmlType="submit"
+              style={{ width: 200, marginLeft: 15, textTransform: "uppercase" }}
+            >
+              đăng ký
+            </Button>
+          {/* </Link> */}
         </Form.Item>
       </Form>
     </div>

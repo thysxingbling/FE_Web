@@ -1,68 +1,196 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Card } from 'antd';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { Button, Card, Col, Layout, List, Menu, Row, Space } from "antd";
+import axios from "axios";
+import Component from "../../components/layouts/components/components";
+import { Link } from "react-router-dom";
+import { MailOutlined, TeamOutlined, UserAddOutlined } from "@ant-design/icons";
+import { Content, Header } from "antd/es/layout/layout";
 
-interface Recipient{
-  _id:string;
-  reciverId:string;
+interface Recipient {
+  _id: string;
+  reciverId: string;
   // reciverName:string;
-  senderName:string;
-  
+  senderName: string;
 }
-const ListRequest: React.FC = ({  }) => {
+const ListRequest: React.FC = ({}) => {
   const [requests, setRequests] = useState<Recipient[]>([]);
-  const token = localStorage.getItem('token'); 
+  const token = localStorage.getItem("token");
   useEffect(() => {
     const getaddFriendsReqs = async () => {
-      
-      debugger
       try {
-        const response = await axios.get('http://localhost:8080/friend/list/req', {
-          headers: {
-            Authorization: `Bearer ${token}`, 
-          },
-        });
+        const response = await axios.get(
+          "http://localhost:8080/friend/list/req",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         const { data } = response;
         setRequests(data.addFriendReqs);
         console.log();
-        
       } catch (error) {
-        console.error('Error fetching friend requests:', error);
+        console.error("Error fetching friend requests:", error);
       }
     };
 
     getaddFriendsReqs();
-  }, []); 
+  }, []);
   const handleAccept = async (addFriendReqId: string) => {
-    debugger
+    debugger;
     try {
-      await axios.put(`http://localhost:8080/friend/status/${addFriendReqId}`, { status: true });
+      await axios.put(`http://localhost:8080/friend/status/${addFriendReqId}`, {
+        status: true,
+      });
     } catch (error) {
-      console.error('Error accepting friend request:', error);
+      console.error("Error accepting friend request:", error);
     }
   };
 
   const handleReject = async (addFriendReqId: string) => {
-    debugger
+    debugger;
     try {
-      await axios.put(`http://localhost:8080/friend/status/${addFriendReqId}`, { status: false });
+      await axios.put(`http://localhost:8080/friend/status/${addFriendReqId}`, {
+        status: false,
+      });
     } catch (error) {
-      console.error('Error rejecting friend request:', error);
+      console.error("Error rejecting friend request:", error);
     }
   };
   return (
-      <div>
-      {requests.map(request => (
-        <Card
-          key={request._id}
-          extra={<Button type="primary" onClick={() => handleReject(request._id)}>Từ chối</Button>}
-          style={{ width: 300, marginBottom: 16 }}
+    <Row>
+      <Col span={1} style={{ position: "fixed" }}>
+        <Component />
+      </Col>
+      <Col span={7}>
+        <Menu
+          style={{
+            justifyContent: "center",
+            marginTop: 50,
+            width: 294,
+            marginLeft: 100,
+
+            position: "fixed",
+
+            height: 300,
+          }}
         >
-          <p>{request.senderName} muốn kết bạn với bạn.</p>
-          <Button type="primary" onClick={() => handleAccept(request._id)}>Đồng ý</Button>
-        </Card>
-      ))}
-    </div>
+          <Menu.Item key={1}>
+            <Link to="/listFriends">
+              <UserAddOutlined
+                style={{
+                  fontSize: "25px",
+                  color: "gray",
+                  margin: 10,
+                  marginLeft: 0,
+                }}
+              />
+              Danh sách bạn bè
+            </Link>
+          </Menu.Item>
+          <Menu.Item key={2}>
+            <Link to="/listGroups">
+              {" "}
+              <TeamOutlined
+                style={{
+                  fontSize: "25px",
+                  color: "gray",
+                  margin: 10,
+                  marginLeft: 0,
+                }}
+              />
+              Danh sách nhóm
+            </Link>
+          </Menu.Item>
+
+          <Menu.Item key={3}>
+            {" "}
+            <MailOutlined
+              style={{
+                fontSize: "25px",
+                color: "gray",
+                margin: 10,
+                marginLeft: 0,
+              }}
+            />
+            Lời mời kết bạn
+          </Menu.Item>
+        </Menu>
+      </Col>
+      <Col span={16}>
+        <Layout
+          style={{
+            marginLeft: -50,
+            width: 1130,
+            display: "flex",
+            position: "fixed",
+            marginTop: -10,
+          }}
+        >
+          <Header
+            style={{
+              backgroundColor: "#ffffff",
+              display: "flex",
+              flexDirection: "row",
+            }}
+          >
+            <p
+              style={{
+                color: "black",
+                fontFamily: "Time new Roman",
+                marginTop: 10,
+                marginLeft: 10,
+                fontSize: 25,
+                fontWeight: "bold",
+              }}
+            >
+              Lời mời kết bạn
+            </p>
+          </Header>
+
+          <Content
+            style={{ backgroundColor: "white", height: 600,padding:20 }}
+          >
+            
+              <Content>
+                <div >
+                  {requests.map((request) => (
+                    <Card
+                      key={request._id}
+                      style={{ width: 500, marginBottom: 15 }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          
+                        }}
+                      >
+                        <p>{request.senderName} muốn kết bạn với bạn</p>
+                        <Button
+                          type="primary"
+                          onClick={() => handleAccept(request._id)}
+                        >
+                          Đồng ý
+                        </Button>
+                        <Button
+                          type="primary"
+                          danger
+                          onClick={() => handleReject(request._id)}
+                        >
+                          Từ chối
+                        </Button>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              </Content>
+            
+          </Content>
+        </Layout>
+      </Col>
+    </Row>
+    
   );
 };
 
