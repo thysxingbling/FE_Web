@@ -15,15 +15,17 @@ interface Recipient {
 const ListRequest: React.FC = ({}) => {
   const [requests, setRequests] = useState<Recipient[]>([]);
   const token = localStorage.getItem("token");
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+
   useEffect(() => {
     const getaddFriendsReqs = async () => {
       try {
         const response = await axios.get(
           "http://localhost:8080/friend/list/req",
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            headers,
           }
         );
         const { data } = response;
@@ -36,25 +38,50 @@ const ListRequest: React.FC = ({}) => {
 
     getaddFriendsReqs();
   }, []);
-  const handleAccept = async (addFriendReqId: string) => {
-    debugger;
-    try {
-      await axios.put(`http://localhost:8080/friend/status/${addFriendReqId}`, {
-        status: true,
-      });
-    } catch (error) {
-      console.error("Error accepting friend request:", error);
-    }
-  };
+  // const handleAccept = async (addFriendReqId: string) => {
+  //   try {
+  //     const response = await axios.put(
+  //       `http://localhost:8080/friend/status/${addFriendReqId}`,
+  //       {
+  //         status: true,
+  //       },
+  //       { headers }
+  //     );
+  //   } catch (error) {
+  //     console.error("Error accepting friend request:", error);
+  //   }
+  // };
 
-  const handleReject = async (addFriendReqId: string) => {
-    debugger;
+  // const handleReject = async (addFriendReqId: string) => {
+  //   try {
+  //     await axios.put(
+  //       `http://localhost:8080/friend/status/${addFriendReqId}`,
+  //       {
+  //         status: false,
+  //       },
+  //       { headers }
+  //     );
+  //   } catch (error) {
+  //     console.error("Error rejecting friend request:", error);
+  //   }
+  // };
+  const handleFriendRequest = async (
+    addFriendReqId: string,
+    status: boolean
+  ) => {
     try {
-      await axios.put(`http://localhost:8080/friend/status/${addFriendReqId}`, {
-        status: false,
-      });
+      await axios.put(
+        `http://localhost:8080/friend/status/${addFriendReqId}`,
+        {
+          status: status,
+        },
+        { headers }
+      );
     } catch (error) {
-      console.error("Error rejecting friend request:", error);
+      console.error(
+        `Error ${status ? "accepting" : "rejecting"} friend request:`,
+        error
+      );
     }
   };
   return (
@@ -149,48 +176,44 @@ const ListRequest: React.FC = ({}) => {
           </Header>
 
           <Content
-            style={{ backgroundColor: "white", height: 600,padding:20 }}
+            style={{ backgroundColor: "white", height: 600, padding: 20 }}
           >
-            
-              <Content>
-                <div >
-                  {requests.map((request) => (
-                    <Card
-                      key={request._id}
-                      style={{ width: 500, marginBottom: 15 }}
+            <Content>
+              <div>
+                {requests.map((request) => (
+                  <Card
+                    key={request._id}
+                    style={{ width: 500, marginBottom: 15 }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
                     >
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          
-                        }}
+                      <p>{request.senderName} muốn kết bạn với bạn</p>
+                      <Button
+                        type="primary"
+                        onClick={() => handleFriendRequest(request._id, true)}
                       >
-                        <p>{request.senderName} muốn kết bạn với bạn</p>
-                        <Button
-                          type="primary"
-                          onClick={() => handleAccept(request._id)}
-                        >
-                          Đồng ý
-                        </Button>
-                        <Button
-                          type="primary"
-                          danger
-                          onClick={() => handleReject(request._id)}
-                        >
-                          Từ chối
-                        </Button>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              </Content>
-            
+                        Đồng ý
+                      </Button>
+                      <Button
+                        type="primary"
+                        danger
+                        onClick={() => handleFriendRequest(request._id, false)}
+                      >
+                        Từ chối
+                      </Button>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </Content>
           </Content>
         </Layout>
       </Col>
     </Row>
-    
   );
 };
 
