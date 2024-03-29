@@ -7,12 +7,14 @@ import Component from "../components/layouts/components/components";
 import ListFriends from "../pages/ContactPage/ListFriends";
 import ListGroups from "../pages/ContactPage/ListGroups";
 import ListRequest from "../pages/ContactPage/ListRequest";
+import Verify from "../pages/Register/Verify";
 
 const Router: React.FC=()=>{
     return (
       <Routes>
         <Route path="/" element={<Login/>}/>
         <Route path='/register' element={<Register />} />
+        <Route path='/auth' element={<Verify />} />
         <Route path="/home" element={<Component/>}/>
         <Route path='/message' element={<MessagePage />} />
         <Route path='/contact' element={<ContactPage />} />

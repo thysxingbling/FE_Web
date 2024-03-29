@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Checkbox, Form, Image, Input, Modal, Space, message } from "antd";
+import { Button, Checkbox, Form, Image, Input, Space, message } from "antd";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
@@ -35,34 +35,54 @@ const Register: React.FC = () => {
   const [email, setEmail] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const[verify,setVerify]=useState("");
 
-  const handleRegister = async () => {
-    debugger;
-    if (password !== confirmPassword) {
-      message.error("Passwords do not match");
-      return;
-    }
 
+  // const handleRegister = async () => {
+  //   if (password !== confirmPassword) {
+  //     message.error("Passwords do not match");
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await axios.put("http://localhost:8080/auth/signup", {
+  //       phoneNumber,
+  //       password,
+  //       name,
+  //       email,
+  //     });
+  //     message.success("Đăng ký thành công");
+  //     window.location.href = "/";
+  //   } catch (error: any) {
+  //     if (
+  //       error.response &&
+  //       error.response.data &&
+  //       error.response.data.message
+  //     ) {
+  //       message.error("Đăng ký không thành công");
+  //     } else {
+  //       message.error("Đã có lỗi xảy ra. Vui lòng thử lại sau.");
+  //     }
+  //   }
+  // };
+  const verifyByEmail = async () => {
     try {
-      const response = await axios.put("http://localhost:8080/auth/signup", {
-        phoneNumber,
-        password,
-        name,
-        email,
-      });
-      message.success("Đăng ký thành công");
-      window.location.href = "/";
-    } catch (error: any) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        message.error("Đăng ký không thành công");
-      } else {
-        message.error("Đã có lỗi xảy ra. Vui lòng thử lại sau.");
-      }
+      // Kiểm tra xem địa chỉ email có hợp lệ không
+      // if (!isValidEmail(email)) {
+      //    Xử lý khi địa chỉ email không hợp lệ
+      //   return;
+      // }
+  
+      // Gửi yêu cầu đến máy chủ để gửi mã xác thực
+      const response = await axios.post('YOUR_API_ENDPOINT', { email });
+      
+      // Xử lý phản hồi từ máy chủ (nếu cần)
+      console.log('Response:', response.data);
+  
+      // Hiển thị thông báo cho người dùng
+      alert('Mã xác thực đã được gửi đến địa chỉ email của bạn.');
+    } catch (error) {
+      console.error('Error sending verification code:', error);
+      alert('Đã xảy ra lỗi khi gửi mã xác thực.');
     }
   };
   const validatePhoneNumber = (
@@ -228,26 +248,9 @@ const Register: React.FC = () => {
             },
           ]}
         >
-           <Space direction="horizontal">
             <Input onChange={(e) => setEmail(e.target.value)} />
-            <Button style={{ width: 80 }}>Gửi mã</Button>
-          </Space>
         </Form.Item>
-        <Form.Item
-          name="verify"
-          label="Nhập mã"
-          rules={[
-            {
-              // validator: validateEmail,
-            },
-            {
-              required: true,
-              message: "Verify not null!",
-            },
-          ]}
-        >
-          <Input onChange={(e) => setVerify(e.target.value)} />
-        </Form.Item>
+       
         <Form.Item
           name="agreement"
           valuePropName="checked"
@@ -264,14 +267,16 @@ const Register: React.FC = () => {
           <Checkbox>Tôi đồng ý với tất cả những điều trên</Checkbox>
         </Form.Item>
         <Form.Item {...tailFormItemLayout}>
+          <Link to="/auth">
           <Button
-            onClick={handleRegister}
+            onClick={verifyByEmail}
             type="primary"
             htmlType="submit"
-            style={{ width: 200, marginLeft: 15 }}
+            style={{ width: 200, marginLeft: 15,textTransform:"uppercase" }}
           >
-            ĐĂNG KÝ
+           đăng ký
           </Button>
+          </Link>
         </Form.Item>
       </Form>
     </div>

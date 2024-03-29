@@ -8,10 +8,8 @@ import {
   ContactsOutlined,
   ClockCircleOutlined,
   PaperClipOutlined,
-  ExclamationOutlined,
   MehOutlined,
   LayoutOutlined,
-  EditOutlined,
   BellOutlined,
   PushpinOutlined,
 } from "@ant-design/icons";
@@ -34,7 +32,7 @@ const MessagePage: React.FC = () => {
     >
       <Component/>
       <Sider width={300} style={{ backgroundColor: "#ffffff", marginLeft:100, marginTop:50 }}>
-        <Header
+        {/* <Header
           style={{
             flexDirection: "row",
             marginTop: 0,
@@ -50,16 +48,16 @@ const MessagePage: React.FC = () => {
           </Button>
           <Button type="text">Chưa đọc</Button>
           <Button type="text">Phân loại</Button>
-        </Header>
-        <Content
+        </Header> */}
+        {/* <Content
           style={{
             marginTop: 0,
             marginLeft: 10,
           }}
-        >
+        > */}
           {/* <ListDataFriends users={friends}/> */}
-        </Content>
-      </Sider>
+        {/* {/* </Content> */}
+      </Sider> 
 
       <Content
         style={{
