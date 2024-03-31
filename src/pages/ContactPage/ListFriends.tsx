@@ -5,6 +5,8 @@ import Component from "../../components/layouts/components/components";
 import axios from "axios";
 import { IFriends } from "../../components/models/friends";
 import MenuItem from "./Menu";
+import Siderbar from "../../components/layouts/siderbar/siderbar";
+import Search from "../../components/layouts/search/search";
 // const { Search } = Input;
 const ListFriends: React.FC = () => {
 
@@ -30,7 +32,8 @@ const ListFriends: React.FC = () => {
   return (
     <Row>
       <Col span={1} style={{ position: "fixed" }}>
-        <Component />
+      <Siderbar/>
+       <Search/>
       </Col> 
        <Col span={7}>
         <MenuItem/>

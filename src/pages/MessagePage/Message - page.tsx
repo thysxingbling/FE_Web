@@ -14,11 +14,36 @@ import {
   PushpinOutlined,
 } from "@ant-design/icons";
 import Component from "../../components/layouts/components/components";
+import axios from "axios";
+import { IFriends } from "../../components/models/friends";
+import Siderbar from "../../components/layouts/siderbar/siderbar";
+import Search from "../../components/layouts/search/search";
+import ListDataFriends from "./ListDataFriends";
 
 const { Header, Content, Sider, Footer } = Layout;
 
 const MessagePage: React.FC = () => {
+  const [friends, setFriends] = useState<IFriends[]>([]);
+  useEffect(() => {
+ 
+    const getList = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get("http://localhost:8080/friend/list", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setFriends(response.data.users);
+        // console.log(response.data.users);
+        
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
+    getList();
+  }, []);
   return (
     <Layout
       style={{
@@ -31,6 +56,10 @@ const MessagePage: React.FC = () => {
       }}
     >
       <Component/>
+      {/* <Siderbar/>
+      <Search/> */}
+      {/* <ListDataFriends users={friends ? friends : []} /> */}
+
       <Sider width={300} style={{ backgroundColor: "#ffffff", marginLeft:100, marginTop:100 }}>
       </Sider> 
 

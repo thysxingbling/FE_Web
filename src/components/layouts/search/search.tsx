@@ -11,26 +11,6 @@ const Search: React.FC = () => {
   const [friends, setFriends] = useState<IFriends[]>([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
- 
-    const getList = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:8080/friend/list", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setFriends(response.data.users);
-        // console.log(response.data.users);
-        
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    getList();
-  }, []);
   
   const handleSearch = () => {
     setLoading(true);

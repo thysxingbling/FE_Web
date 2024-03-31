@@ -4,7 +4,9 @@ import { Avatar, Layout, List, Row, Col,Input} from "antd";
 import { Content, Header } from "antd/es/layout/layout";
 import Component from "../../components/layouts/components/components";
 import MenuItem from "./Menu";
-const {Search} = Input ;
+import Siderbar from "../../components/layouts/siderbar/siderbar";
+import Search from "../../components/layouts/search/search";
+// const {Search} = Input ;
 const ListGroups: React.FC = () => {
   const data = [
    
@@ -26,7 +28,8 @@ const ListGroups: React.FC = () => {
   return (
     <Row>
       <Col span={1} style={{ position: "fixed" }}>
-        <Component />
+      <Siderbar/>
+       <Search/>
       </Col>
       <Col span={7}>
         <MenuItem/>
