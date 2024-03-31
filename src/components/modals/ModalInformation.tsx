@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { Modal, Row, Col, Space, Button, Avatar, Upload } from "antd";
-import { UserOutlined, UploadOutlined } from "@ant-design/icons";
+import { UserOutlined, UploadOutlined, EditOutlined } from "@ant-design/icons";
 import ModalUpdateInfo from "./ModalUpdateInfo";
 interface ModalInformationProps {
   open: boolean;
@@ -76,7 +76,6 @@ const ModalInformation: React.FC<ModalInformationProps> = ({
                     size={150}
                     shape="square"
                     icon={<UserOutlined />}
-                    // src={user ? user.avatar : ""}
                     src={avatarUrl || (user && user.avatar)}
                   />
                   <Upload
@@ -109,13 +108,16 @@ const ModalInformation: React.FC<ModalInformationProps> = ({
           </div>
           <div>
             <Row>
-              <Col span={6}>Tên</Col>
-              <Col span={18} style={{fontWeight:"bold"}}>{user ? user.name : ""}</Col>
+              <Col span={6}>Tên người dùng</Col>
+              <Col span={6} style={{fontWeight:"bold"}}>{user ? user.name : ""}</Col>
+              <Col span={6}>
+              <Button type="link" onClick={openModalUpdateInfo} icon={<EditOutlined />}></Button>
+              </Col>
             </Row>
            
             <Row>
               <Col span={6}>Điện thoại</Col>
-              <Col span={18}>{user ? user.phoneNumber : ""}</Col>
+              <Col span={18}>{user && user.phoneNumber ? user.phoneNumber : "Chưa lên"}</Col>
             </Row>
             <Row>
               <Col span={24}>
@@ -126,9 +128,6 @@ const ModalInformation: React.FC<ModalInformationProps> = ({
             </Row>
           </div>
           <div>
-            <Button type="default" onClick={openModalUpdateInfo}>
-              Cập nhật
-            </Button>
           </div>
         </div>
       </Modal>
@@ -137,6 +136,7 @@ const ModalInformation: React.FC<ModalInformationProps> = ({
           open={isOpenModalUpdateInfo}
           onCancel={handleOk}
           onOk={handleCancel}
+          user={user}
         />
       </div>
     </div>

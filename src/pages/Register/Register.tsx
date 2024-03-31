@@ -37,26 +37,26 @@ const Register: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleRegister = async () => {
+    const requestData = {
+      phoneNumber,
+      password,
+      name,
+      email,
+      confirmPassword
+    };
+  
     try {
-      const response = await axios.post("http://localhost:8080/auth/signup", {
-        phoneNumber,
-        password,
-        name,
-        email,
-        confirmPassword
-      });
-      // message.success("Đăng ký thành công");
+      const response = await axios.post("http://localhost:8080/auth/signup", requestData);
       console.log(response);
-      
       window.location.href = "/auth?verify=" + email;
-
+  
     } catch (error: any) {
       if (
         error.response &&
         error.response.data &&
         error.response.data.message
       ) {
-        message.error("Đăng ký không thành công");
+        message.error("Đăng ký không thành công: " + error.response.data.message);
       } else {
         message.error("Đã có lỗi xảy ra. Vui lòng thử lại sau.");
       }

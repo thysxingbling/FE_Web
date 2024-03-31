@@ -33,18 +33,15 @@ const Siderbar: React.FC = () => {
         })
         .then((response) => {
           setUser(response.data.user); 
+          console.log(response.data.user);
+          
         })
         .catch((error) => {
           console.error("Error getting user:", error);
         });
     }
   }, []);
-  // logout
-  // const handleLogout = () => {
-  //   localStorage.removeItem("token");
-  //   setToken(null);
-  // };
-
+ 
   const handleLogout = async () => {
     try {
       localStorage.removeItem("token");
@@ -59,7 +56,6 @@ const Siderbar: React.FC = () => {
 
     }
   };
-  
   const openModalInfo = () => {
     setIsOpenModalInfo(true);
   };
