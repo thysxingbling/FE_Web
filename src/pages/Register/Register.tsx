@@ -49,6 +49,7 @@ const Register: React.FC = () => {
       const response = await axios.post("http://localhost:8080/auth/signup", requestData);
       console.log(response);
       window.location.href = "/auth?verify=" + email;
+      // window.location.href = "/auth";
   
     } catch (error: any) {
       if (

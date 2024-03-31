@@ -28,19 +28,17 @@ const tailFormItemLayout = {
 const Verify: React.FC = () => {
   const [form] = Form.useForm();
   const [otp, setOtp] = useState("");
-
   const handleRegister = async () => {
     try {
+      debugger
       const urlSearchParams = new URLSearchParams(window.location.search);
-      const verifyEmail = urlSearchParams.get("verify");
-
-      const response = await axios.put(
-        `http://localhost:8080/auth/verify/${verifyEmail}`,
+      const email = urlSearchParams.get("verify");
+       const response = await axios.post(
+        `http://localhost:8080/auth/verify`,
         {
-          otp,
+          otp,email
         }
       );
-   
       message.success("Đăng ký thành công");
       console.log(response);
 
