@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar, Button, List, message } from "antd";
 import axios from "axios";
 import { IFriends } from "../../components/models/friends";
@@ -11,17 +11,19 @@ interface ModalListFriends {
 const ListDataFriends: React.FC<ModalListFriends> = ({users}) => {
 
   const [sentRequests, setSentRequests] = useState<string[]>([]);
+  const [conversations, setConversations] = useState([]);
+  const token = localStorage.getItem("token");
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  }
 
   const handleAddFriend = (_id: string) => {
     if (sentRequests.includes(_id)) {
       message.info("Lời mời đã được gửi.");
       return;
-    }
-    const token = localStorage.getItem("token");
+    } 
     const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers
     };
 
     axios
@@ -39,6 +41,19 @@ const ListDataFriends: React.FC<ModalListFriends> = ({users}) => {
   const isSentRequest = (_id: string) => sentRequests.includes(_id);
 
 
+  // useEffect(() => {
+  //   const getConversation = async () => {
+  //     try {
+  //       const response = await axios.get('http://localhost:8080/auth/conversations', { headers });
+  //       setConversations(response.data.conversations);
+  //     } catch (error) {
+  //       console.error('Error fetching conversations:', error);
+  //     }
+  //   };
+  
+  //   getConversation();
+  // }, []);
+  
   return (
    
       <List
@@ -73,7 +88,7 @@ const ListDataFriends: React.FC<ModalListFriends> = ({users}) => {
           <List.Item.Meta
             avatar={<Avatar src={item.avatar} />}
             title={item.name}
-            // title={item.chat}
+            description={item.content}
           />
         </List.Item>
         </Link>

@@ -12,7 +12,7 @@ import Verify from "../pages/Register/Verify";
 const Router: React.FC=()=>{
     return (
       <Routes>
-        <Route path="/" element={<Login/>}/>
+        <Route path="/login" element={<Login/>}/>
         <Route path='/register' element={<Register />} />
         <Route path='/auth' element={<Verify />} />
         <Route path="/home" element={<Component/>}/>

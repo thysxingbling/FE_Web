@@ -1,5 +1,5 @@
 import { Avatar, Button, Layout, Input, List } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   SearchOutlined,
   UsergroupAddOutlined,
@@ -18,7 +18,7 @@ import Component from "../../components/layouts/components/components";
 const { Header, Content, Sider, Footer } = Layout;
 
 const MessagePage: React.FC = () => {
- 
+
   return (
     <Layout
       style={{

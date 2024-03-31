@@ -38,7 +38,7 @@ const Register: React.FC = () => {
 
   const handleRegister = async () => {
     try {
-      const response = await axios.put("http://localhost:8080/auth/signup", {
+      const response = await axios.post("http://localhost:8080/auth/signup", {
         phoneNumber,
         password,
         name,

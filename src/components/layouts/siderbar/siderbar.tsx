@@ -19,6 +19,7 @@ import axios from "axios";
 const Siderbar: React.FC = () => {
   const [isOpenModalInfo, setIsOpenModalInfo] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const[token,setToken]=useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -40,10 +41,25 @@ const Siderbar: React.FC = () => {
   }, []);
   // logout
   // const handleLogout = () => {
-  //   // Xóa token khỏi localStorage và state
   //   localStorage.removeItem("token");
   //   setToken(null);
   // };
+
+  const handleLogout = async () => {
+    try {
+      localStorage.removeItem("token");
+      if (setToken) { 
+        setToken(null);
+      } else {
+        console.warn("setToken function not found. State might not be cleared.");
+      }
+      window.location.href = "/login"; 
+    } catch (error) {
+      console.error("Error during logout:", error);
+
+    }
+  };
+  
   const openModalInfo = () => {
     setIsOpenModalInfo(true);
   };
@@ -105,8 +121,7 @@ const Siderbar: React.FC = () => {
               user={user}
             />
             <Menu.Item key="cd">Cài đặt</Menu.Item>
-            {/* <Menu.Item key="dx" onClick={handleLogout}>Đăng xuất</Menu.Item> */}
-            <Menu.Item key="dx">Đăng xuất</Menu.Item>
+            <Menu.Item key="dx" onClick={handleLogout}>Đăng xuất</Menu.Item>
           </SubMenu>
 
           <Menu.Item key={2}>

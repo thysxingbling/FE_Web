@@ -44,7 +44,7 @@ const Verify: React.FC = () => {
       message.success("Đăng ký thành công");
       console.log(response);
 
-      window.location.href = "/";
+      window.location.href = "/login";
     } catch (error: any) {
     
       if (

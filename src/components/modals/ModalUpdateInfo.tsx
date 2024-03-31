@@ -3,7 +3,6 @@ import {
   Col,
   Row,
   Flex,
-  Radio,
   Space,
   DatePicker,
   Input,
@@ -41,16 +40,11 @@ const ModalUpdateInfo:React.FC<ModalProps> =({open,onCancel,onOk} )=>{
 
         <Row>
           <Col span={24}>
-            <Radio.Group>
-              <Radio value={1}>Nam</Radio>
-              <Radio value={2}>Nữ</Radio>
-            </Radio.Group>
+            
           </Col>
         </Row>
         <Row>
-          <Col span={24}>
-            <p>Ngày sinh</p>
-          </Col>
+          
         </Row>
         <Row>
           <Col span={24}>

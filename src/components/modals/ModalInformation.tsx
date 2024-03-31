@@ -100,11 +100,6 @@ const ModalInformation: React.FC<ModalInformationProps> = ({
                   </Upload>
                 </Space>
               </Col>
-              <Col span={16}>
-                <p style={{ fontWeight: "bold", fontSize: 18 }}>
-                  {user ? user.name : ""}
-                </p>
-              </Col>
             </Row>
           </div>
           <div>
@@ -114,15 +109,12 @@ const ModalInformation: React.FC<ModalInformationProps> = ({
           </div>
           <div>
             <Row>
-              <Col span={6}>Giới tính</Col>
-              <Col span={18}>Nam</Col>
+              <Col span={6}>Tên</Col>
+              <Col span={18} style={{fontWeight:"bold"}}>{user ? user.name : ""}</Col>
             </Row>
+           
             <Row>
-              <Col span={6}>Ngày sinh</Col>
-              <Col span={18}>27 Tháng 12 , 2002</Col>
-            </Row>
-            <Row>
-              <Col span={6}>Điện thoai</Col>
+              <Col span={6}>Điện thoại</Col>
               <Col span={18}>{user ? user.phoneNumber : ""}</Col>
             </Row>
             <Row>
