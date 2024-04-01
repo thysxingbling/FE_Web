@@ -8,11 +8,13 @@ import ListFriends from "../pages/ContactPage/ListFriends";
 import ListGroups from "../pages/ContactPage/ListGroups";
 import ListRequest from "../pages/ContactPage/ListRequest";
 import Verify from "../pages/Register/Verify";
+import ForgetPassWord from "../pages/ForgetPassWord/ForgetPassWord";
 
 const Router: React.FC=()=>{
     return (
       <Routes>
         <Route path="/login" element={<Login/>}/>
+        <Route path="/resetPass" element={<ForgetPassWord/>}/>
         <Route path='/register' element={<Register />} />
         <Route path='/auth' element={<Verify />} />
         <Route path="/home" element={<Component/>}/>

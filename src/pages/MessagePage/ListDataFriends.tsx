@@ -27,7 +27,7 @@ const ListDataFriends: React.FC<ModalListFriends> = ({users}) => {
     };
 
     axios
-      .post(`http://localhost:8080/friend/add/${_id}`, {}, config)
+      .post(`http://localhost:8000/friend/add/${_id}`, {}, config)
       .then((response) => {
         const data = response.data;
         message.success(data.message);
@@ -44,7 +44,7 @@ const ListDataFriends: React.FC<ModalListFriends> = ({users}) => {
   // useEffect(() => {
   //   const getConversation = async () => {
   //     try {
-  //       const response = await axios.get('http://localhost:8080/auth/conversations', { headers });
+  //       const response = await axios.get('http://localhost:8000/auth/conversations', { headers });
   //       setConversations(response.data.conversations);
   //     } catch (error) {
   //       console.error('Error fetching conversations:', error);

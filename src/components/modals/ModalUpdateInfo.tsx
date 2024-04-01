@@ -6,10 +6,9 @@ const ModalUpdateInfo: React.FC<ModalProps & { user: any }> = ({
   onCancel,
   onOk,
   user,
-
- 
 }) => {
- const[newName,setNewName]=useState("")
+  const [newName, setNewName] = useState(user ? user.name : "");
+  
   return (
     <Modal
       title="Cập nhật tên người dùng"
@@ -26,8 +25,8 @@ const ModalUpdateInfo: React.FC<ModalProps & { user: any }> = ({
               <Col span={18}>
                 <Input
                   placeholder="Nhập tên của bạn"
-                  value={user ? user.name : ""}
-                  onChange={(e) => setNewName({ ...user, name: e.target.value })}
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
                 />
               </Col>
             </Flex>

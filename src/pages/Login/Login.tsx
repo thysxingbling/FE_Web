@@ -11,7 +11,7 @@ const Login: React.FC = () => {
   const handleLogin = async () => {
     try {
       const response = await axios.post(
-        'http://localhost:8080/auth/login',
+        'http://localhost:8000/auth/login',
         { phoneNumber, password }
       );
        localStorage.setItem('token', response.data.token);
@@ -64,9 +64,11 @@ const Login: React.FC = () => {
         </Form.Item>
         {errorMessage && <p style={{ color: 'red',textAlign:"center",marginLeft:10}}>{errorMessage}</p>}
         <div style={{ marginLeft: 120 }}>
+          <Link to="/resetPass">
           <a className="login-form-forgot" href="">
             Quên mật khẩu
           </a>
+          </Link>
         </div>
         <div style={{ marginLeft: 100 }}>
           <a style={{ textAlign: "center", fontWeight: "bold", color: "black", textDecoration: "" }} className="login-form-forgot" href="">

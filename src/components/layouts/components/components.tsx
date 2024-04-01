@@ -12,7 +12,7 @@ const Component: React.FC = () => {
     const getList = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:8080/friend/list", {
+        const response = await axios.get("http://localhost:8000/friend/list", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -27,22 +27,22 @@ const Component: React.FC = () => {
     getList();
   }, []);
   return (
-    <Row>
-      <Col span={1} style={{ position: "fixed" }}>
-       <Siderbar/>
+    // <Row>
+    //   <Col span={1} style={{ position: "fixed" }}>
+    //    <Siderbar/>
 
-      </Col>
-      <Col span={7}>
-      <Search/>
-      <ListDataFriends users={friends ? friends : []} />
-        {/* <MenuItem /> */}
-      </Col>
-    </Row>
-    // <div className="full-screen-sidebar-layout">
-    //   <Siderbar />
-    //   <Search />
+    //   </Col>
+    //   <Col span={7}>
+    //   <Search/>
     //   <ListDataFriends users={friends ? friends : []} />
-    // </div>
+    //     {/* <MenuItem /> */}
+    //   </Col>
+    // </Row>
+    <div className="full-screen-sidebar-layout">
+      <Siderbar />
+      <Search />
+      {/* <ListDataFriends users={friends ? friends : []} /> */}
+    </div>
   );
 };
 export default Component;

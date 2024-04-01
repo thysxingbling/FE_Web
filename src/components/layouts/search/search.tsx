@@ -22,7 +22,7 @@ const Search: React.FC = () => {
       },
     };
     axios
-      .get(`http://localhost:8080/friend/find/${phoneNumber}`, config)
+      .get(`http://localhost:8000/friend/find/${phoneNumber}`, config)
       .then((response) => {
         const data = response.data;
         console.log(data);
@@ -79,7 +79,7 @@ const Search: React.FC = () => {
         }}
       />
       <UsergroupAddOutlined style={{ width: 40, height: 50, color: "gray" }} />
-      <ListDataFriends users={friends ? friends : []} />
+      {/* <ListDataFriends users={friends ? friends : []} /> */}
     </div>
   );
 };

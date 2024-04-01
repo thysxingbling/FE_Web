@@ -26,7 +26,7 @@ const Siderbar: React.FC = () => {
     
     if (token) {
       axios
-        .get("http://localhost:8080/auth/user", {
+        .get("http://localhost:8000/auth/user", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

@@ -28,34 +28,31 @@ const tailFormItemLayout = {
 const Verify: React.FC = () => {
   const [form] = Form.useForm();
   const [otp, setOtp] = useState("");
-  const handleRegister = async () => {
-    try {
-      debugger
-      const urlSearchParams = new URLSearchParams(window.location.search);
-      const email = urlSearchParams.get("verify");
-       const response = await axios.post(
-        `http://localhost:8080/auth/verify`,
-        {
-          otp,email
+  const handleRegister = () => {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const email = urlSearchParams.get("verify");
+  
+    axios
+      .post(`http://localhost:8000/auth/verify`, { otp, email })
+      .then((response) => {
+        console.log(response);
+        message.success(" Thành công");
+        window.location.href = "/login";
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          message.error("Đăng ký không thành công");
+        } else {
+          message.error("Đã có lỗi xảy ra. Vui lòng thử lại sau.");
         }
-      );
-      message.success("Đăng ký thành công");
-      console.log(response);
-
-      window.location.href = "/login";
-    } catch (error: any) {
-    
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        message.error("Đăng ký không thành công");
-      } else {
-        message.error("Đã có lỗi xảy ra. Vui lòng thử lại sau.");
-      }
-    }
+      });
   };
+  
 
   return (
     <div>
@@ -108,7 +105,7 @@ const Verify: React.FC = () => {
             htmlType="submit"
             style={{ width: 200, marginLeft: 15, textTransform: "uppercase" }}
           >
-            ĐĂNG KÝ
+            Xác thực thành công 
           </Button>
         </Form.Item>
       </Form>

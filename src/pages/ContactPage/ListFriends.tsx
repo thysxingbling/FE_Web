@@ -16,7 +16,7 @@ const ListFriends: React.FC = () => {
     const getList = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:8080/friend/list", {
+        const response = await axios.get("http://localhost:8000/friend/list", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

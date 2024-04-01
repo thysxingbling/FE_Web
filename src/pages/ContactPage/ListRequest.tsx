@@ -22,7 +22,7 @@ const ListRequest: React.FC = ({}) => {
     const getaddFriendsReqs = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/friend/list/req",
+          "http://localhost:8000/friend/list/req",
           {
             headers,
           }
@@ -44,7 +44,7 @@ const ListRequest: React.FC = ({}) => {
   ) => {
     try {
       await axios.put(
-        `http://localhost:8080/friend/status/${addFriendReqId}`,
+        `http://localhost:8000/friend/status/${addFriendReqId}`,
         {
           status: status,
         },

@@ -32,32 +32,35 @@ const ModalInformation: React.FC<ModalInformationProps> = ({
     setIsOpenModalUpdateInfo(false);
   };
 
-  const handleFileUpload = async (file: File) => {
-
+  const handleFileUpload = (file: File) => {
     const token = localStorage.getItem("token");
-    try {
-      const formData = new FormData();
-      formData.append("image", file);
-
-      const response = await fetch("http://localhost:8080/auth/update", {
-        method: "PUT",
-        body: formData,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
+  
+    const formData = new FormData();
+    formData.append("image", file);
+  
+    fetch("http://localhost:8000/auth/update", {
+      method: "PUT",
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Failed to upload avatar");
+        }
+      })
+      .then((data) => {
         setAvatarUrl(data.user.avatar);
         console.log(data.user.avatar);
-      } else {
-        console.error("Failed to upload avatar");
-      }
-    } catch (error) {
-      console.error("Error uploading avatar:", error);
-    }
+      })
+      .catch((error) => {
+        console.error("Error uploading avatar:", error);
+      });
   };
+  
 
   return (
     <div>
