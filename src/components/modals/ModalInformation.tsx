@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Modal, Row, Col, Space, Button, Avatar, Upload } from "antd";
 import { UserOutlined, UploadOutlined, EditOutlined } from "@ant-design/icons";
 import ModalUpdateInfo from "./ModalUpdateInfo";
+import axios from "axios";
 interface ModalInformationProps {
   open: boolean;
   onCancel: () => void;
@@ -18,7 +19,6 @@ const ModalInformation: React.FC<ModalInformationProps> = ({
 }) => {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
-  // const [user, setUser] = useState<any>(null);
 
   const openModalUpdateInfo = () => {
     setIsOpenModalUpdateInfo(true);
@@ -38,29 +38,21 @@ const ModalInformation: React.FC<ModalInformationProps> = ({
     const formData = new FormData();
     formData.append("image", file);
   
-    fetch("http://localhost:8000/auth/update", {
-      method: "PUT",
-      body: formData,
+    axios.put("http://localhost:8000/auth/update", formData, {
       headers: {
+        'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error("Failed to upload avatar");
-        }
-      })
-      .then((data) => {
-        setAvatarUrl(data.user.avatar);
-        console.log(data.user.avatar);
+    
+          setAvatarUrl(response.data.user.avatar);
+          console.log(response.data.user.avatar);
       })
       .catch((error) => {
         console.error("Error uploading avatar:", error);
       });
   };
-  
 
   return (
     <div>
@@ -69,6 +61,7 @@ const ModalInformation: React.FC<ModalInformationProps> = ({
         open={open}
         onCancel={onCancel}
         onOk={onOk}
+        visible={open}
       >
         <div>
           <div>

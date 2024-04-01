@@ -13,7 +13,7 @@ const ContactPage: React.FC = () => {
       </Col>
       <Col span={7}>
       <Search/>
-        {/* <MenuItem /> */}
+        <MenuItem />
       </Col>
     </Row>
   );

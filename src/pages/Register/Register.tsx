@@ -76,23 +76,25 @@ const Register: React.FC = () => {
     }
   };
 
-  // const validatePassword = (
-  //   rule: any,
-  //   value: string,
-  //   callback: (message?: string) => void
-  // ) => {
-  //   if (value.length < 9) {
-  //     callback("Password must be at least 9 characters (Ex: 123456789)");
-  //   } else {
-  //     callback();
-  //   }
-  // };
+
+  const validatePassword = (
+    rule: any,
+    value: string,
+    callback: (message?: string) => void
+  ) => {
+    const passwordRegex =/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/ ;
+    if (!passwordRegex.test(value)) {
+      callback("Invalid phone number (Ex: 01234567Thuy@)");
+    } else {
+      callback();
+    }
+  };
   const validateName = (
     rule: any,
     value: string,
     callback: (message?: string) => void
   ) => {
-    const nameRegex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1 ]{2,30}$/;
+    const nameRegex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1 ]{2,20}$/;
     if (!nameRegex.test(value)) {
       callback("Invalid name");
     } else {
@@ -175,7 +177,7 @@ const Register: React.FC = () => {
           label="Password"
           rules={[
             {
-              // validator: validatePassword,
+              validator: validatePassword,
             },
             {
               required: true,

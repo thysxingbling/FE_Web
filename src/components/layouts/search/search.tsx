@@ -79,7 +79,7 @@ const Search: React.FC = () => {
         }}
       />
       <UsergroupAddOutlined style={{ width: 40, height: 50, color: "gray" }} />
-      {/* <ListDataFriends users={friends ? friends : []} /> */}
+      <ListDataFriends users={friends ? friends : []} />
     </div>
   );
 };

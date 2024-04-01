@@ -1,5 +1,6 @@
-import { Modal, Col, Row, Flex, Input, ModalProps } from "antd";
+import { Modal, Col, Row, Flex, Input, ModalProps, message } from "antd";
 import React, { useState } from "react";
+import axios from "axios";
 
 const ModalUpdateInfo: React.FC<ModalProps & { user: any }> = ({
   open,
@@ -8,13 +9,37 @@ const ModalUpdateInfo: React.FC<ModalProps & { user: any }> = ({
   user,
 }) => {
   const [newName, setNewName] = useState(user ? user.name : "");
-  
+  const [token, setToken] = useState(""); 
+
+  const handleUpdateName = async () => {
+    try {
+      debugger
+      const response = await axios.put(
+        "http://localhost:8000/auth/updateName",
+        {
+          name: newName,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setNewName(response.data.user.name); 
+      console.log(response.data.user.name);
+      
+      
+      message.success(response.data.message); 
+    } catch (error) {
+      console.error("Error:", error);
+      message.error("Đã có lỗi xảy ra. Vui lòng thử lại sau.");
+    }
+  };
+
   return (
     <Modal
       title="Cập nhật tên người dùng"
-      open={open}
+      visible={open}
       onCancel={onCancel}
-      onOk={onOk}
+      onOk={handleUpdateName}
     >
       <div>
         <Row>
@@ -27,6 +52,7 @@ const ModalUpdateInfo: React.FC<ModalProps & { user: any }> = ({
                   placeholder="Nhập tên của bạn"
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
+
                 />
               </Col>
             </Flex>
@@ -36,4 +62,5 @@ const ModalUpdateInfo: React.FC<ModalProps & { user: any }> = ({
     </Modal>
   );
 };
+
 export default ModalUpdateInfo;
