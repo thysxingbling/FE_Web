@@ -13,7 +13,6 @@ const ModalUpdateInfo: React.FC<ModalProps & { user: any }> = ({
 
   const handleUpdateName = async () => {
     try {
-      debugger
       const response = await axios.put(
         "http://localhost:8000/auth/updateName",
         {

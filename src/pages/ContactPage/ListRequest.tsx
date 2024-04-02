@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Layout, Row } from "antd";
+import { Button, Card, Col, Input, Layout, Row, message } from "antd";
 import axios from "axios";
 import Component from "../../components/layouts/components/components";
 import { Content, Header } from "antd/es/layout/layout";
 import MenuItem from "./Menu";
+import { IFriends } from "../../components/models/friends";
+import { UserAddOutlined, UsergroupAddOutlined } from "@ant-design/icons";
+import ListDataFriends from "../MessagePage/ListDataFriends";
 
 interface Recipient {
   _id: string;
@@ -13,6 +16,9 @@ interface Recipient {
 }
 const ListRequest: React.FC = ({}) => {
   const [requests, setRequests] = useState<Recipient[]>([]);
+    const [phoneNumber, setPhoneNumber] = useState("");
+  const [friendSearchs, setFriendSearchs] = useState<IFriends[] | null>(null);
+  const [loading, setLoading] = useState(false);
   const token = localStorage.getItem("token");
   const headers = {
     Authorization: `Bearer ${token}`,
@@ -57,14 +63,91 @@ const ListRequest: React.FC = ({}) => {
       );
     }
   };
+  const handleSearch = (e: any) => {
+    setLoading(true);
+    const token = localStorage.getItem("token");
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    axios
+      .get(`http://localhost:8000/friend/find/${e}`, config)
+      .then((response) => {
+        const data = response.data;
+        console.log(data);
+
+        if (data.friend) {
+          setFriendSearchs([data.friend]);
+          console.log([data.friend]);
+        } else {
+          message.info("Friend not found.");
+        }
+      })
+
+      .catch((error) => {
+        console.error("Error searching friend:", error);
+        message.error("Failed to search for friend.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
   return (
     <Row>
       <Col span={1} style={{ position: "fixed" }}>
         <Component />
       </Col>
       <Col span={7}>
-        <MenuItem/>
+        <div
+          style={{
+            flexDirection: "row",
+            height: 70,
+            marginLeft: 100,
+            marginTop: 0,
+            position: "fixed",
+            borderRight: "0.5px solid #ededee",
+          }}
+        >
+          <Input.Search
+            value={phoneNumber}
+            placeholder="Tìm kiếm"
+            onSearch={(e) => {
+              if (e == "") {
+                setFriendSearchs(null);
+              } else {
+                setPhoneNumber(e);
+                handleSearch(e);
+              }
+            }}
+            loading={loading}
+            allowClear
+            style={{ width: 200, color: "red", marginLeft: 10, marginTop: 10 }}
+            onChange={(e) => { 
+              setPhoneNumber(e.target.value);
+            }}
+          />
+          <UserAddOutlined
+            style={{
+              marginTop: "10px",
+              marginLeft: 5,
+              width: 30,
+              height: 30,
+              color: "gray",
+            }}
+          />
+          <UsergroupAddOutlined
+            style={{ width: 40, height: 50, color: "gray" }}
+          />
+          {friendSearchs ? (
+            <ListDataFriends users={friendSearchs} />
+          ) : (
+            <MenuItem />
+          )}
+        </div>
       </Col>
+
       <Col span={16}>
         <Layout
           style={{

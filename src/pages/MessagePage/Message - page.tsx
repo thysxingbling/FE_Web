@@ -16,9 +16,8 @@ import {
 import Component from "../../components/layouts/components/components";
 import axios from "axios";
 import { IFriends } from "../../components/models/friends";
-import Siderbar from "../../components/layouts/siderbar/siderbar";
-import Search from "../../components/layouts/search/search";
-import ListDataFriends from "./ListDataFriends";
+
+
 
 const { Header, Content, Sider, Footer } = Layout;
 
@@ -35,7 +34,6 @@ const MessagePage: React.FC = () => {
           },
         });
         setFriends(response.data.users);
-        // console.log(response.data.users);
         
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -44,6 +42,7 @@ const MessagePage: React.FC = () => {
 
     getList();
   }, []);
+  
   return (
     <Layout
       style={{
@@ -56,14 +55,12 @@ const MessagePage: React.FC = () => {
       }}
     >
       <Component/>
-      {/* <Siderbar/>
-      <Search/> */}
-      {/* <ListDataFriends users={friends ? friends : []} /> */}
+    
 
       <Sider width={300} style={{ backgroundColor: "#ffffff", marginLeft:100, marginTop:100 }}>
       </Sider> 
 
-      <Content
+      <Content 
         style={{
           height: "680px",
           marginLeft: 30,
@@ -123,7 +120,8 @@ const MessagePage: React.FC = () => {
             </Button>
           </div>
         </div>
-        <Content
+
+         <Content
           style={{
             backgroundColor: "gray",
             marginLeft: "30px  ",
@@ -209,7 +207,7 @@ const MessagePage: React.FC = () => {
             <Button type="text">Gửi</Button>
           </div>
         </Footer>
-      </Content>
+      </Content> 
       <Sider width={400} style={{ backgroundColor: "#ffff" }}>
         <Header
           style={{
@@ -283,6 +281,7 @@ const MessagePage: React.FC = () => {
         </Content>
       </Sider>
     </Layout>
+ 
   );
 };
 export default MessagePage;
