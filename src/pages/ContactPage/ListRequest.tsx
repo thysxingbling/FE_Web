@@ -11,7 +11,6 @@ import ListDataFriends from "../MessagePage/ListDataFriends";
 interface Recipient {
   _id: string;
   reciverId: string;
-  // reciverName:string;
   senderName: string;
 }
 const ListRequest: React.FC = ({}) => {

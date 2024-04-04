@@ -31,6 +31,7 @@ const ContactPage: React.FC = () => {
 
         if (data.friend) {
           setFriends([data.friend]);
+          
           console.log([data.friend]);
         } else {
           message.info("Friend not found.");

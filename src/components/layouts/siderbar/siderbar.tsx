@@ -33,7 +33,6 @@ const Siderbar: React.FC = () => {
         })
         .then((response) => {
           setUser(response.data.user); 
-          console.log(response.data.user);
           
         })
         .catch((error) => {

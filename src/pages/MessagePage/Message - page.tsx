@@ -14,35 +14,13 @@ import {
   PushpinOutlined,
 } from "@ant-design/icons";
 import Component from "../../components/layouts/components/components";
-import axios from "axios";
-import { IFriends } from "../../components/models/friends";
-
+import Search from "../../components/layouts/search/search";
 
 
 const { Header, Content, Sider, Footer } = Layout;
 
 const MessagePage: React.FC = () => {
-  const [friends, setFriends] = useState<IFriends[]>([]);
-  useEffect(() => {
- 
-    const getList = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:8000/friend/list", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setFriends(response.data.users);
-        
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    getList();
-  }, []);
-  
+  const [messageInput, setMessageInput] = useState("");
   return (
     <Layout
       style={{
@@ -54,17 +32,19 @@ const MessagePage: React.FC = () => {
         position: "fixed",
       }}
     >
-      <Component/>
-    
+      <Component />
+   
+      <Sider
+        width={280}
+        style={{ backgroundColor: "#ffffff", marginLeft: 100, marginTop: 100 }}
+      ></Sider>
 
-      <Sider width={300} style={{ backgroundColor: "#ffffff", marginLeft:100, marginTop:100 }}>
-      </Sider> 
-
-      <Content 
+      <Content
         style={{
           height: "680px",
           marginLeft: 30,
           borderLeft: "1px",
+        
         }}
       >
         <div
@@ -77,11 +57,16 @@ const MessagePage: React.FC = () => {
             borderRight: "1px solid #000",
             borderBottom: "1px solid #000",
             borderLeft: "1px solid #000",
-            marginTop:-10,
+            marginTop: -10,
           }}
         >
           <Avatar
-            style={{ height: 50, width: 50, marginLeft: 20 ,backgroundColor:'gray'}}
+            style={{
+              height: 50,
+              width: 50,
+              marginLeft: 20,
+              backgroundColor: "gray",
+            }}
             src={`https://api.dicebear.com/7.x/miniavs/svg?seed=`}
           />
 
@@ -93,7 +78,7 @@ const MessagePage: React.FC = () => {
                 height: 25,
               }}
             >
-             Thuy
+              Thuy
             </p>
           </div>
 
@@ -102,7 +87,7 @@ const MessagePage: React.FC = () => {
               display: "flex",
               alignItems: "center",
               marginLeft: 180,
-             
+
               justifyContent: "center",
               height: 50,
               width: 150,
@@ -121,41 +106,71 @@ const MessagePage: React.FC = () => {
           </div>
         </div>
 
-         <Content
+        <Content
           style={{
             backgroundColor: "gray",
             marginLeft: "30px  ",
             height: "530px",
             display: "flex",
             borderRight: "1px solid #000",
-            width:650
+            width: 650,
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              marginLeft: 10,
-              marginTop: 10,
-            }}
-          >
-            <Avatar
-              src={`https://api.dicebear.com/7.x/miniavs/svg?seed=`}
-              style={{ height: 40, width: 40 }}
-            ></Avatar>
-            <p
+          {/* {_id === idSender ? ( */}
+            <div
               style={{
-                backgroundColor: "#ffffff",
-                height: "64px",
-                borderRadius: "10px",
-                width: "100px",
+                display: "flex",
+                flexDirection: "row",
                 marginLeft: 10,
-                marginTop: 0,
+                marginTop: 10,
+                justifyContent: "right",
               }}
             >
-              Helo word
-            </p>
-          </div>
+              <Avatar
+                src={`https://api.dicebear.com/7.x/miniavs/svg?seed=`}
+                style={{ height: 40, width: 40 }}
+              />
+              <p
+                style={{
+                  backgroundColor: "#ffffff",
+                  height: "64px",
+                  borderRadius: "4px",
+                  width: "100px",
+                  marginLeft: 10,
+                  marginTop: 0,
+                }}
+              >
+                Helo word
+              </p>
+            </div>
+          {/* ) : ( */}
+            <div
+              style={{
+                display: "flex",
+                marginLeft: 350,
+                marginTop: 400,
+                justifyContent: "left",
+              }}
+            >
+              <p
+                className="graptext"
+                style={{
+                  backgroundColor: "#ffffff",
+                  height: "auto",
+                  borderRadius: "4px",
+                  marginLeft: 10,
+                  marginTop: 0,
+                  display: "inline-block",
+                  width: "auto",
+                  wordWrap: "break-word",
+              
+                }}
+              >
+                Đều này sẽ khiến văn bản tự động xuống dòng khi nó vượt qua
+                chiều rộng của phần tử cha.
+              </p>
+            </div>
+          {/* )} */}
         </Content>
         <Footer style={{ marginLeft: "30px", height: 100 }}>
           <div
@@ -174,7 +189,7 @@ const MessagePage: React.FC = () => {
             }}
           >
             <Button type="text">
-              <FileImageOutlined  style={{ color: "grey" }} />
+              <FileImageOutlined style={{ color: "grey" }} />
             </Button>
             <Button type="text">
               <PaperClipOutlined style={{ color: "grey" }} />
@@ -182,7 +197,6 @@ const MessagePage: React.FC = () => {
             <Button type="text">
               <ContactsOutlined style={{ color: "grey" }} />
             </Button>
-
           </div>
 
           <div
@@ -192,14 +206,15 @@ const MessagePage: React.FC = () => {
               marginLeft: -50,
               display: "flex",
               alignItems: "center",
-              borderRight: "1px solid #000",
-              borderLeft: "1px solid #000",
-              flexDirection:"row",
+              flexDirection: "row",
             }}
           >
             <Input
               placeholder="Nhập tin nhắn  "
-              style={{ borderRadius: "0px", height: 60 , width:510}}
+              style={{ borderRadius: "0px", height: 60, width: 510 }}
+              value={messageInput}
+              onChange={(e) => setMessageInput(e.target.value)}
+              // onPressEnter={handleSendMessage}
             />
             <Button type="text">
               <MehOutlined />
@@ -207,13 +222,13 @@ const MessagePage: React.FC = () => {
             <Button type="text">Gửi</Button>
           </div>
         </Footer>
-      </Content> 
+      </Content>
       <Sider width={400} style={{ backgroundColor: "#ffff" }}>
         <Header
           style={{
             display: "flex",
             alignItems: "center",
-  
+
             borderBottom: "1px solid #000",
             backgroundColor: "#fff",
             width: 450,
@@ -239,50 +254,123 @@ const MessagePage: React.FC = () => {
               overflowY: "auto",
             }}
           >
-            <div style={{display:"flex",justifyContent:"center",alignItems:"center",width: 450,height:310,flexDirection:"column",borderBottom:'6px solid gray'}}>
-            <Avatar
-            style={{ height: 50, width: 50, marginLeft: 0,backgroundColor:'gray' }}
-            src={`https://api.dicebear.com/7.x/miniavs/svg?seed=`}
-            />
-              <div style={{display:"flex",flexDirection:"row"}}>
-                <p style={{fontFamily:"Time new Roman",fontSize:20,fontWeight:"bold"}}>Thuy</p>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: 450,
+                height: 310,
+                flexDirection: "column",
+                borderBottom: "6px solid gray",
+              }}
+            >
+              <Avatar
+                style={{
+                  height: 50,
+                  width: 50,
+                  marginLeft: 0,
+                  backgroundColor: "gray",
+                }}
+                src={`https://api.dicebear.com/7.x/miniavs/svg?seed=`}
+              />
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <p
+                  style={{
+                    fontFamily: "Time new Roman",
+                    fontSize: 20,
+                    fontWeight: "bold",
+                  }}
+                >
+                  Thuy
+                </p>
               </div>
 
-              <div style={{display:"flex",flexDirection:"row" }}>
-                
-                <Button type="text" style={{marginTop:10,height:50 , borderRadius:10}}>
-                    <Avatar><BellOutlined/></Avatar>
-                    <p>Tắt thông báo</p>
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <Button
+                  type="text"
+                  style={{ marginTop: 10, height: 50, borderRadius: 10 }}
+                >
+                  <Avatar>
+                    <BellOutlined />
+                  </Avatar>
+                  <p>Tắt thông báo</p>
                 </Button>
-                <Button type="text" style={{marginTop:10,height:50 , borderRadius:10,marginLeft:20}}>
-                    <Avatar><PushpinOutlined/></Avatar>
-                    <p>Ghim hội thoại</p>
+                <Button
+                  type="text"
+                  style={{
+                    marginTop: 10,
+                    height: 50,
+                    borderRadius: 10,
+                    marginLeft: 20,
+                  }}
+                >
+                  <Avatar>
+                    <PushpinOutlined />
+                  </Avatar>
+                  <p>Ghim hội thoại</p>
                 </Button>
-                <Button type="text" style={{marginTop:10,height:50 , borderRadius:10,marginLeft:20}}>
-                    <Avatar><UsergroupAddOutlined/></Avatar>
-                    <p>Tạo nhóm </p>
-                    
+                <Button
+                  type="text"
+                  style={{
+                    marginTop: 10,
+                    height: 50,
+                    borderRadius: 10,
+                    marginLeft: 20,
+                  }}
+                >
+                  <Avatar>
+                    <UsergroupAddOutlined />
+                  </Avatar>
+                  <p>Tạo nhóm </p>
                 </Button>
               </div>
             </div>
-            <div style={{width:450 , height:150 , borderBottom:'6px solid gray', display:'flex', flexDirection:'column'}}>
-                  <Button type="text" style={{display:"flex",flexDirection:"row",width:350,height:75 ,alignItems:"center"}}>
-                      <ClockCircleOutlined style={{marginRight:10,marginTop:-2}}/>
-                      <p >Danh sách nhắc hẹn</p>
-                  </Button>
+            <div
+              style={{
+                width: 450,
+                height: 150,
+                borderBottom: "6px solid ",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <Button
+                type="text"
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  width: 350,
+                  height: 75,
+                  alignItems: "center",
+                }}
+              >
+                <ClockCircleOutlined
+                  style={{ marginRight: 10, marginTop: -2 }}
+                />
+                <p>Danh sách nhắc hẹn</p>
+              </Button>
 
-                  <Button type="text" style={{display:"flex",flexDirection:"row",width:350,height:75 ,alignItems:"center"}}>
-                      <UsergroupAddOutlined style={{marginRight:10,marginTop:-1}}/>
-                      <p >Nhóm chung</p>
-                  </Button>
-                  
+              <Button
+                type="text"
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  width: 350,
+                  height: 75,
+                  alignItems: "center",
+                }}
+              >
+                <UsergroupAddOutlined
+                  style={{ marginRight: 10, marginTop: -1 }}
+                />
+                <p>Nhóm chung</p>
+              </Button>
             </div>
           </List>
         </Content>
       </Sider>
     </Layout>
- 
   );
 };
 export default MessagePage;
-

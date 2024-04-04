@@ -12,24 +12,64 @@ const Search: React.FC = () => {
     null
   );
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    const getList = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:8000/friend/list", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setFriends(response.data.users);   
-        setOriginalFriends(response.data.users);
-        // console.log(response.data.users);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+  const [error, setError] = useState(null);
+  
+  // useEffect(() => {
+  //   const getList = async () => {
+  //     try {
+  //       const token = localStorage.getItem("token");
+  //       const response = await axios.get("http://localhost:8000/friend/list", {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       });
+  //       setFriends(response.data.users);
+  //       setOriginalFriends(response.data.users);
+  //       // console.log(response.data.users);
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //     }
+  //   };
 
-    getList();
+  //   getList();
+  // }, []);
+
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+    const token = localStorage.getItem("token");
+    axios
+      .get("http://localhost:8000/conversation/", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        const conversations = response.data.conversations;
+        if (!conversations) {
+          throw new Error("Danh sách cuộc trò chuyện không tồn tại.");
+        }
+        const listConversations: IFriends[] = conversations.map(
+          (conversations: any) => {
+
+            return {
+              _id: conversations._id,
+              userId: conversations.userId,
+              avatar: conversations.avatar,
+              name: conversations.chatName,
+              message: conversations.message,
+            };
+          }
+        );
+        setFriends(listConversations);
+        setOriginalFriends(listConversations);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching conversations:", error);
+        setError(error.message || "Không thể tải danh sách cuộc trò chuyện");
+        setLoading(false);
+      });
   }, []);
 
   const handleSearch = (e: any) => {
@@ -51,11 +91,11 @@ const Search: React.FC = () => {
       .get(`http://localhost:8000/friend/find/${phoneNumber}`, config)
       .then((response) => {
         const data = response.data;
-        console.log(data);
+        // console.log(data);
 
         if (data.friend) {
-          setFriends([data.friend]); 
-          console.log([data.friend]);
+          setFriends([data.friend]);
+          // console.log([data.friend]);
         } else {
           message.info("Friend not found.");
         }

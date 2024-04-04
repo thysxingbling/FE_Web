@@ -96,8 +96,6 @@ const ListFriends: React.FC = () => {
             allowClear
             style={{ width: 200, color: "red", marginLeft: 10, marginTop: 10 }}
             onChange={(e) => {
-              // if (e.target.value == null) {
-              // }
               setPhoneNumber(e.target.value);
             }}
           />

@@ -10,9 +10,6 @@ interface ModalListFriends {
 
 const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
   const [sentRequests, setSentRequests] = useState<string[]>([]);
-  const [conversations, setConversations] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const token = localStorage.getItem("token");
   const headers = {
     Authorization: `Bearer ${token}`,
@@ -31,6 +28,8 @@ const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
       .post(`http://localhost:8000/friend/add/${_id}`, {}, config)
       .then((response) => {
         const data = response.data;
+        console.log(data);
+        
         message.success(data.message);
         setSentRequests([...sentRequests, _id]);
       })
@@ -40,46 +39,21 @@ const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
       });
   };
   const isSentRequest = (_id: string) => sentRequests.includes(_id);
-////////////////////////////////////////////////////
-  useEffect(() => {
-    setIsLoading(true);
-    setError(null);
-    const token = localStorage.getItem("token");
-    console.log(token);
-    
-    axios.get('http://localhost:8000/conversation/', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
  
-    .then(response => {
-      setConversations(response.data.conversations);
-      console.log(response.data.conversations);
-
-      setIsLoading(false);
-    })
-    .catch(error => {
-      console.error('Error fetching conversations:', error);
-      setError(error.message || 'Không thể tải danh sách cuộc trò chuyện');
-      setIsLoading(false);
-    });
-  }, []);
   return (
     users !== null && (
       <List
         style={{
           backgroundColor: "#ffffff",
-          // width: 300,
-          maxHeight: 600,
-          // overflowY: "auto",
-          marginLeft: 10,
+          minHeight: 400,
+          // marginLeft: 10,
+          overflowY: 'auto',
         }}
         itemLayout="horizontal"
         dataSource={users}
         renderItem={(item, index) => (
           <Link to="/message">
-            <List.Item
+            <List.Item style={{height:10}}
               actions={[
                 <Button
                   type="primary"
@@ -96,7 +70,7 @@ const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
               <List.Item.Meta
                 avatar={<Avatar src={item.avatar} />}
                 title={item.name}
-                description={item.message}
+                description={item.message ? item.message : "No message"}
               />
             </List.Item>
           </Link>

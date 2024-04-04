@@ -4,5 +4,6 @@ export interface IFriends {
     name: string;
     message: string;
     checkIsFriends:boolean;
+    chatName:string;
   }
   
