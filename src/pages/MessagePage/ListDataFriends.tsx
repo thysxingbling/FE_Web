@@ -3,6 +3,7 @@ import { Avatar, Button, List, message } from "antd";
 import axios from "axios";
 import { IFriends } from "../../components/models/friends";
 import { Link } from "react-router-dom";
+import MessagePage from "./Message - page";
 
 interface ModalListFriends {
   users: IFriends[] | null;
@@ -29,7 +30,7 @@ const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
       .then((response) => {
         const data = response.data;
         console.log(data);
-        
+
         message.success(data.message);
         setSentRequests([...sentRequests, _id]);
       })
@@ -39,21 +40,26 @@ const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
       });
   };
   const isSentRequest = (_id: string) => sentRequests.includes(_id);
- 
+
   return (
     users !== null && (
       <List
         style={{
           backgroundColor: "#ffffff",
           minHeight: 400,
-          // marginLeft: 10,
-          overflowY: 'auto',
+          overflowY: "auto",
         }}
         itemLayout="horizontal"
         dataSource={users}
         renderItem={(item, index) => (
-          <Link to="/message">
-            <List.Item style={{height:10}}
+          <Link
+            to={{
+              pathname: `/message`,
+              search: `?id=${item._id}`,
+            }}
+          >
+            <List.Item
+              style={{ height: 50 }}
               actions={[
                 <Button
                   type="primary"
@@ -76,7 +82,6 @@ const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
           </Link>
         )}
       />
-
     )
   );
 };

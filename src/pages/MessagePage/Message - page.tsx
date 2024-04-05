@@ -1,4 +1,4 @@
-import { Avatar, Button, Layout, Input, List } from "antd";
+import { Avatar, Button, Layout, Input, List, message } from "antd";
 import React, { useEffect, useState } from "react";
 import {
   SearchOutlined,
@@ -14,13 +14,68 @@ import {
   PushpinOutlined,
 } from "@ant-design/icons";
 import Component from "../../components/layouts/components/components";
-import Search from "../../components/layouts/search/search";
-
-
+import "./Message.css";
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 const { Header, Content, Sider, Footer } = Layout;
-
+interface Message {
+  senderId: string;
+  content: string;
+}
 const MessagePage: React.FC = () => {
-  const [messageInput, setMessageInput] = useState("");
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputText, setInputText] = useState("");
+  const [currentUserId, setCurrentUserId] = useState("");
+
+  useEffect(() => {
+    const fetchConversation = async () => {
+      const urlSearchParams = new URLSearchParams(window.location.search); 
+      const id = urlSearchParams.get("id");
+      try {
+        const token = localStorage.getItem("token");
+        if (token) {
+          try {
+            const decodedToken = jwtDecode(token);
+            const userId = decodedToken.userId;
+            setCurrentUserId(userId);
+          } catch (error) {
+            console.error("Error decoding token:", error);
+          }
+        } else {
+          console.error("Token not found in localStorage");
+        }
+        const headers = {
+          Authorization: `Bearer ${token}`,
+        };
+
+        const response = await axios.get(
+          `http://localhost:8000/conversation/${id}`,
+          {
+            headers,
+          }
+        );
+        const data = response.data.messages;
+        setMessages(data);
+        console.log(data);
+      } catch (error) {
+        console.error("Error fetching conversation:", error);
+      }
+    };
+
+    fetchConversation();
+  }, []);
+
+  const sendMessage = () => {
+    if (inputText.trim() === "") return;
+
+    const newMessage: Message = {
+      senderId: messages.toString(),
+      content: inputText,
+    };
+
+    setMessages([...messages, newMessage]);
+    setInputText("");
+  };
   return (
     <Layout
       style={{
@@ -33,18 +88,11 @@ const MessagePage: React.FC = () => {
       }}
     >
       <Component />
-   
-      <Sider
-        width={280}
-        style={{ backgroundColor: "#ffffff", marginLeft: 100, marginTop: 100 }}
-      ></Sider>
-
       <Content
         style={{
           height: "680px",
-          marginLeft: 30,
+          marginLeft: 400,
           borderLeft: "1px",
-        
         }}
       >
         <div
@@ -106,72 +154,50 @@ const MessagePage: React.FC = () => {
           </div>
         </div>
 
-        <Content
+        <List
           style={{
             backgroundColor: "gray",
             marginLeft: "30px  ",
             height: "530px",
             display: "flex",
             borderRight: "1px solid #000",
-            width: 650,
+            width: 670,
+            overflowY: "auto",
+            justifyContent: "flex-end",
           }}
-        >
-          {/* {_id === idSender ? ( */}
-            <div
+          itemLayout="vertical"
+          dataSource={messages}
+          renderItem={(message) => (
+            <List.Item
               style={{
                 display: "flex",
                 flexDirection: "row",
-                marginLeft: 10,
-                marginTop: 10,
-                justifyContent: "right",
+                alignItems: "flex-start",
+                justifyContent:
+                    message.senderId ==  currentUserId 
+                    ? "flex-end"
+                    : "flex-start",
               }}
             >
-              <Avatar
-                src={`https://api.dicebear.com/7.x/miniavs/svg?seed=`}
-                style={{ height: 40, width: 40 }}
-              />
-              <p
+              <div
+                // className={`message-bubble ${
+                //   message.senderId === currentUserId ? "sent" : "received"
+                // }`}
                 style={{
-                  backgroundColor: "#ffffff",
-                  height: "64px",
-                  borderRadius: "4px",
-                  width: "100px",
-                  marginLeft: 10,
-                  marginTop: 0,
+                  maxWidth: "70%",
+                  padding: "10px",
+                  margin: "5px",
+                  borderRadius: "10px",
+                  backgroundColor:
+                  currentUserId === message.senderId ? "#0084ff" : "#f1f0f0",
+                  color:  currentUserId === message.senderId ? "#fff" : "#000",
                 }}
               >
-                Helo word
-              </p>
-            </div>
-          {/* ) : ( */}
-            <div
-              style={{
-                display: "flex",
-                marginLeft: 350,
-                marginTop: 400,
-                justifyContent: "left",
-              }}
-            >
-              <p
-                className="graptext"
-                style={{
-                  backgroundColor: "#ffffff",
-                  height: "auto",
-                  borderRadius: "4px",
-                  marginLeft: 10,
-                  marginTop: 0,
-                  display: "inline-block",
-                  width: "auto",
-                  wordWrap: "break-word",
-              
-                }}
-              >
-                Đều này sẽ khiến văn bản tự động xuống dòng khi nó vượt qua
-                chiều rộng của phần tử cha.
-              </p>
-            </div>
-          {/* )} */}
-        </Content>
+                {message.content}
+              </div>
+            </List.Item>
+          )}
+        ></List>
         <Footer style={{ marginLeft: "30px", height: 100 }}>
           <div
             style={{
@@ -212,14 +238,16 @@ const MessagePage: React.FC = () => {
             <Input
               placeholder="Nhập tin nhắn  "
               style={{ borderRadius: "0px", height: 60, width: 510 }}
-              value={messageInput}
-              onChange={(e) => setMessageInput(e.target.value)}
-              // onPressEnter={handleSendMessage}
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              onPressEnter={sendMessage}
             />
             <Button type="text">
               <MehOutlined />
             </Button>
-            <Button type="text">Gửi</Button>
+            <Button type="text" onClick={sendMessage}>
+              Gửi
+            </Button>
           </div>
         </Footer>
       </Content>

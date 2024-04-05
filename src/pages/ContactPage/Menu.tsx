@@ -6,14 +6,6 @@ import { MailOutlined, TeamOutlined, UserAddOutlined } from "@ant-design/icons";
 const MenuItem: React.FC = () => {
   return (
     <Menu
-      // style={{
-      //   justifyContent: "center",
-      //   marginTop: 50,
-      //   width: 294,
-      //   marginLeft: 110,
-      //   position: "fixed",
-      //   height: 300,
-      // }}
     >
       <Menu.Item key={1}>
         <Link to="/listFriends">

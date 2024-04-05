@@ -57,7 +57,7 @@ const Search: React.FC = () => {
               userId: conversations.userId,
               avatar: conversations.avatar,
               name: conversations.chatName,
-              message: conversations.message,
+              lastMessages: conversations.lastMessages,
             };
           }
         );
