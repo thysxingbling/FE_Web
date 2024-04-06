@@ -1,43 +1,56 @@
-import { Avatar, Button, Layout, Input, List, message } from "antd";
+import { Avatar, Button, Layout, Input, List, message, Upload } from "antd";
 import React, { useEffect, useState } from "react";
 import {
   SearchOutlined,
   UsergroupAddOutlined,
   VideoCameraOutlined,
   FileImageOutlined,
-  ContactsOutlined,
   ClockCircleOutlined,
-  PaperClipOutlined,
   MehOutlined,
   LayoutOutlined,
   BellOutlined,
   PushpinOutlined,
+  LinkOutlined,
+  SmileOutlined,
 } from "@ant-design/icons";
 import Component from "../../components/layouts/components/components";
 import "./Message.css";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 const { Header, Content, Sider, Footer } = Layout;
+
+enum MessageType {
+  TEXT = "TEXT",
+  FILE = "FILE",
+  LINK = "LINK",
+}
 interface Message {
   senderId: string;
   content: string;
+  type: MessageType;
+}
+interface Information {
+  avatar: string;
+  chatName: string;
 }
 const MessagePage: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
   const [currentUserId, setCurrentUserId] = useState("");
+  const [information, setInformation] = useState<Information>();
 
-  const urlSearchParams = new URLSearchParams(window.location.search); 
+  const urlSearchParams = new URLSearchParams(window.location.search);
   const id = urlSearchParams.get("id");
 
   const token = localStorage.getItem("token");
+  console.log(token);
+
   const headers = {
     Authorization: `Bearer ${token}`,
   };
 
   useEffect(() => {
     const fetchConversation = async () => {
-    
       try {
         if (token) {
           try {
@@ -45,23 +58,28 @@ const MessagePage: React.FC = () => {
             const userId = decodedToken.userId;
             setCurrentUserId(userId);
             console.log(userId);
-            
           } catch (error) {
             console.error("Error decoding token:", error);
           }
         } else {
           console.error("Token not found in localStorage");
         }
-       
+      
         const response = await axios.get(
           `http://localhost:8000/conversation/${id}`,
           {
             headers,
           }
         );
-        const data = response.data.messages;
-        setMessages(data);
-        // console.log(data);
+       
+        const data = response.data;
+        const chatInformation: Information = {
+          avatar: data.avatar,
+          chatName: data.chatName,
+        };
+        setMessages(data.chat.messages);
+        setInformation(data);
+        
       } catch (error) {
         console.error("Error fetching conversation:", error);
       }
@@ -69,38 +87,34 @@ const MessagePage: React.FC = () => {
 
     fetchConversation();
   }, []);
+  // gửi tin nhắn
+  const sendMessage = async () => {
+    if (inputText.trim() === "") {
+      return;
+    }
 
-const sendMessage = async  () => {
-  if (inputText.trim() === "") {
-    return;
-  }
+    const newMessage: Message = {
+      senderId: currentUserId || "",
+      content: inputText,
+    };
 
-  const newMessage: Message = {
-    senderId: currentUserId || '', 
-    content: inputText,
+    const requestData = {
+      content: newMessage.content,
+    };
+
+    axios
+      .post(`http://localhost:8000/message/text/${id}`, requestData, {
+        headers,
+      })
+      .then((response) => {
+        console.log("Message sent successfully:", response.data);
+        setMessages([...messages, newMessage]);
+        setInputText("");
+      })
+      .catch((error) => {
+        console.error("Error sending message:", error);
+      });
   };
-
-  const requestData = {
-    content: newMessage.content,
-  };
-  
-
-  axios.post(
-    `http://localhost:8000/message/text/${id}`,
-    requestData,
-    { headers }
-  )
-    .then((response) => {
-      console.log('Message sent successfully:', response.data);
-      setMessages([...messages, newMessage]);
-      setInputText("");
-    })
-    .catch((error) => {
-      console.error('Error sending message:', error);
-   
-    });
-    
-};
 
   return (
     <Layout
@@ -140,20 +154,20 @@ const sendMessage = async  () => {
               width: 50,
               marginLeft: 20,
               backgroundColor: "gray",
+              border:"none",
             }}
-            src={`https://api.dicebear.com/7.x/miniavs/svg?seed=`}
+            src={information?.avatar}
           />
 
           <div style={{ marginLeft: 10, height: 50, width: 200 }}>
             <p
               style={{
-                marginTop: 0,
+                marginTop: 10,
                 fontWeight: "bold",
                 height: 25,
+                fontSize:18
               }}
-            >
-              Thuy
-            </p>
+            >{information?.chatName}</p>
           </div>
 
           <div
@@ -200,9 +214,7 @@ const sendMessage = async  () => {
                 flexDirection: "row",
                 alignItems: "flex-start",
                 justifyContent:
-                    message.senderId ==  currentUserId 
-                    ? "flex-end"
-                    : "flex-start",
+                  message.senderId == currentUserId ? "flex-end" : "flex-start",
               }}
             >
               <div
@@ -215,8 +227,8 @@ const sendMessage = async  () => {
                   margin: "5px",
                   borderRadius: "10px",
                   backgroundColor:
-                  currentUserId === message.senderId ? "#0084ff" : "#f1f0f0",
-                  color:  currentUserId === message.senderId ? "#fff" : "#000",
+                    currentUserId === message.senderId ? "#0084ff" : "#f1f0f0",
+                  color: currentUserId === message.senderId ? "#fff" : "#000",
                 }}
               >
                 {message.content}
@@ -240,15 +252,34 @@ const sendMessage = async  () => {
               borderLeft: "1px solid #000",
             }}
           >
-            <Button type="text">
-              <FileImageOutlined style={{ color: "grey" }} />
-            </Button>
-            <Button type="text">
-              <PaperClipOutlined style={{ color: "grey" }} />
-            </Button>
-            <Button type="text">
-              <ContactsOutlined style={{ color: "grey" }} />
-            </Button>
+            <Upload>
+              <Button
+                style={{
+                  color: "gray",
+                  border: "none",
+                }}
+                icon={<FileImageOutlined />}
+              ></Button>
+            </Upload>
+            <Upload>
+              <Button
+                style={{
+                  color: "gray",
+                  border: "none",
+                }}
+                icon={<LinkOutlined />}
+              ></Button>
+            </Upload>
+            {/*  todo chưa ra */}
+            <Upload>
+              <Button
+                style={{
+                  color: "gray",
+                  border: "none",
+                }}
+                icon={<SmileOutlined />}
+              ></Button>
+            </Upload>
           </div>
 
           <div
@@ -321,22 +352,22 @@ const sendMessage = async  () => {
             >
               <Avatar
                 style={{
-                  height: 50,
-                  width: 50,
+                  border:"none",
+                  height: 70,
+                  width: 70,
                   marginLeft: 0,
                   backgroundColor: "gray",
                 }}
-                src={`https://api.dicebear.com/7.x/miniavs/svg?seed=`}
+                src={information?.avatar}
               />
               <div style={{ display: "flex", flexDirection: "row" }}>
                 <p
                   style={{
-                    fontFamily: "Time new Roman",
                     fontSize: 20,
                     fontWeight: "bold",
                   }}
                 >
-                  Thuy
+                  {information?.chatName}
                 </p>
               </div>
 
