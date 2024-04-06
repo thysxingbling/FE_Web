@@ -27,27 +27,32 @@ const MessagePage: React.FC = () => {
   const [inputText, setInputText] = useState("");
   const [currentUserId, setCurrentUserId] = useState("");
 
+  const urlSearchParams = new URLSearchParams(window.location.search); 
+  const id = urlSearchParams.get("id");
+
+  const token = localStorage.getItem("token");
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+
   useEffect(() => {
     const fetchConversation = async () => {
-      const urlSearchParams = new URLSearchParams(window.location.search); 
-      const id = urlSearchParams.get("id");
+    
       try {
-        const token = localStorage.getItem("token");
         if (token) {
           try {
             const decodedToken = jwtDecode(token);
             const userId = decodedToken.userId;
             setCurrentUserId(userId);
+            console.log(userId);
+            
           } catch (error) {
             console.error("Error decoding token:", error);
           }
         } else {
           console.error("Token not found in localStorage");
         }
-        const headers = {
-          Authorization: `Bearer ${token}`,
-        };
-
+       
         const response = await axios.get(
           `http://localhost:8000/conversation/${id}`,
           {
@@ -56,7 +61,7 @@ const MessagePage: React.FC = () => {
         );
         const data = response.data.messages;
         setMessages(data);
-        console.log(data);
+        // console.log(data);
       } catch (error) {
         console.error("Error fetching conversation:", error);
       }
@@ -65,17 +70,38 @@ const MessagePage: React.FC = () => {
     fetchConversation();
   }, []);
 
-  const sendMessage = () => {
-    if (inputText.trim() === "") return;
+const sendMessage = async  () => {
+  if (inputText.trim() === "") {
+    return;
+  }
 
-    const newMessage: Message = {
-      senderId: messages.toString(),
-      content: inputText,
-    };
-
-    setMessages([...messages, newMessage]);
-    setInputText("");
+  const newMessage: Message = {
+    senderId: currentUserId || '', 
+    content: inputText,
   };
+
+  const requestData = {
+    content: newMessage.content,
+  };
+  
+
+  axios.post(
+    `http://localhost:8000/message/text/${id}`,
+    requestData,
+    { headers }
+  )
+    .then((response) => {
+      console.log('Message sent successfully:', response.data);
+      setMessages([...messages, newMessage]);
+      setInputText("");
+    })
+    .catch((error) => {
+      console.error('Error sending message:', error);
+   
+    });
+    
+};
+
   return (
     <Layout
       style={{
@@ -180,9 +206,9 @@ const MessagePage: React.FC = () => {
               }}
             >
               <div
-                // className={`message-bubble ${
-                //   message.senderId === currentUserId ? "sent" : "received"
-                // }`}
+                className={`message-bubble ${
+                  message.senderId === currentUserId ? "sent" : "received"
+                }`}
                 style={{
                   maxWidth: "70%",
                   padding: "10px",

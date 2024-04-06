@@ -3,7 +3,6 @@ import { Avatar, Button, List, message } from "antd";
 import axios from "axios";
 import { IFriends } from "../../components/models/friends";
 import { Link } from "react-router-dom";
-import MessagePage from "./Message - page";
 
 interface ModalListFriends {
   users: IFriends[] | null;
