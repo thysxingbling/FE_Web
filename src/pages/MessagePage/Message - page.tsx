@@ -213,6 +213,8 @@ const MessagePage: React.FC = () => {
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "flex-start",
+                padding:10,
+                width:670,
                 justifyContent:
                   message.senderId == currentUserId ? "flex-end" : "flex-start",
               }}
