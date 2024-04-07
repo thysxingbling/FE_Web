@@ -1,4 +1,12 @@
-import { Avatar, Button, Layout, Input, List, message, Upload } from "antd";
+import {
+  Avatar,
+  Button,
+  Layout,
+  Input,
+  List,
+  message,
+  Upload,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import {
   SearchOutlined,
@@ -8,10 +16,10 @@ import {
   ClockCircleOutlined,
   MehOutlined,
   LayoutOutlined,
-  BellOutlined,
   PushpinOutlined,
   LinkOutlined,
   SmileOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
 import Component from "../../components/layouts/components/components";
 import "./Message.css";
@@ -28,6 +36,7 @@ interface Message {
   senderId: string;
   content: string;
   type: MessageType;
+  fileUrl: string;
 }
 interface Information {
   avatar: string;
@@ -38,17 +47,63 @@ const MessagePage: React.FC = () => {
   const [inputText, setInputText] = useState("");
   const [currentUserId, setCurrentUserId] = useState("");
   const [information, setInformation] = useState<Information>();
+  const [file, setFile] = useState<any>(null);
 
   const urlSearchParams = new URLSearchParams(window.location.search);
   const id = urlSearchParams.get("id");
 
   const token = localStorage.getItem("token");
-  console.log(token);
-
   const headers = {
     Authorization: `Bearer ${token}`,
   };
 
+  const dummyRequest = async ({ file, onSuccess }) => {
+    setTimeout(() => {
+      onSuccess("ok");
+    }, 0);
+  };
+
+  const uploadImage = {
+    name: "file",
+    multiple: true,
+    customRequest: dummyRequest,
+    accept: "image/png,image/gif,image/jpeg",
+    onChange(info) {
+      console.log(info);
+      setFile(info.file);
+      if (info.file.status === "done") {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
+  const uploadFile = {
+    name: "file",
+    multiple: true,
+    customRequest: dummyRequest,
+    accept: ".doc, .docx, .txt, .pdf",
+    onChange(info) {
+      debugger;
+      console.log(info);
+      setFile(info.file);
+      if (info.file.status === "done") {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
+  const getFileName = (fileUrl: string) => {
+    const segments = fileUrl.split("/");
+    const filenameWithParams = segments[segments.length - 1];
+    const filename = filenameWithParams.split("?")[0];
+    console.log(filename);
+    const decodedFilename = decodeURIComponent(filename);
+    const desiredFilename = decodedFilename.split("-").slice(1).join("-");
+
+    return desiredFilename;
+  };
   useEffect(() => {
     const fetchConversation = async () => {
       try {
@@ -57,21 +112,21 @@ const MessagePage: React.FC = () => {
             const decodedToken = jwtDecode(token);
             const userId = decodedToken.userId;
             setCurrentUserId(userId);
-            console.log(userId);
+            // console.log(userId);
           } catch (error) {
             console.error("Error decoding token:", error);
           }
         } else {
           console.error("Token not found in localStorage");
         }
-      
+
         const response = await axios.get(
           `http://localhost:8000/conversation/${id}`,
           {
             headers,
           }
         );
-       
+
         const data = response.data;
         const chatInformation: Information = {
           avatar: data.avatar,
@@ -79,7 +134,6 @@ const MessagePage: React.FC = () => {
         };
         setMessages(data.chat.messages);
         setInformation(data);
-        
       } catch (error) {
         console.error("Error fetching conversation:", error);
       }
@@ -87,9 +141,30 @@ const MessagePage: React.FC = () => {
 
     fetchConversation();
   }, []);
+
+  function isImageFile(filename: string): boolean {
+    const parts = filename.split(".");
+    const extension = parts[parts.length - 1].toLowerCase();
+    const validExtensions = ["jpg", "jpeg", "png", "gif", "bmp", "svg"];
+    if (!validExtensions.includes(extension)) {
+      return false;
+    }
+    return true;
+  }
+  function isFile(filename: string): boolean {
+    debugger;
+    const parts = filename.split(".");
+    const extension = parts[parts.length - 1].toLowerCase();
+    const validExtensions = ["doc", "txt", "pdf", "docx"];
+    if (!validExtensions.includes(extension)) {
+      return false;
+    }
+    return true;
+  }
+
   // gửi tin nhắn
   const sendMessage = async () => {
-    if (inputText.trim() === "") {
+    if (inputText.trim() === "" && file == null) {
       return;
     }
 
@@ -97,15 +172,24 @@ const MessagePage: React.FC = () => {
       senderId: currentUserId || "",
       content: inputText,
     };
+    debugger;
+    console.log(inputText, file);
 
-    const requestData = {
-      content: newMessage.content,
-    };
+    const formData = new FormData();
+    if (inputText.trim() !== "") formData.append("content", inputText);
+    if (file !== "" && file != null)
+      formData.append("file", file.originFileObj);
+    console.log(formData);
 
+    debugger;
     axios
-      .post(`http://localhost:8000/message/text/${id}`, requestData, {
-        headers,
+      .post(`http://localhost:8000/message/text/${id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
       })
+
       .then((response) => {
         console.log("Message sent successfully:", response.data);
         setMessages([...messages, newMessage]);
@@ -154,7 +238,7 @@ const MessagePage: React.FC = () => {
               width: 50,
               marginLeft: 20,
               backgroundColor: "gray",
-              border:"none",
+              border: "none",
             }}
             src={information?.avatar}
           />
@@ -165,9 +249,11 @@ const MessagePage: React.FC = () => {
                 marginTop: 10,
                 fontWeight: "bold",
                 height: 25,
-                fontSize:18
+                fontSize: 18,
               }}
-            >{information?.chatName}</p>
+            >
+              {information?.chatName}
+            </p>
           </div>
 
           <div
@@ -213,28 +299,55 @@ const MessagePage: React.FC = () => {
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "flex-start",
-                padding:10,
-                width:670,
+                padding: 10,
+                width: 670,
                 justifyContent:
                   message.senderId == currentUserId ? "flex-end" : "flex-start",
               }}
             >
-              <div
-                className={`message-bubble ${
-                  message.senderId === currentUserId ? "sent" : "received"
-                }`}
-                style={{
-                  maxWidth: "70%",
-                  padding: "10px",
-                  margin: "5px",
-                  borderRadius: "10px",
-                  backgroundColor:
-                    currentUserId === message.senderId ? "#0084ff" : "#f1f0f0",
-                  color: currentUserId === message.senderId ? "#fff" : "#000",
-                }}
-              >
-                {message.content}
-              </div>
+              {message.content || message.fileUrl ? (
+                <div
+                  className={`message-bubble ${
+                    message.senderId === currentUserId ? "sent" : "received"
+                  }`}
+                  style={{
+                    maxWidth: "70%",
+                    padding: "10px",
+                    margin: "5px",
+                    borderRadius: "10px",
+                    backgroundColor:
+                      currentUserId === message.senderId
+                        ? "#0084ff"
+                        : "#f1f0f0",
+                    color: currentUserId === message.senderId ? "#fff" : "#000",
+                  }}
+                >
+                  <div>{message.content}</div>
+                  {message.fileUrl ? (
+                    isImageFile(message.fileUrl) ? (
+                      <img
+                        src={message.fileUrl}
+                        alt=""
+                        style={{ maxWidth: "40%" }}
+                      />
+                    ) : (
+                      <a
+                        style={{ textDecoration: "none", color: "white" }}
+                        href={message.fileUrl}
+                      >
+                        {" "}
+                        {getFileName(message.fileUrl)}{" "}
+                      </a>
+                     
+                    )
+                  ) : (
+                    ""
+                  )}
+                 
+                </div>
+              ) : (
+                ""
+              )}
             </List.Item>
           )}
         ></List>
@@ -254,7 +367,7 @@ const MessagePage: React.FC = () => {
               borderLeft: "1px solid #000",
             }}
           >
-            <Upload>
+            <Upload {...uploadImage}>
               <Button
                 style={{
                   color: "gray",
@@ -263,7 +376,8 @@ const MessagePage: React.FC = () => {
                 icon={<FileImageOutlined />}
               ></Button>
             </Upload>
-            <Upload>
+
+            <Upload {...uploadFile}>
               <Button
                 style={{
                   color: "gray",
@@ -354,7 +468,7 @@ const MessagePage: React.FC = () => {
             >
               <Avatar
                 style={{
-                  border:"none",
+                  border: "none",
                   height: 70,
                   width: 70,
                   marginLeft: 0,
@@ -378,10 +492,8 @@ const MessagePage: React.FC = () => {
                   type="text"
                   style={{ marginTop: 10, height: 50, borderRadius: 10 }}
                 >
-                  <Avatar>
-                    <BellOutlined />
-                  </Avatar>
-                  <p>Tắt thông báo</p>
+                  <DeleteOutlined style={{ fontSize: "25px", color: "red" }} />
+                  <p>Xóa cuộc trò chuyện</p>
                 </Button>
                 <Button
                   type="text"
@@ -392,9 +504,9 @@ const MessagePage: React.FC = () => {
                     marginLeft: 20,
                   }}
                 >
-                  <Avatar>
-                    <PushpinOutlined />
-                  </Avatar>
+                  <PushpinOutlined
+                    style={{ fontSize: "25px", color: "black" }}
+                  />
                   <p>Ghim hội thoại</p>
                 </Button>
                 <Button
@@ -406,9 +518,10 @@ const MessagePage: React.FC = () => {
                     marginLeft: 20,
                   }}
                 >
-                  <Avatar>
-                    <UsergroupAddOutlined />
-                  </Avatar>
+                  <UsergroupAddOutlined
+                    style={{ fontSize: "25px", color: "green" }}
+                  />
+
                   <p>Tạo nhóm </p>
                 </Button>
               </div>

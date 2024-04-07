@@ -36,7 +36,7 @@ const ModalInformation: React.FC<ModalInformationProps> = ({
     const token = localStorage.getItem("token");
   
     const formData = new FormData();
-    formData.append("image", file);
+    formData.append("file", file);
   
     axios.put("http://localhost:8000/auth/update", formData, {
       headers: {

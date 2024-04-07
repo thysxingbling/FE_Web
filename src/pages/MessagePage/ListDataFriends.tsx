@@ -40,6 +40,11 @@ const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
   };
   const isSentRequest = (_id: string) => sentRequests.includes(_id);
 
+  // const createMessage =()=>{
+  //   axios
+  //   .post(` http://localhost:8000/conversation`)
+   
+  // }
   return (
     users !== null && (
       <List
