@@ -492,8 +492,10 @@ const MessagePage: React.FC = () => {
                   type="text"
                   style={{ marginTop: 10, height: 50, borderRadius: 10 }}
                 >
-                  <DeleteOutlined style={{ fontSize: "25px", color: "red" }} />
-                  <p>Xóa cuộc trò chuyện</p>
+                  <Avatar>
+                    <BellOutlined />
+                  </Avatar>
+                  <p>Tắt thông báo</p>
                 </Button>
                 <Button
                   type="text"
