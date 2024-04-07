@@ -12,6 +12,7 @@ import {
   PushpinOutlined,
   LinkOutlined,
   SmileOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
 import Component from "../../components/layouts/components/components";
 import "./Message.css";
@@ -379,9 +380,9 @@ const MessagePage: React.FC = () => {
                   style={{ marginTop: 10, height: 50, borderRadius: 10 }}
                 >
                   <Avatar>
-                    <BellOutlined />
+                    <DeleteOutlined />
                   </Avatar>
-                  <p>Tắt thông báo</p>
+                  <p>Xóa cuộc trò chuyện</p>
                 </Button>
                 <Button
                   type="text"
