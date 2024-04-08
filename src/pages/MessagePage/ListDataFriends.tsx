@@ -40,11 +40,28 @@ const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
   };
   const isSentRequest = (_id: string) => sentRequests.includes(_id);
 
-  // const createMessage =()=>{
-  //   axios
-  //   .post(` http://localhost:8000/conversation`)
-   
-  // }
+  /////
+  const createConversation = async (receiverId: string) => {
+    const token = localStorage.getItem("token");
+    console.log(token);
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    axios
+      .post(`http://localhost:8000/conversation/${receiverId}`,{}, {
+        headers,
+      })
+      .then((response) => {
+        const conversation = response.data.conversation._id;
+        console.log("chưa ra",conversation);
+        return conversation;
+       
+      })
+      .catch((error) => {
+        console.error("Error creating conversation:", error);
+      });
+  };
+
   return (
     users !== null && (
       <List
@@ -57,11 +74,20 @@ const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
         dataSource={users}
         renderItem={(item, index) => (
           <Link
-            to={{
-              pathname: `/message`,
-              search: `?id=${item._id}`,
-            }}
-          >
+          to={{
+            pathname: `/message`,
+            search: `?id=${item._id}`,
+          }}
+          onClick={async () => {
+            try {
+              const conversation = await createConversation(item._id);
+              console.log("Conversation created:", conversation);
+            } catch (error) {
+              console.error("Error:", error);
+            }
+          }}
+        >
+        
             <List.Item
               style={{ height: 50 }}
               actions={[
@@ -89,5 +115,4 @@ const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
     )
   );
 };
-
 export default ListDataFriends;

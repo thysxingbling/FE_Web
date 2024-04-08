@@ -1,12 +1,4 @@
-import {
-  Avatar,
-  Button,
-  Layout,
-  Input,
-  List,
-  message,
-  Upload,
-} from "antd";
+import { Avatar, Button, Layout, Input, List, message, Upload } from "antd";
 import React, { useEffect, useState } from "react";
 import {
   SearchOutlined,
@@ -37,6 +29,7 @@ interface Message {
   content: string;
   type: MessageType;
   fileUrl: string;
+  _id: string;
 }
 interface Information {
   avatar: string;
@@ -45,6 +38,7 @@ interface Information {
 const MessagePage: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
+  const [chatId, setChatId] = useState("");
   const [currentUserId, setCurrentUserId] = useState("");
   const [information, setInformation] = useState<Information>();
   const [file, setFile] = useState<any>(null);
@@ -84,7 +78,6 @@ const MessagePage: React.FC = () => {
     customRequest: dummyRequest,
     accept: ".doc, .docx, .txt, .pdf",
     onChange(info) {
-      debugger;
       console.log(info);
       setFile(info.file);
       if (info.file.status === "done") {
@@ -133,6 +126,7 @@ const MessagePage: React.FC = () => {
           chatName: data.chatName,
         };
         setMessages(data.chat.messages);
+        setChatId(data.chat._id);
         setInformation(data);
       } catch (error) {
         console.error("Error fetching conversation:", error);
@@ -152,7 +146,6 @@ const MessagePage: React.FC = () => {
     return true;
   }
   function isFile(filename: string): boolean {
-    debugger;
     const parts = filename.split(".");
     const extension = parts[parts.length - 1].toLowerCase();
     const validExtensions = ["doc", "txt", "pdf", "docx"];
@@ -172,7 +165,7 @@ const MessagePage: React.FC = () => {
       senderId: currentUserId || "",
       content: inputText,
     };
-    debugger;
+
     console.log(inputText, file);
 
     const formData = new FormData();
@@ -181,7 +174,6 @@ const MessagePage: React.FC = () => {
       formData.append("file", file.originFileObj);
     console.log(formData);
 
-    debugger;
     axios
       .post(`http://localhost:8000/message/text/${id}`, formData, {
         headers: {
@@ -192,6 +184,7 @@ const MessagePage: React.FC = () => {
 
       .then((response) => {
         console.log("Message sent successfully:", response.data);
+        newMessage._id = response.data.message._id;
         setMessages([...messages, newMessage]);
         setInputText("");
       })
@@ -199,7 +192,52 @@ const MessagePage: React.FC = () => {
         console.error("Error sending message:", error);
       });
   };
+  // xóa cuộc trò chuyện
 
+  const deleteConversation = async (id: string) => {
+    debugger;
+    axios
+      .delete(`http://localhost:8000/conversation/${id}`, {
+        headers,
+      })
+      .then((response) => {
+        debugger;
+        console.log("Conversation deleted:", response.data);
+        message.success("Cuộc trò chuyện đã được xóa thành công.");
+        window.location.href = "/message";
+      })
+
+      .catch((error) => {
+        console.error("Error deleting conversation:", error);
+        message.error("Đã xảy ra lỗi khi xóa cuộc trò chuyện.");
+      });
+  };
+
+  // xóa tin nhắn
+
+  const deleteMessage = async (messageId: string) => {
+    debugger;
+
+    axios
+      .delete(`http://localhost:8000/message/delete/${messageId}`, {
+        headers,
+        data: { chatId },
+      })
+
+      .then((response) => {
+        debugger;
+        console.log("Conversation deleted:", response.data);
+        message.success("Tin nhắn đã được xóa thành công.");
+        setMessages((prevMessages) =>
+          prevMessages.filter((message) => message._id !== messageId)
+        );
+      })
+
+      .catch((error) => {
+        console.error("Error deleting conversation:", error);
+        message.error("Đã xảy ra lỗi khi xóa tin nhắn.");
+      });
+  };
   return (
     <Layout
       style={{
@@ -283,7 +321,7 @@ const MessagePage: React.FC = () => {
         <List
           style={{
             backgroundColor: "gray",
-            marginLeft: "30px  ",
+            marginLeft: "30px",
             height: "530px",
             display: "flex",
             borderRight: "1px solid #000",
@@ -302,55 +340,68 @@ const MessagePage: React.FC = () => {
                 padding: 10,
                 width: 670,
                 justifyContent:
-                  message.senderId == currentUserId ? "flex-end" : "flex-start",
+                  message.senderId === currentUserId
+                    ? "flex-end"
+                    : "flex-start",
               }}
             >
               {message.content || message.fileUrl ? (
-                <div
-                  className={`message-bubble ${
-                    message.senderId === currentUserId ? "sent" : "received"
-                  }`}
-                  style={{
-                    maxWidth: "70%",
-                    padding: "10px",
-                    margin: "5px",
-                    borderRadius: "10px",
-                    backgroundColor:
-                      currentUserId === message.senderId
-                        ? "#0084ff"
-                        : "#f1f0f0",
-                    color: currentUserId === message.senderId ? "#fff" : "#000",
-                  }}
-                >
-                  <div>{message.content}</div>
-                  {message.fileUrl ? (
-                    isImageFile(message.fileUrl) ? (
-                      <img
-                        src={message.fileUrl}
-                        alt=""
-                        style={{ maxWidth: "40%" }}
-                      />
+                <>
+                  <div
+                    className={`message-bubble ${
+                      message.senderId === currentUserId ? "sent" : "received"
+                    }`}
+                    style={{
+                      maxWidth: "70%",
+                      padding: "10px",
+                      margin: "5px",
+                      borderRadius: "10px",
+                      backgroundColor:
+                        currentUserId === message.senderId
+                          ? "#0084ff"
+                          : "#f1f0f0",
+                      color:
+                        currentUserId === message.senderId ? "#fff" : "black",
+                    }}
+                  >
+                    <div>{message.content}</div>
+                    {message.fileUrl ? (
+                      isImageFile(message.fileUrl) ? (
+                        <img
+                          src={message.fileUrl}
+                          alt=""
+                          style={{ maxWidth: "40%" }}
+                        />
+                      ) : (
+                        <a
+                          style={{ textDecoration: "none", color: "black" }}
+                          href={message.fileUrl}
+                        >
+                          {" "}
+                          {getFileName(message.fileUrl)}{" "}
+                        </a>
+                      )
                     ) : (
-                      <a
-                        style={{ textDecoration: "none", color: "white" }}
-                        href={message.fileUrl}
-                      >
-                        {" "}
-                        {getFileName(message.fileUrl)}{" "}
-                      </a>
-                     
+                      ""
+                    )}
+                  </div>
+                  {
+                    // message.senderId === currentUserId
+                    true && (
+                      <Button
+                        style={{ marginLeft: 5 }}
+                        icon={<DeleteOutlined />}
+                        onClick={() => deleteMessage(message._id)}
+                      />
                     )
-                  ) : (
-                    ""
-                  )}
-                 
-                </div>
+                  }
+                </>
               ) : (
                 ""
               )}
             </List.Item>
           )}
-        ></List>
+        />
         <Footer style={{ marginLeft: "30px", height: 100 }}>
           <div
             style={{
@@ -386,7 +437,6 @@ const MessagePage: React.FC = () => {
                 icon={<LinkOutlined />}
               ></Button>
             </Upload>
-            {/*  todo chưa ra */}
             <Upload>
               <Button
                 style={{
@@ -491,8 +541,9 @@ const MessagePage: React.FC = () => {
                 <Button
                   type="text"
                   style={{ marginTop: 10, height: 50, borderRadius: 10 }}
+                  onClick={() => deleteConversation(id)}
                 >
-                 <DeleteOutlined style={{ fontSize: "25px", color: "RED" }}/>
+                  <DeleteOutlined style={{ fontSize: "25px", color: "RED" }} />
                   <p>Xóa tin nhắn</p>
                 </Button>
                 <Button
@@ -573,4 +624,5 @@ const MessagePage: React.FC = () => {
     </Layout>
   );
 };
+
 export default MessagePage;
