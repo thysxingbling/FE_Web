@@ -3,6 +3,7 @@ import { Avatar, Button, List, message } from "antd";
 import axios from "axios";
 import { IFriends } from "../../components/models/friends";
 import { Link } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 interface ModalListFriends {
   users: IFriends[] | null;
@@ -10,6 +11,7 @@ interface ModalListFriends {
 
 const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
   const [sentRequests, setSentRequests] = useState<string[]>([]);
+  const [currentUserId, setCurrentUserId] = useState("");
   const token = localStorage.getItem("token");
   const headers = {
     Authorization: `Bearer ${token}`,
@@ -47,15 +49,33 @@ const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
     const headers = {
       Authorization: `Bearer ${token}`,
     };
+    if (token) {
+      try {
+        debugger;
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken.userId;
+        if (userId === receiverId) {
+          return;
+        }
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    } else {
+      console.error("Token not found in localStorage");
+    }
+
     axios
-      .post(`http://localhost:8000/conversation/${receiverId}`,{}, {
-        headers,
-      })
+      .post(
+        `http://localhost:8000/conversation/${receiverId}`,
+        {},
+        {
+          headers,
+        }
+      )
       .then((response) => {
         const conversation = response.data.conversation._id;
-        console.log("chưa ra",conversation);
+        console.log("chưa ra", conversation);
         return conversation;
-       
       })
       .catch((error) => {
         console.error("Error creating conversation:", error);
@@ -74,20 +94,19 @@ const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
         dataSource={users}
         renderItem={(item, index) => (
           <Link
-          to={{
-            pathname: `/message`,
-            search: `?id=${item._id}`,
-          }}
-          onClick={async () => {
-            try {
-              const conversation = await createConversation(item._id);
-              console.log("Conversation created:", conversation);
-            } catch (error) {
-              console.error("Error:", error);
-            }
-          }}
-        >
-        
+            to={{
+              pathname: `/message`,
+              search: `?id=${item._id}`,
+            }}
+            onClick={async () => {
+              try {
+                const conversation = await createConversation(item._id);
+                console.log("Conversation created:", conversation);
+              } catch (error) {
+                console.error("Error:", error);
+              }
+            }}
+          >
             <List.Item
               style={{ height: 50 }}
               actions={[
