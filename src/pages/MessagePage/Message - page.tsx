@@ -12,11 +12,14 @@ import {
   LinkOutlined,
   SmileOutlined,
   DeleteOutlined,
+  ForwardOutlined,
+  ReloadOutlined,
 } from "@ant-design/icons";
 import Component from "../../components/layouts/components/components";
 import "./Message.css";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import ModalCreateGroupChat from "../../components/modals/ModalCreateGroupChat";
 const { Header, Content, Sider, Footer } = Layout;
 
 enum MessageType {
@@ -42,13 +45,20 @@ const MessagePage: React.FC = () => {
   const [currentUserId, setCurrentUserId] = useState("");
   const [information, setInformation] = useState<Information>();
   const [file, setFile] = useState<any>(null);
-
+  const [hoveredMessageId, setHoveredMessageId] = useState<string | null>(null);
   const urlSearchParams = new URLSearchParams(window.location.search);
   const id = urlSearchParams.get("id");
-
+  const [isOpenModalCreateGroupChat, setIsOpenModalCreateGroupChat] = useState(false);
   const token = localStorage.getItem("token");
   const headers = {
     Authorization: `Bearer ${token}`,
+  };
+  const handleMouseEnter = (_id: string) => {
+    setHoveredMessageId(_id);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredMessageId(null);
   };
 
   const dummyRequest = async ({ file, onSuccess }) => {
@@ -238,6 +248,18 @@ const MessagePage: React.FC = () => {
         message.error("Đã xảy ra lỗi khi xóa tin nhắn.");
       });
   };
+  // show modal create group
+  const openModalCreateGroupChat = () => {
+    setIsOpenModalCreateGroupChat(true);
+  };
+  const handleOk = () => {
+    setIsOpenModalCreateGroupChat(false);
+  };
+
+  const handleCancel = () => {
+    setIsOpenModalCreateGroupChat(false);
+  };
+
   return (
     <Layout
       style={{
@@ -344,6 +366,8 @@ const MessagePage: React.FC = () => {
                     ? "flex-end"
                     : "flex-start",
               }}
+              onMouseEnter={() => handleMouseEnter(message._id)}
+              onMouseLeave={handleMouseLeave}
             >
               {message.content || message.fileUrl ? (
                 <>
@@ -385,16 +409,42 @@ const MessagePage: React.FC = () => {
                       ""
                     )}
                   </div>
-                  {
-                    // message.senderId === currentUserId
-                    true && (
+                  <div
+                    style={{
+                      background: "gray",
+                      padding: 2,
+                      marginRight: 10,
+                      display:
+                        hoveredMessageId === message._id ? "block" : "none",
+                    }}
+                  >
+                    {
+                      // message.senderId === currentUserId
+                      true && (
+                        <Button
+                          style={{ marginLeft: 5, marginTop: 10 }}
+                          icon={<DeleteOutlined />}
+                          onClick={() => deleteMessage(message._id)}
+                        />
+                      )
+                    }
+                    {/* chuyển tiếp */}
+                    {true && (
                       <Button
-                        style={{ marginLeft: 5 }}
-                        icon={<DeleteOutlined />}
-                        onClick={() => deleteMessage(message._id)}
+                        style={{ marginLeft: 5, marginTop: 10 }}
+                        icon={<ForwardOutlined />}
+                       
                       />
-                    )
-                  }
+                    )}
+                    {/* Thu hồi */}
+                    {true && (
+                      <Button
+                        style={{ marginLeft: 5, marginTop: 10 }}
+                        icon={<ReloadOutlined />}
+                      
+                      />
+                    )}
+                  </div>
                 </>
               ) : (
                 ""
@@ -568,6 +618,9 @@ const MessagePage: React.FC = () => {
                     borderRadius: 10,
                     marginLeft: 20,
                   }}
+                  onClick={()=>{
+                    openModalCreateGroupChat();
+                  }}
                 >
                   <UsergroupAddOutlined
                     style={{ fontSize: "25px", color: "green" }}
@@ -575,6 +628,11 @@ const MessagePage: React.FC = () => {
 
                   <p>Tạo nhóm </p>
                 </Button>
+                <ModalCreateGroupChat
+                 open={isOpenModalCreateGroupChat} 
+                 onCancel={handleCancel}
+                 onOk={handleOk}
+                 />
               </div>
             </div>
             <div

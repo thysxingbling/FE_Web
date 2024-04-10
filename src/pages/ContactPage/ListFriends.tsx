@@ -94,7 +94,7 @@ const ListFriends: React.FC = () => {
             }}
             loading={loading}
             allowClear
-            style={{ width: 200, color: "red", marginLeft: 10, marginTop: 10 }}
+            style={{ width: 300, color: "red", marginLeft: 10, marginTop: 10 }}
             onChange={(e) => {
               setPhoneNumber(e.target.value);
             }}
@@ -111,11 +111,11 @@ const ListFriends: React.FC = () => {
           <UsergroupAddOutlined
             style={{ width: 40, height: 50, color: "gray" }}
           />
-          {friendSearchs ? (
+          {/* {friendSearchs ? (
             <ListDataFriends users={friendSearchs} />
           ) : (
             <MenuItem />
-          )}
+          )} */}
         </div>
       </Col>
 

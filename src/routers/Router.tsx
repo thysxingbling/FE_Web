@@ -23,7 +23,7 @@ const Router: React.FC=()=>{
         <Route path='/listFriends' element={<ListFriends />} />
         <Route path='/listGroups' element={<ListGroups />} />
         <Route path='/friendsRequest' element={<ListRequest/>} />
-     
+      
       
       </Routes>
     )
