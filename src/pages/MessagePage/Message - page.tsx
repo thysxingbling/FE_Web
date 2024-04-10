@@ -20,6 +20,7 @@ import "./Message.css";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import ModalCreateGroupChat from "../../components/modals/ModalCreateGroupChat";
+import ModalForwardMessages from "../../components/modals/ModalForwardMessages";
 const { Header, Content, Sider, Footer } = Layout;
 
 enum MessageType {
@@ -50,6 +51,9 @@ const MessagePage: React.FC = () => {
   const id = urlSearchParams.get("id");
   const [isOpenModalCreateGroupChat, setIsOpenModalCreateGroupChat] =
     useState(false);
+  const [isOpenModalModalForwardMessages, setIsOpenModalForwardMessages] =
+    useState(false);
+  const [selectedMessageContent, setSelectedMessageContent] = useState("");
   const [messageRetracted, setMessageRetracted] = useState(false);
   const token = localStorage.getItem("token");
   const headers = {
@@ -268,6 +272,22 @@ const MessagePage: React.FC = () => {
   const handleCancel = () => {
     setIsOpenModalCreateGroupChat(false);
   };
+  // show modal chuyển tin nhắn
+
+  const OpenModalForwardMessages = (
+    messageId: string,
+    messageContent: string
+  ) => {
+    setSelectedMessageContent(messageContent);
+    setIsOpenModalForwardMessages(true);
+  };
+  const handleOkModal = () => {
+    setIsOpenModalForwardMessages(false);
+  };
+
+  const handleCancelModal = () => {
+    setIsOpenModalForwardMessages(false);
+  };
 
   return (
     <Layout
@@ -442,20 +462,27 @@ const MessagePage: React.FC = () => {
                       <Button
                         style={{ marginLeft: 5, marginTop: 10 }}
                         icon={<ForwardOutlined />}
+                        onClick={() =>
+                          OpenModalForwardMessages(message._id, message.content)
+                        }
                       />
                     )}
                     {/* Thu hồi */}
-                      {messageRetracted ? (
-                        <div>Tin nhắn đã được thu hồi.</div>
-                      ) : (
-                        <Button
-                          style={{ marginLeft: 5, marginTop: 10 }}
-                          icon={<ReloadOutlined />}
-                          onClick={handleRetractMessage}
-                        >
-                        </Button>
-                      )}
-                 
+                    {messageRetracted ? (
+                      <div>Tin nhắn đã được thu hồi.</div>
+                    ) : (
+                      <Button
+                        style={{ marginLeft: 5, marginTop: 10 }}
+                        icon={<ReloadOutlined />}
+                        onClick={handleRetractMessage}
+                      ></Button>
+                    )}
+                    <ModalForwardMessages
+                      open={isOpenModalModalForwardMessages}
+                      onCancel={handleCancelModal}
+                      onOk={handleOkModal}
+                      selectedMessageContent={selectedMessageContent}
+                    />
                   </div>
                 </>
               ) : (
