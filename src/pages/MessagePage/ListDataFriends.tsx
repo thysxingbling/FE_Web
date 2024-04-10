@@ -11,7 +11,7 @@ interface ModalListFriends {
 
 const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
   const [sentRequests, setSentRequests] = useState<string[]>([]);
-  const [currentUserId, setCurrentUserId] = useState("");
+  // const [currentUserId, setCurrentUserId] = useState("");
   const token = localStorage.getItem("token");
   const headers = {
     Authorization: `Bearer ${token}`,

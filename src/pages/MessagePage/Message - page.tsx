@@ -594,7 +594,7 @@ const MessagePage: React.FC = () => {
                   onClick={() => deleteConversation(id)}
                 >
                   <DeleteOutlined style={{ fontSize: "25px", color: "RED" }} />
-                  <p>Xóa tin nhắn</p>
+                  <p>Xóa cuộc trò chuyện</p>
                 </Button>
                 <Button
                   type="text"
