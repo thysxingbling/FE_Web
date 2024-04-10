@@ -48,7 +48,9 @@ const MessagePage: React.FC = () => {
   const [hoveredMessageId, setHoveredMessageId] = useState<string | null>(null);
   const urlSearchParams = new URLSearchParams(window.location.search);
   const id = urlSearchParams.get("id");
-  const [isOpenModalCreateGroupChat, setIsOpenModalCreateGroupChat] = useState(false);
+  const [isOpenModalCreateGroupChat, setIsOpenModalCreateGroupChat] =
+    useState(false);
+  const [messageRetracted, setMessageRetracted] = useState(false);
   const token = localStorage.getItem("token");
   const headers = {
     Authorization: `Bearer ${token}`,
@@ -248,6 +250,13 @@ const MessagePage: React.FC = () => {
         message.error("Đã xảy ra lỗi khi xóa tin nhắn.");
       });
   };
+
+  // thu hồi tin nhắn
+  const handleRetractMessage = () => {
+    //xử lý
+    setMessageRetracted(true);
+    message.success("Tin nhắn đã được thu hồi.");
+  };
   // show modal create group
   const openModalCreateGroupChat = () => {
     setIsOpenModalCreateGroupChat(true);
@@ -433,17 +442,20 @@ const MessagePage: React.FC = () => {
                       <Button
                         style={{ marginLeft: 5, marginTop: 10 }}
                         icon={<ForwardOutlined />}
-                       
                       />
                     )}
                     {/* Thu hồi */}
-                    {true && (
-                      <Button
-                        style={{ marginLeft: 5, marginTop: 10 }}
-                        icon={<ReloadOutlined />}
-                      
-                      />
-                    )}
+                      {messageRetracted ? (
+                        <div>Tin nhắn đã được thu hồi.</div>
+                      ) : (
+                        <Button
+                          style={{ marginLeft: 5, marginTop: 10 }}
+                          icon={<ReloadOutlined />}
+                          onClick={handleRetractMessage}
+                        >
+                        </Button>
+                      )}
+                 
                   </div>
                 </>
               ) : (
@@ -618,7 +630,7 @@ const MessagePage: React.FC = () => {
                     borderRadius: 10,
                     marginLeft: 20,
                   }}
-                  onClick={()=>{
+                  onClick={() => {
                     openModalCreateGroupChat();
                   }}
                 >
@@ -629,10 +641,10 @@ const MessagePage: React.FC = () => {
                   <p>Tạo nhóm </p>
                 </Button>
                 <ModalCreateGroupChat
-                 open={isOpenModalCreateGroupChat} 
-                 onCancel={handleCancel}
-                 onOk={handleOk}
-                 />
+                  open={isOpenModalCreateGroupChat}
+                  onCancel={handleCancel}
+                  onOk={handleOk}
+                />
               </div>
             </div>
             <div
