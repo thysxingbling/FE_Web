@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Input, Layout, Row, message } from "antd";
+import { Avatar, Button, Card, Col, Input, Layout, Row, message } from "antd";
 import axios from "axios";
 import Component from "../../components/layouts/components/components";
 import { Content, Header } from "antd/es/layout/layout";
@@ -9,13 +9,18 @@ import { UserAddOutlined, UsergroupAddOutlined } from "@ant-design/icons";
 import ListDataFriends from "../MessagePage/ListDataFriends";
 
 interface Recipient {
-  _id: string;
+  _id:string;
   reciverId: string;
-  senderName: string;
+  sender:{
+    name: string;
+    avatar:string;
+    // _id: string;
+  }
+
 }
 const ListRequest: React.FC = ({}) => {
   const [requests, setRequests] = useState<Recipient[]>([]);
-    const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [friendSearchs, setFriendSearchs] = useState<IFriends[] | null>(null);
   const [loading, setLoading] = useState(false);
   const token = localStorage.getItem("token");
@@ -33,8 +38,10 @@ const ListRequest: React.FC = ({}) => {
           }
         );
         const { data } = response;
+                console.log(data);
+        
         setRequests(data.addFriendReqs);
-        console.log();
+        console.log(data.addFriendReqs);
       } catch (error) {
         console.error("Error fetching friend requests:", error);
       }
@@ -48,13 +55,16 @@ const ListRequest: React.FC = ({}) => {
     status: boolean
   ) => {
     try {
+      
       await axios.put(
         `http://localhost:8000/friend/status/${addFriendReqId}`,
         {
           status: status,
         },
         { headers }
-      );
+      ).then(response => {
+        console.log("Friend request status updated:", response.data);
+      });
     } catch (error) {
       console.error(
         `Error ${status ? "accepting" : "rejecting"} friend request:`,
@@ -62,6 +72,7 @@ const ListRequest: React.FC = ({}) => {
       );
     }
   };
+  
   const handleSearch = (e: any) => {
     setLoading(true);
     const token = localStorage.getItem("token");
@@ -75,11 +86,11 @@ const ListRequest: React.FC = ({}) => {
       .get(`http://localhost:8000/friend/find/${e}`, config)
       .then((response) => {
         const data = response.data;
-        console.log(data);
+        // console.log(data);
 
         if (data.friend) {
           setFriendSearchs([data.friend]);
-          console.log([data.friend]);
+          // console.log([data.friend]);
         } else {
           message.info("Friend not found.");
         }
@@ -184,6 +195,7 @@ const ListRequest: React.FC = ({}) => {
             <Content>
               <div>
                 {requests.map((request) => (
+                   
                   <Card
                     key={request._id}
                     style={{ width: 500, marginBottom: 15 }}
@@ -194,7 +206,8 @@ const ListRequest: React.FC = ({}) => {
                         justifyContent: "space-between",
                       }}
                     >
-                      <p>{request.senderName} muốn kết bạn với bạn</p>
+                      <Avatar src={request.sender.avatar} />
+                      <p >{request.sender.name} muốn kết bạn với bạn</p>
                       <Button
                         type="primary"
                         onClick={() => handleFriendRequest(request._id, true)}

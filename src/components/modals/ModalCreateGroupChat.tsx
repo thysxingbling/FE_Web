@@ -1,4 +1,4 @@
-import { CameraOutlined, SearchOutlined } from "@ant-design/icons";
+import { CameraOutlined } from "@ant-design/icons";
 import {
   Modal,
   Col,
@@ -8,36 +8,34 @@ import {
   Avatar,
   Upload,
   List,
-
-  Radio,
   message,
+  Checkbox,
 } from "antd";
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { IFriends } from "../models/friends";
-import ListDataFriends from "../../pages/MessagePage/ListDataFriends";
 
-
-const ModalCreateGroupChat: React.FC<ModalProps> = ({
-  open,
-  onCancel,
-  onOk,
-}) => {
+const ModalCreateGroupChat: React.FC<ModalProps> = ({ open, onCancel }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [friends, setFriends] = useState<IFriends[] | null>(null);
   const [loading, setLoading] = useState(false);
+  const [chatName, setChatName] = useState("");
+  const [memberIds, setMemberIds] = useState([]);
+  const [file, setFile] = useState<any>(null);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const getList = async () => {
       try {
+        debugger;
         const token = localStorage.getItem("token");
         const response = await axios.get("http://localhost:8000/friend/list", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        setFriends(response.data.users);
+        setFriends(response.data.friends);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -63,7 +61,7 @@ const ModalCreateGroupChat: React.FC<ModalProps> = ({
           setFriends([data.friend]);
           console.log([data.friend]);
         } else {
-            message.info("Friend not found.");
+          message.info("Friend not found.");
         }
       })
 
@@ -75,8 +73,43 @@ const ModalCreateGroupChat: React.FC<ModalProps> = ({
         setLoading(false);
       });
   };
+  const CreateGroupChat = async () => {
+    const data = {
+      chatName: chatName,
+      memberIds: memberIds,
+    };
+
+    if (file) {
+      // data.image = file;
+    }
+
+    axios
+      .post("http://localhost:8000/conversation/group", data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Group chat created:", response.data);
+        message.success("Group chat created successfully!");
+      })
+
+      .catch((error) => {
+        console.error("Error creating group chat:", error);
+        message.error("Failed to create group chat.");
+      });
+  };
+
   return (
-    <Modal title="Tạo nhóm" visible={open} onCancel={onCancel} onOk={onOk} cancelText="Hủy" okText="Tạo nhóm">
+    <Modal
+      title="Tạo nhóm"
+      visible={open}
+      onCancel={onCancel}
+      onOk={CreateGroupChat}
+      cancelText="Hủy"
+      okText="Tạo nhóm"
+    >
       <div>
         <Row>
           <Col span={2}>
@@ -94,7 +127,7 @@ const ModalCreateGroupChat: React.FC<ModalProps> = ({
           <Col span={24}>
             <Input.Search
               value={phoneNumber}
-              placeholder="Nhập tên , số điện thoại , danh sách số điện thoại"
+              placeholder="Nhập số điện thoại"
               style={{
                 display: "flex",
                 flexDirection: "row-reverse",
@@ -115,7 +148,6 @@ const ModalCreateGroupChat: React.FC<ModalProps> = ({
                 setPhoneNumber(e.target.value);
               }}
             />
-             
           </Col>
         </Row>
         <Row>
@@ -123,15 +155,13 @@ const ModalCreateGroupChat: React.FC<ModalProps> = ({
             {friends !== null && (
               <List
                 style={{
-                  
-                
                   marginLeft: 0,
                 }}
                 itemLayout="horizontal"
                 dataSource={friends}
                 renderItem={(item) => (
                   <List.Item style={{ marginLeft: 40 }}>
-                    <Radio/>
+                    <Checkbox />
                     <List.Item.Meta
                       avatar={<Avatar src={item.avatar} />}
                       title={item.name}

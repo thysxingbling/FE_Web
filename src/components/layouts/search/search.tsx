@@ -56,8 +56,8 @@ const Search: React.FC = () => {
               _id: conversations._id,
               userId: conversations.userId,
               avatar: conversations.avatar,
-              name: conversations.chatName,
-              lastMessages: conversations.lastMessages,
+              name: conversations.name,
+              lastMessage: conversations.lastMessage,
             };
           }
         );
@@ -74,7 +74,6 @@ const Search: React.FC = () => {
 
   const handleSearch = (e: any) => {
     if (e == "") {
-      // If search input is empty, revert to original list of friends
       setFriends(originalFriends);
       setLoading(false);
       return;
@@ -87,15 +86,15 @@ const Search: React.FC = () => {
         Authorization: `Bearer ${token}`,
       },
     };
+  
     axios
+
       .get(`http://localhost:8000/friend/find/${phoneNumber}`, config)
       .then((response) => {
         const data = response.data;
-        // console.log(data);
 
         if (data.friend) {
           setFriends([data.friend]);
-          // console.log([data.friend]);
         } else {
           message.info("Friend not found.");
         }

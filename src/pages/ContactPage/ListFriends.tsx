@@ -24,7 +24,9 @@ const ListFriends: React.FC = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        setFriends(response.data.users);
+        setFriends(response.data.friends);
+        console.log(response.data.friends);
+        
       } catch (error) {
         console.error("Error fetching data:", error);
       }

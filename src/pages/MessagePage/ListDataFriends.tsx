@@ -25,12 +25,11 @@ const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
     const config = {
       headers,
     };
-
     axios
       .post(`http://localhost:8000/friend/add/${_id}`, {}, config)
       .then((response) => {
         const data = response.data;
-        console.log(data);
+        // console.log(data);
 
         message.success(data.message);
         setSentRequests([...sentRequests, _id]);
@@ -43,6 +42,7 @@ const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
   const isSentRequest = (_id: string) => sentRequests.includes(_id);
 
   /////
+  // const createConversation = async (receiverId: string) => {
   const createConversation = async (receiverId: string) => {
     const token = localStorage.getItem("token");
     console.log(token);
@@ -51,10 +51,10 @@ const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
     };
     if (token) {
       try {
-        debugger;
         const decodedToken = jwtDecode(token);
         const userId = decodedToken.userId;
         if (userId === receiverId) {
+          // if (userId === conversationId) {
           return;
         }
       } catch (error) {
@@ -63,19 +63,19 @@ const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
     } else {
       console.error("Token not found in localStorage");
     }
-
     axios
       .post(
-        `http://localhost:8000/conversation/${receiverId}`,
+        `http://localhost:8000/conversation/single/${receiverId}`,
         {},
         {
           headers,
         }
       )
       .then((response) => {
-        const conversation = response.data.conversation._id;
-        console.log("chưa ra", conversation);
-        return conversation;
+         ;
+        // const conversation = response.data.conversation._id;
+        console.log("Tạo ra được cuộc trò chuyện nè");
+        // return conversation;
       })
       .catch((error) => {
         console.error("Error creating conversation:", error);
@@ -98,14 +98,13 @@ const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
               pathname: `/message`,
               search: `?id=${item._id}`,
             }}
-            onClick={async () => {
-              try {
-                const conversation = await createConversation(item._id);
-                console.log("Conversation created:", conversation);
-              } catch (error) {
-                console.error("Error:", error);
-              }
-            }}
+            // onClick={async () => {
+            //   try {
+            //    await createConversation(item._id); 
+            //   } catch (error) {
+            //     console.error("Error:", error);
+            //   }
+            // }}
           >
             <List.Item
               style={{ height: 50 }}

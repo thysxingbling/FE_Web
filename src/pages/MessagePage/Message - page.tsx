@@ -5,21 +5,22 @@ import {
   UsergroupAddOutlined,
   VideoCameraOutlined,
   FileImageOutlined,
-  ClockCircleOutlined,
   MehOutlined,
   LayoutOutlined,
-  PushpinOutlined,
   LinkOutlined,
   SmileOutlined,
   DeleteOutlined,
   ForwardOutlined,
   ReloadOutlined,
+  TeamOutlined,
+  UserDeleteOutlined,
 } from "@ant-design/icons";
 import Component from "../../components/layouts/components/components";
 import "./Message.css";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import ModalCreateGroupChat from "../../components/modals/ModalCreateGroupChat";
+
 const { Header, Content, Sider, Footer } = Layout;
 
 enum MessageType {
@@ -36,12 +37,11 @@ interface Message {
 }
 interface Information {
   avatar: string;
-  chatName: string;
+  name: string;
 }
 const MessagePage: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
-  const [chatId, setChatId] = useState("");
   const [currentUserId, setCurrentUserId] = useState("");
   const [information, setInformation] = useState<Information>();
   const [file, setFile] = useState<any>(null);
@@ -51,7 +51,56 @@ const MessagePage: React.FC = () => {
   const [isOpenModalCreateGroupChat, setIsOpenModalCreateGroupChat] =
     useState(false);
   const [messageRetracted, setMessageRetracted] = useState(false);
+  const [conversationId, setConversationId] = useState<string | null>(null);
   const token = localStorage.getItem("token");
+  
+  
+  useEffect(() => {
+    const decodedToken = jwtDecode(token);
+    const userId = decodedToken.userId;
+    setCurrentUserId(userId);
+
+    fetchConversation();
+  }, []);
+
+  const fetchConversation = async () => {
+    try {
+      // id là user bị click
+      if (id !== null && currentUserId !== id) {
+        axios
+          .post(
+            `http://localhost:8000/conversation/single/${id}`,
+            {},
+            {
+              headers,
+            }
+          )
+          .then((responseCreateChat) => {
+            var conversationId =
+              responseCreateChat.data.conversation.conversationId;
+            setConversationId(conversationId);
+            axios
+              .get(`http://localhost:8000/conversation/${conversationId}`, {
+                headers,
+              })
+              .then((response) => {
+                const data = response.data;
+                setMessages(data.messages);
+                setInformation(data.nameAndAvatar);
+              })
+              .catch((error) => {
+                console.log("lỗi get cuộc trò chuyện", error);
+              });
+          })
+          .catch((error) => {
+            console.log("lỗi tạo cuộc trò chuyện", error);
+          });
+      }
+    } catch (error) {
+      console.error("Error fetching conversation:", error);
+    }
+  };
+
   const headers = {
     Authorization: `Bearer ${token}`,
   };
@@ -109,44 +158,6 @@ const MessagePage: React.FC = () => {
 
     return desiredFilename;
   };
-  useEffect(() => {
-    const fetchConversation = async () => {
-      try {
-        if (token) {
-          try {
-            const decodedToken = jwtDecode(token);
-            const userId = decodedToken.userId;
-            setCurrentUserId(userId);
-            // console.log(userId);
-          } catch (error) {
-            console.error("Error decoding token:", error);
-          }
-        } else {
-          console.error("Token not found in localStorage");
-        }
-
-        const response = await axios.get(
-          `http://localhost:8000/conversation/${id}`,
-          {
-            headers,
-          }
-        );
-
-        const data = response.data;
-        const chatInformation: Information = {
-          avatar: data.avatar,
-          chatName: data.chatName,
-        };
-        setMessages(data.chat.messages);
-        setChatId(data.chat._id);
-        setInformation(data);
-      } catch (error) {
-        console.error("Error fetching conversation:", error);
-      }
-    };
-
-    fetchConversation();
-  }, []);
 
   function isImageFile(filename: string): boolean {
     const parts = filename.split(".");
@@ -176,6 +187,9 @@ const MessagePage: React.FC = () => {
     const newMessage: Message = {
       senderId: currentUserId || "",
       content: inputText,
+      type: MessageType.TEXT,
+      fileUrl: "",
+      _id: "",
     };
 
     console.log(inputText, file);
@@ -187,7 +201,7 @@ const MessagePage: React.FC = () => {
     console.log(formData);
 
     axios
-      .post(`http://localhost:8000/message/text/${id}`, formData, {
+      .post(`http://localhost:8000/message/text/${conversationId}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
@@ -207,13 +221,11 @@ const MessagePage: React.FC = () => {
   // xóa cuộc trò chuyện
 
   const deleteConversation = async (id: string) => {
-    debugger;
     axios
-      .delete(`http://localhost:8000/conversation/${id}`, {
+      .delete(`http://localhost:8000/conversation/${conversationId}`, {
         headers,
       })
       .then((response) => {
-        debugger;
         console.log("Conversation deleted:", response.data);
         message.success("Cuộc trò chuyện đã được xóa thành công.");
         window.location.href = "/message";
@@ -226,18 +238,14 @@ const MessagePage: React.FC = () => {
   };
 
   // xóa tin nhắn
-
   const deleteMessage = async (messageId: string) => {
     debugger;
-
     axios
       .delete(`http://localhost:8000/message/delete/${messageId}`, {
         headers,
-        data: { chatId },
       })
 
       .then((response) => {
-        debugger;
         console.log("Conversation deleted:", response.data);
         message.success("Tin nhắn đã được xóa thành công.");
         setMessages((prevMessages) =>
@@ -257,6 +265,7 @@ const MessagePage: React.FC = () => {
     setMessageRetracted(true);
     message.success("Tin nhắn đã được thu hồi.");
   };
+
   // show modal create group
   const openModalCreateGroupChat = () => {
     setIsOpenModalCreateGroupChat(true);
@@ -321,7 +330,7 @@ const MessagePage: React.FC = () => {
                 fontSize: 18,
               }}
             >
-              {information?.chatName}
+              {information?.name}
             </p>
           </div>
 
@@ -427,16 +436,13 @@ const MessagePage: React.FC = () => {
                         hoveredMessageId === message._id ? "block" : "none",
                     }}
                   >
-                    {
-                      // message.senderId === currentUserId
-                      true && (
-                        <Button
-                          style={{ marginLeft: 5, marginTop: 10 }}
-                          icon={<DeleteOutlined />}
-                          onClick={() => deleteMessage(message._id)}
-                        />
-                      )
-                    }
+                    {true && (
+                      <Button
+                        style={{ marginLeft: 5, marginTop: 10 }}
+                        icon={<DeleteOutlined />}
+                        onClick={() => deleteMessage(message._id)}
+                      />
+                    )}
                     {/* chuyển tiếp */}
                     {true && (
                       <Button
@@ -445,17 +451,15 @@ const MessagePage: React.FC = () => {
                       />
                     )}
                     {/* Thu hồi */}
-                      {messageRetracted ? (
-                        <div>Tin nhắn đã được thu hồi.</div>
-                      ) : (
-                        <Button
-                          style={{ marginLeft: 5, marginTop: 10 }}
-                          icon={<ReloadOutlined />}
-                          onClick={handleRetractMessage}
-                        >
-                        </Button>
-                      )}
-                 
+                    {messageRetracted ? (
+                      <div>Tin nhắn đã được thu hồi.</div>
+                    ) : (
+                      <Button
+                        style={{ marginLeft: 5, marginTop: 10 }}
+                        icon={<ReloadOutlined />}
+                        onClick={handleRetractMessage}
+                      ></Button>
+                    )}
                   </div>
                 </>
               ) : (
@@ -595,7 +599,7 @@ const MessagePage: React.FC = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  {information?.chatName}
+                  {information?.name}
                 </p>
               </div>
 
@@ -617,11 +621,12 @@ const MessagePage: React.FC = () => {
                     marginLeft: 20,
                   }}
                 >
-                  <PushpinOutlined
+                  <UsergroupAddOutlined
                     style={{ fontSize: "25px", color: "black" }}
                   />
-                  <p>Ghim hội thoại</p>
+                  <p>Thêm thành viên</p>
                 </Button>
+
                 <Button
                   type="text"
                   style={{
@@ -640,6 +645,7 @@ const MessagePage: React.FC = () => {
 
                   <p>Tạo nhóm </p>
                 </Button>
+
                 <ModalCreateGroupChat
                   open={isOpenModalCreateGroupChat}
                   onCancel={handleCancel}
@@ -666,10 +672,9 @@ const MessagePage: React.FC = () => {
                   alignItems: "center",
                 }}
               >
-                <ClockCircleOutlined
-                  style={{ marginRight: 10, marginTop: -2 }}
-                />
-                <p>Danh sách nhắc hẹn</p>
+                <TeamOutlined style={{ fontSize: "25px" }} />
+
+                <p>Thành viên nhóm </p>
               </Button>
 
               <Button
@@ -682,10 +687,10 @@ const MessagePage: React.FC = () => {
                   alignItems: "center",
                 }}
               >
-                <UsergroupAddOutlined
+                <UserDeleteOutlined
                   style={{ marginRight: 10, marginTop: -1 }}
                 />
-                <p>Nhóm chung</p>
+                <p>Rời nhóm</p>
               </Button>
             </div>
           </List>
