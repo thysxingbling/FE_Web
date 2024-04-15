@@ -1,4 +1,13 @@
-import { Avatar, Button, Layout, Input, List, message, Upload } from "antd";
+import {
+  Avatar,
+  Button,
+  Layout,
+  Input,
+  List,
+  message,
+  Upload,
+  Modal,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import {
   SearchOutlined,
@@ -14,12 +23,15 @@ import {
   ReloadOutlined,
   TeamOutlined,
   UserDeleteOutlined,
+  UserSwitchOutlined,
 } from "@ant-design/icons";
 import Component from "../../components/layouts/components/components";
 import "./Message.css";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import ModalCreateGroupChat from "../../components/modals/ModalCreateGroupChat";
+import ModalAddMembers from "../../components/modals/ModalAddMembers";
+import ModalShareData from "../../components/modals/ModalShareData";
 
 const { Header, Content, Sider, Footer } = Layout;
 
@@ -34,8 +46,19 @@ interface Message {
   type: MessageType;
   fileUrl: string;
   _id: string;
+  senderAvatar: string;
+  isDeleted: boolean;
 }
 interface Information {
+  avatar: string;
+  name: string;
+}
+interface InformationGroup {
+  avatar: string;
+  chatName: string;
+}
+interface Member {
+  _id: string;
   avatar: string;
   name: string;
 }
@@ -43,18 +66,27 @@ const MessagePage: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
   const [currentUserId, setCurrentUserId] = useState("");
-  const [information, setInformation] = useState<Information>();
+  const [informationGroup, setinformationGroup] = useState<InformationGroup>();
+  const [informations, setInformations] = useState<Information[]>([]);
   const [file, setFile] = useState<any>(null);
   const [hoveredMessageId, setHoveredMessageId] = useState<string | null>(null);
   const urlSearchParams = new URLSearchParams(window.location.search);
   const id = urlSearchParams.get("id");
+  const type = urlSearchParams.get("type");
+  const conversationPramter = urlSearchParams.get("conversation");
   const [isOpenModalCreateGroupChat, setIsOpenModalCreateGroupChat] =
     useState(false);
-  const [messageRetracted, setMessageRetracted] = useState(false);
+  const [isOpenModalAddMember, setIsOpenModalAddMember] = useState(false);
+  const [isOpenModalShareData, setIsOpenModalShareData] = useState(false);
+  // const [messageRecall, setMessageRecall] = useState(false);
   const [conversationId, setConversationId] = useState<string | null>(null);
+  const [messageId, setMessageId] = useState<string | null>(null);
+
+  const [members, setMembers] = useState<Member[]>([]);
+  const [visible, setVisible] = useState(false);
   const token = localStorage.getItem("token");
-  
-  
+
+  useEffect(() => {}, [informations]);
   useEffect(() => {
     const decodedToken = jwtDecode(token);
     const userId = decodedToken.userId;
@@ -66,7 +98,7 @@ const MessagePage: React.FC = () => {
   const fetchConversation = async () => {
     try {
       // id là user bị click
-      if (id !== null && currentUserId !== id) {
+      if (id !== null && type === "SINGLE" && currentUserId !== id) {
         axios
           .post(
             `http://localhost:8000/conversation/single/${id}`,
@@ -86,7 +118,8 @@ const MessagePage: React.FC = () => {
               .then((response) => {
                 const data = response.data;
                 setMessages(data.messages);
-                setInformation(data.nameAndAvatar);
+                setInformations([data.nameAndAvatar]);
+                // console.log(data);
               })
               .catch((error) => {
                 console.log("lỗi get cuộc trò chuyện", error);
@@ -95,12 +128,68 @@ const MessagePage: React.FC = () => {
           .catch((error) => {
             console.log("lỗi tạo cuộc trò chuyện", error);
           });
+      } else if (type === "GROUP") {
+        setConversationId(conversationPramter);
+        axios
+          .get(`http://localhost:8000/conversation/${conversationPramter}`, {
+            headers,
+          })
+          .then((response) => {
+            const data = response.data;
+            setMessages(data.messages);
+            setInformations(data.nameAndAvatar);
+            setinformationGroup(data.conversation);
+            // console.log(data);
+          })
+          .catch((error) => {
+            console.log("lỗi get cuộc trò chuyện", error);
+          });
       }
     } catch (error) {
       console.error("Error fetching conversation:", error);
     }
   };
+  // getList memeber
+  const getListMembers = () => {
+    axios
+      .get(`http://localhost:8000/conversation/member/${conversationId}`, {
+        headers,
+      })
+      .then((response) => {
+        const data = response.data;
+        setMembers(data.users);
+      })
+      .catch((error) => {
+        console.log("lỗi get thành viên", error);
+      });
+  };
+  const showModal = (conversationId: string) => {
+    setVisible(true);
+    getListMembers();
+    setConversationId(conversationId);
+  };
+  // delete memeber
+  const handleDeleteMember = (memberId: string) => {
+    axios
+      .delete(`http://localhost:8000/conversation/member/${conversationId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: {
+          deleteUserId: memberId,
+        },
+      })
 
+      .then((response) => {
+        console.log("Member deleted:", response.data);
+        message.success("Thành viên đã được xóa thành công.");
+        getListMembers();
+      })
+      .catch((error) => {
+        console.error("Error deleting conversation:", error);
+        message.error("Đã xảy ra lỗi khi xóa thành viên.");
+      });
+  };
   const headers = {
     Authorization: `Bearer ${token}`,
   };
@@ -124,7 +213,7 @@ const MessagePage: React.FC = () => {
     customRequest: dummyRequest,
     accept: "image/png,image/gif,image/jpeg",
     onChange(info) {
-      console.log(info);
+      // console.log(info);
       setFile(info.file);
       if (info.file.status === "done") {
         message.success(`${info.file.name} file uploaded successfully`);
@@ -139,7 +228,7 @@ const MessagePage: React.FC = () => {
     customRequest: dummyRequest,
     accept: ".doc, .docx, .txt, .pdf",
     onChange(info) {
-      console.log(info);
+      // console.log(info);
       setFile(info.file);
       if (info.file.status === "done") {
         message.success(`${info.file.name} file uploaded successfully`);
@@ -183,22 +272,21 @@ const MessagePage: React.FC = () => {
     if (inputText.trim() === "" && file == null) {
       return;
     }
-
     const newMessage: Message = {
       senderId: currentUserId || "",
       content: inputText,
-      type: MessageType.TEXT,
-      fileUrl: "",
-      _id: "",
+      fileUrl: file,
     };
 
     console.log(inputText, file);
 
     const formData = new FormData();
+
     if (inputText.trim() !== "") formData.append("content", inputText);
     if (file !== "" && file != null)
-      formData.append("file", file.originFileObj);
-    console.log(formData);
+      formData.append("files", file.originFileObj);
+    // console.log(file.originFileObj);
+    // console.log(formData);
 
     axios
       .post(`http://localhost:8000/message/text/${conversationId}`, formData, {
@@ -211,8 +299,10 @@ const MessagePage: React.FC = () => {
       .then((response) => {
         console.log("Message sent successfully:", response.data);
         newMessage._id = response.data.message._id;
+        newMessage.fileUrl = response.data.message.fileUrl;
         setMessages([...messages, newMessage]);
         setInputText("");
+        // console.log(response.data);
       })
       .catch((error) => {
         console.error("Error sending message:", error);
@@ -222,7 +312,7 @@ const MessagePage: React.FC = () => {
 
   const deleteConversation = async (id: string) => {
     axios
-      .delete(`http://localhost:8000/conversation/${conversationId}`, {
+      .delete(`http://localhost:8000/conversation/message/${conversationId}`, {
         headers,
       })
       .then((response) => {
@@ -239,12 +329,10 @@ const MessagePage: React.FC = () => {
 
   // xóa tin nhắn
   const deleteMessage = async (messageId: string) => {
-    debugger;
     axios
-      .delete(`http://localhost:8000/message/delete/${messageId}`, {
+      .delete(`http://localhost:8000/message/delete/only/${messageId}`, {
         headers,
       })
-
       .then((response) => {
         console.log("Conversation deleted:", response.data);
         message.success("Tin nhắn đã được xóa thành công.");
@@ -252,32 +340,124 @@ const MessagePage: React.FC = () => {
           prevMessages.filter((message) => message._id !== messageId)
         );
       })
-
       .catch((error) => {
         console.error("Error deleting conversation:", error);
         message.error("Đã xảy ra lỗi khi xóa tin nhắn.");
       });
   };
 
-  // thu hồi tin nhắn
-  const handleRetractMessage = () => {
-    //xử lý
-    setMessageRetracted(true);
-    message.success("Tin nhắn đã được thu hồi.");
+  //thu hồi tin nhắn
+  const handleRecallMessage = async (messageId: string) => {
+    axios
+      .delete(`http://localhost:8000/message/delete/${messageId}`, {
+        headers,
+      })
+
+      .then((response) => {
+        console.log("Conversation deleted:", response.data);
+        message.success("Tin nhắn đã được thu hồi thành công.");
+        // setMessageRecall();
+      })
+
+      .catch((error) => {
+        console.error("Error deleting conversation:", error);
+        message.error("Đã xảy ra lỗi khi thu hồi tin nhắn.");
+      });
   };
 
+  // rời nhóm
+  const handleLeaveGroup = () => {
+    axios
+      .delete(
+        `http://localhost:8000/conversation/member/leave/${conversationId}`,
+        {
+          headers,
+        }
+      )
+      .then((response) => {
+        console.log("Leave group:", response.data);
+        message.success("Rời nhóm thành công.");
+      })
+
+      .catch((error) => {
+        console.error("Error deleting conversation:", error);
+        message.error("Đã xảy ra lỗi khi rời nhóm.");
+      });
+  };
+
+  // giải tán nhóm
+  const handleDeleteGroup = (conversationId: string) => {
+    axios
+      .delete(`http://localhost:8000/conversation/group/${conversationId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Deleted conversation:", response.data);
+        message.success("Nhóm đã được giải tán thành công.");
+      })
+      .catch((error) => {
+        console.error("Failed to delete conversation:", error);
+        message.error("Đã xảy ra lỗi khi giải tán nhóm.");
+      });
+  };
   // show modal create group
   const openModalCreateGroupChat = () => {
     setIsOpenModalCreateGroupChat(true);
   };
   const handleOk = () => {
     setIsOpenModalCreateGroupChat(false);
+    setIsOpenModalAddMember(false);
   };
 
   const handleCancel = () => {
     setIsOpenModalCreateGroupChat(false);
+    setIsOpenModalAddMember(false);
+    setVisible(false);
   };
 
+  // show modal add member
+  const openModalAddMember = (conversationId) => {
+    setIsOpenModalAddMember(true);
+    setConversationId(conversationId);
+  };
+  // show modal share data
+  const openModalShare = (messageId: string) => {
+    setMessageId(messageId);
+    setIsOpenModalShareData(true);
+  };
+  const handleCancelModalShare = () => {
+    setIsOpenModalShareData(false);
+    setVisible(false);
+  };
+  const handleOkModalShare = () => {
+    setIsOpenModalShareData(false);
+  };
+  // chuyển quyền leader
+  const handleTransferLeader = (memberId: string) => {
+    axios
+
+      .patch(
+        `http://localhost:8000/conversation/${conversationId}/member/${memberId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Kết quả:", response.data);
+        message.success(
+          "Người dùng đã được chuyển quyền làm nhóm trưởng thành công."
+        );
+      })
+      .catch((error) => {
+        console.error("Lỗi khi chuyển quyền làm nhóm trưởng:", error);
+        message.error("Đã xảy ra lỗi khi chuyển quyền làm nhóm trưởng.");
+      });
+  };
   return (
     <Layout
       style={{
@@ -318,7 +498,10 @@ const MessagePage: React.FC = () => {
               backgroundColor: "gray",
               border: "none",
             }}
-            src={information?.avatar}
+            src={
+              informationGroup?.avatar ||
+              informations.map((info) => info.avatar).join(", ")
+            }
           />
 
           <div style={{ marginLeft: 10, height: 50, width: 200 }}>
@@ -330,7 +513,9 @@ const MessagePage: React.FC = () => {
                 fontSize: 18,
               }}
             >
-              {information?.name}
+              {informationGroup?.chatName
+                ? informationGroup.chatName
+                : informations.map((info) => info.name).join(", ")}
             </p>
           </div>
 
@@ -387,6 +572,17 @@ const MessagePage: React.FC = () => {
               onMouseEnter={() => handleMouseEnter(message._id)}
               onMouseLeave={handleMouseLeave}
             >
+              {message.senderId !== currentUserId && (
+                <img
+                  src={message.senderAvatar}
+                  alt="Avatar"
+                  style={{
+                    width: 30,
+                    height: 30,
+                    borderRadius: "50%",
+                  }}
+                />
+              )}
               {message.content || message.fileUrl ? (
                 <>
                   <div
@@ -406,21 +602,27 @@ const MessagePage: React.FC = () => {
                         currentUserId === message.senderId ? "#fff" : "black",
                     }}
                   >
-                    <div>{message.content}</div>
+                    <div>
+                      {message.isDeleted
+                        ? "Tin nhắn đã được thu hồi"
+                        : message.content}
+                    </div>
+                    {/* <div>{message.content}</div> */}
                     {message.fileUrl ? (
-                      isImageFile(message.fileUrl) ? (
+                      isImageFile(message.fileUrl[0]) ? (
+                        // isImageFile(message.fileUrl) ? (
                         <img
-                          src={message.fileUrl}
+                          src={message.fileUrl[0]}
                           alt=""
                           style={{ maxWidth: "40%" }}
                         />
                       ) : (
                         <a
                           style={{ textDecoration: "none", color: "black" }}
-                          href={message.fileUrl}
+                          href={message.fileUrl[0]}
                         >
                           {" "}
-                          {getFileName(message.fileUrl)}{" "}
+                          {getFileName(message.fileUrl[0])}{" "}
                         </a>
                       )
                     ) : (
@@ -448,16 +650,18 @@ const MessagePage: React.FC = () => {
                       <Button
                         style={{ marginLeft: 5, marginTop: 10 }}
                         icon={<ForwardOutlined />}
+                        onClick={() => openModalShare(message._id)}
                       />
                     )}
+
                     {/* Thu hồi */}
-                    {messageRetracted ? (
+                    {message.isDeleted ? (
                       <div>Tin nhắn đã được thu hồi.</div>
                     ) : (
                       <Button
                         style={{ marginLeft: 5, marginTop: 10 }}
                         icon={<ReloadOutlined />}
-                        onClick={handleRetractMessage}
+                        onClick={() => handleRecallMessage(message._id)}
                       ></Button>
                     )}
                   </div>
@@ -468,6 +672,7 @@ const MessagePage: React.FC = () => {
             </List.Item>
           )}
         />
+
         <Footer style={{ marginLeft: "30px", height: 100 }}>
           <div
             style={{
@@ -590,7 +795,10 @@ const MessagePage: React.FC = () => {
                   marginLeft: 0,
                   backgroundColor: "gray",
                 }}
-                src={information?.avatar}
+                src={
+                  informationGroup?.avatar ||
+                  informations.map((info) => info.avatar).join(", ")
+                }
               />
               <div style={{ display: "flex", flexDirection: "row" }}>
                 <p
@@ -599,7 +807,9 @@ const MessagePage: React.FC = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  {information?.name}
+                  {informationGroup?.chatName
+                    ? informationGroup.chatName
+                    : informations.map((info) => info.name).join(", ")}
                 </p>
               </div>
 
@@ -612,6 +822,7 @@ const MessagePage: React.FC = () => {
                   <DeleteOutlined style={{ fontSize: "25px", color: "RED" }} />
                   <p>Xóa cuộc trò chuyện</p>
                 </Button>
+
                 <Button
                   type="text"
                   style={{
@@ -620,13 +831,22 @@ const MessagePage: React.FC = () => {
                     borderRadius: 10,
                     marginLeft: 20,
                   }}
+                  onClick={() => {
+                    openModalAddMember(conversationId);
+                    // console.log(conversationId);
+                  }}
                 >
                   <UsergroupAddOutlined
                     style={{ fontSize: "25px", color: "black" }}
                   />
                   <p>Thêm thành viên</p>
                 </Button>
-
+                <ModalAddMembers
+                  open={isOpenModalAddMember}
+                  onCancel={handleCancel}
+                  onOk={handleOk}
+                  conversationId={conversationId}
+                />
                 <Button
                   type="text"
                   style={{
@@ -651,6 +871,12 @@ const MessagePage: React.FC = () => {
                   onCancel={handleCancel}
                   onOk={handleOk}
                 />
+                <ModalShareData
+                  open={isOpenModalShareData}
+                  onCancel={handleCancelModalShare}
+                  onOk={handleOkModalShare}
+                  messageId={messageId}
+                />
               </div>
             </div>
             <div
@@ -671,11 +897,54 @@ const MessagePage: React.FC = () => {
                   height: 75,
                   alignItems: "center",
                 }}
+                onClick={() => showModal(conversationId)}
               >
                 <TeamOutlined style={{ fontSize: "25px" }} />
-
-                <p>Thành viên nhóm </p>
+                <p>Thành viên nhóm</p>
               </Button>
+              <Modal
+                title="Thành viên nhóm"
+                visible={visible}
+                onCancel={handleCancel}
+                footer={null}
+              >
+                <List
+                  dataSource={members}
+                  renderItem={(item) => (
+                    <List.Item
+                      key={item._id}
+                      actions={[
+                        <Button
+                          type="text"
+                          icon={<DeleteOutlined />}
+                          onClick={() => handleDeleteMember(item._id)}
+                        />,
+                        <Button
+                          type="text"
+                          icon={<UserSwitchOutlined />}
+                          // onClick={handleTransferLeader(item._id)}
+                          onClick={() => handleTransferLeader(item._id)}
+                        ></Button>,
+                      ]}
+                    >
+                      <List.Item.Meta
+                        avatar={
+                          <img
+                            src={item.avatar}
+                            alt="Avatar"
+                            style={{
+                              width: 50,
+                              height: 50,
+                              borderRadius: "50%",
+                            }}
+                          />
+                        }
+                        title={<p>{item.name}</p>}
+                      />
+                    </List.Item>
+                  )}
+                />
+              </Modal>
 
               <Button
                 type="text"
@@ -686,6 +955,7 @@ const MessagePage: React.FC = () => {
                   height: 75,
                   alignItems: "center",
                 }}
+                onClick={handleLeaveGroup}
               >
                 <UserDeleteOutlined
                   style={{ marginRight: 10, marginTop: -1 }}
@@ -694,6 +964,25 @@ const MessagePage: React.FC = () => {
               </Button>
             </div>
           </List>
+          {/* <Button
+          style={{justifyContent:"center"}}
+            type="primary"
+            danger
+            icon={<DeleteOutlined />}
+            // onClick={deleteGroupConversation}
+            onClick={() => deleteGroupConversation(item._id)}
+          >
+            Giải tán nhóm
+          </Button> */}
+          <Button
+            style={{ justifyContent: "center" }}
+            type="primary"
+            danger
+            icon={<DeleteOutlined />}
+            onClick={() => handleDeleteGroup(conversationId)}
+          >
+            Giải tán nhóm
+          </Button>
         </Content>
       </Sider>
     </Layout>

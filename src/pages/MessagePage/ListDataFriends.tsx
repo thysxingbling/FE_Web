@@ -4,13 +4,14 @@ import axios from "axios";
 import { IFriends } from "../../components/models/friends";
 import { Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-
+import { useNavigate } from 'react-router-dom';
 interface ModalListFriends {
   users: IFriends[] | null;
 }
 
 const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
   const [sentRequests, setSentRequests] = useState<string[]>([]);
+  const navigate = useNavigate();
   // const [currentUserId, setCurrentUserId] = useState("");
   const token = localStorage.getItem("token");
   const headers = {
@@ -25,11 +26,12 @@ const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
     const config = {
       headers,
     };
+    debugger
     axios
       .post(`http://localhost:8000/friend/add/${_id}`, {}, config)
       .then((response) => {
         const data = response.data;
-        // console.log(data);
+        console.log(data);
 
         message.success(data.message);
         setSentRequests([...sentRequests, _id]);
@@ -72,7 +74,6 @@ const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
         }
       )
       .then((response) => {
-         ;
         // const conversation = response.data.conversation._id;
         console.log("Tạo ra được cuộc trò chuyện nè");
         // return conversation;
@@ -82,6 +83,17 @@ const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
       });
   };
 
+
+  const handleClick = (item) => {
+    const searchParams = new URLSearchParams({
+      id: item._id,
+      type: item.type,
+      conversation: item.conversationId,
+    });
+
+    navigate(`/message?${searchParams.toString()}`);
+    window.location.reload()
+  };
   return (
     users !== null && (
       <List
@@ -93,33 +105,37 @@ const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
         itemLayout="horizontal"
         dataSource={users}
         renderItem={(item, index) => (
-          <Link
-            to={{
-              pathname: `/message`,
-              search: `?id=${item._id}`,
-            }}
+          // <Link
+          //   to={{
+          //     pathname: `/message`,
+          //     // search: `?id=${item._id}&type=GROUP&conversation=${item.conversationId}`,
+          //     search: `?id=${item._id}&type=${item.type}&conversation=${item.conversationId}`
+          //   }}
+            
             // onClick={async () => {
             //   try {
-            //    await createConversation(item._id); 
+            //    await createConversation(item._id);
             //   } catch (error) {
             //     console.error("Error:", error);
             //   }
             // }}
-          >
+          // >
+             <Link to={`?id=${item._id}&type=${item.type}&conversation=${item.conversationId}`} onClick={() => handleClick(item)}>
+   
             <List.Item
               style={{ height: 50 }}
-              actions={[
-                <Button
-                  type="primary"
-                  onClick={() => handleAddFriend(item._id)}
-                  disabled={isSentRequest(item._id)}
-                  style={{
-                    display: item.checkIsFriends ? "none" : "inline-block",
-                  }}
-                >
-                  {isSentRequest(item._id) ? "Đã gửi lời mời" : "Kết bạn"}
-                </Button>,
-              ]}
+              // actions={[
+              //   <Button
+              //     type="primary"
+              //     onClick={() => handleAddFriend(item._id)}
+              //     disabled={isSentRequest(item._id)}
+              //     style={{
+              //       display: item.checkIsFriends ? "none" : "inline-block",
+              //     }}
+              //   >
+              //     {isSentRequest(item._id) ? "Đã gửi lời mời" : "Kết bạn"}
+              //   </Button>,
+              // ]}
             >
               <List.Item.Meta
                 avatar={<Avatar src={item.avatar} />}

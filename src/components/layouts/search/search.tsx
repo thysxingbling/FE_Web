@@ -13,7 +13,7 @@ const Search: React.FC = () => {
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  
+
   // useEffect(() => {
   //   const getList = async () => {
   //     try {
@@ -51,13 +51,14 @@ const Search: React.FC = () => {
         }
         const listConversations: IFriends[] = conversations.map(
           (conversations: any) => {
-
             return {
               _id: conversations._id,
               userId: conversations.userId,
               avatar: conversations.avatar,
               name: conversations.name,
               lastMessage: conversations.lastMessage,
+              type: conversations.type,
+              conversationId: conversations.conversationId,
             };
           }
         );
@@ -86,7 +87,7 @@ const Search: React.FC = () => {
         Authorization: `Bearer ${token}`,
       },
     };
-  
+
     axios
 
       .get(`http://localhost:8000/friend/find/${phoneNumber}`, config)

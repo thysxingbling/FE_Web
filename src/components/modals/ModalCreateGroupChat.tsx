@@ -1,4 +1,3 @@
-import { CameraOutlined } from "@ant-design/icons";
 import {
   Modal,
   Col,
@@ -25,10 +24,11 @@ const ModalCreateGroupChat: React.FC<ModalProps> = ({ open, onCancel }) => {
   const [file, setFile] = useState<any>(null);
   const token = localStorage.getItem("token");
 
+
   useEffect(() => {
     const getList = async () => {
       try {
-        debugger;
+         ;
         const token = localStorage.getItem("token");
         const response = await axios.get("http://localhost:8000/friend/list", {
           headers: {
@@ -73,32 +73,73 @@ const ModalCreateGroupChat: React.FC<ModalProps> = ({ open, onCancel }) => {
         setLoading(false);
       });
   };
+  const dummyRequest = async ({ file, onSuccess }) => {
+    setTimeout(() => {
+      onSuccess("ok");
+    }, 0);
+  };
+  const uploadImage = {
+    name: "file",
+    multiple: true,
+    customRequest: dummyRequest,
+    accept: "image/png,image/gif,image/jpeg",
+    onChange(info) {
+      console.log(info);
+      setFile(info.file);
+      if (info.file.status === "done") {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
   const CreateGroupChat = async () => {
-    const data = {
-      chatName: chatName,
-      memberIds: memberIds,
-    };
+    const formData = new FormData();
+    formData.append("chatName", chatName);
+    for(const item of memberIds){
+       formData.append("memberIds", item);
+    }
+    console.log(formData);
 
     if (file) {
-      // data.image = file;
+      formData.append("image", file.originFileObj);
     }
-
+     ;
     axios
-      .post("http://localhost:8000/conversation/group", data, {
+      .post("http://localhost:8000/conversation/group", formData, {
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
+         ;
         console.log("Group chat created:", response.data);
         message.success("Group chat created successfully!");
+      
       })
-
       .catch((error) => {
+         ;
         console.error("Error creating group chat:", error);
         message.error("Failed to create group chat.");
       });
+  };
+
+  const handleCheckboxChange = (itemId: string): void => {
+    const updatedMemberIds: string[] = [...memberIds]; 
+
+    if (memberIds.includes(itemId)) {
+      const index = updatedMemberIds.indexOf(itemId);
+      updatedMemberIds.splice(index, 1);
+    } else {
+   
+      updatedMemberIds.push(itemId);
+    }
+
+    setMemberIds(updatedMemberIds);
+  };
+  const handleChatNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChatName(event.target.value);
   };
 
   return (
@@ -113,14 +154,21 @@ const ModalCreateGroupChat: React.FC<ModalProps> = ({ open, onCancel }) => {
       <div>
         <Row>
           <Col span={2}>
-            <Avatar>
-              <Upload>
-                <CameraOutlined />
-              </Upload>
-            </Avatar>
+          <Upload {...uploadImage}>
+          <Avatar
+            style={{
+              height: 30,
+              width: 30,
+              marginLeft: 5,
+              backgroundColor: "gray",
+              border: "none",
+            }}
+            // src={?.avatar}
+          />
+          </Upload>
           </Col>
           <Col span={22}>
-            <Input placeholder="Nhập tên nhóm"></Input>
+            <Input value={chatName} onChange={handleChatNameChange} placeholder="Nhập tên nhóm"></Input>
           </Col>
         </Row>
         <Row>
@@ -160,8 +208,11 @@ const ModalCreateGroupChat: React.FC<ModalProps> = ({ open, onCancel }) => {
                 itemLayout="horizontal"
                 dataSource={friends}
                 renderItem={(item) => (
-                  <List.Item style={{ marginLeft: 40 }}>
-                    <Checkbox />
+                  <List.Item key={item._id} style={{ marginLeft: 40 }}>
+                    <Checkbox
+                      checked={memberIds.includes(item._id)}
+                      onChange={() => handleCheckboxChange(item._id)}
+                    />
                     <List.Item.Meta
                       avatar={<Avatar src={item.avatar} />}
                       title={item.name}

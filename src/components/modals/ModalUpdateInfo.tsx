@@ -23,7 +23,7 @@ const ModalUpdateInfo: React.FC<ModalProps & { user: any }> = ({
         }
       );
       setNewName(response.data.user.name); 
-      console.log(response.data.user.name);
+      // console.log(response.data.user.name);
       
       
       message.success(response.data.message); 
