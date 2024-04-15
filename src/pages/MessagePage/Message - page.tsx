@@ -44,7 +44,7 @@ interface Message {
   senderId: string;
   content: string;
   type: MessageType;
-  fileUrl: string;
+  fileUrls: string[];
   _id: string;
   senderAvatar: string;
   isDeleted: boolean;
@@ -96,6 +96,7 @@ const MessagePage: React.FC = () => {
   }, []);
 
   const fetchConversation = async () => {
+    // debugger;
     try {
       // id là user bị click
       if (id !== null && type === "SINGLE" && currentUserId !== id) {
@@ -117,7 +118,14 @@ const MessagePage: React.FC = () => {
               })
               .then((response) => {
                 const data = response.data;
-                setMessages(data.messages);
+                var messageList = data.messages;
+                var setValueDelete = messageList.map((item: any) => {
+                  if (item.isDeleted == true) {
+                    item.content = "Tin nhắn đã thu hồi";
+                  }
+                  return item;
+                });
+                setMessages(setValueDelete);
                 setInformations([data.nameAndAvatar]);
                 // console.log(data);
               })
@@ -241,7 +249,6 @@ const MessagePage: React.FC = () => {
     const segments = fileUrl.split("/");
     const filenameWithParams = segments[segments.length - 1];
     const filename = filenameWithParams.split("?")[0];
-    console.log(filename);
     const decodedFilename = decodeURIComponent(filename);
     const desiredFilename = decodedFilename.split("-").slice(1).join("-");
 
@@ -249,19 +256,25 @@ const MessagePage: React.FC = () => {
   };
 
   function isImageFile(filename: string): boolean {
-    const parts = filename.split(".");
+    const parts = filename.split("/");
     const extension = parts[parts.length - 1].toLowerCase();
+    const parts1 = extension.split(".");
+    const extension1 = parts1[parts1.length - 1].toLowerCase();
     const validExtensions = ["jpg", "jpeg", "png", "gif", "bmp", "svg"];
-    if (!validExtensions.includes(extension)) {
+    if (!validExtensions.includes(extension1)) {
       return false;
     }
     return true;
   }
+
   function isFile(filename: string): boolean {
     const parts = filename.split(".");
     const extension = parts[parts.length - 1].toLowerCase();
+    const parts1 = extension.split(".");
+    const extension1 = parts1[parts1.length - 1].toLowerCase();
+    // console.log(extension1);
     const validExtensions = ["doc", "txt", "pdf", "docx"];
-    if (!validExtensions.includes(extension)) {
+    if (!validExtensions.includes(extension1)) {
       return false;
     }
     return true;
@@ -275,7 +288,6 @@ const MessagePage: React.FC = () => {
     const newMessage: Message = {
       senderId: currentUserId || "",
       content: inputText,
-      fileUrl: file,
     };
 
     console.log(inputText, file);
@@ -285,9 +297,6 @@ const MessagePage: React.FC = () => {
     if (inputText.trim() !== "") formData.append("content", inputText);
     if (file !== "" && file != null)
       formData.append("files", file.originFileObj);
-    // console.log(file.originFileObj);
-    // console.log(formData);
-
     axios
       .post(`http://localhost:8000/message/text/${conversationId}`, formData, {
         headers: {
@@ -297,9 +306,11 @@ const MessagePage: React.FC = () => {
       })
 
       .then((response) => {
+        debugger;
+
         console.log("Message sent successfully:", response.data);
         newMessage._id = response.data.message._id;
-        newMessage.fileUrl = response.data.message.fileUrl;
+        newMessage.fileUrls = response.data.message.fileUrls ;
         setMessages([...messages, newMessage]);
         setInputText("");
         // console.log(response.data);
@@ -583,7 +594,7 @@ const MessagePage: React.FC = () => {
                   }}
                 />
               )}
-              {message.content || message.fileUrl ? (
+              {message.content || message.fileUrls ? (
                 <>
                   <div
                     className={`message-bubble ${
@@ -602,27 +613,22 @@ const MessagePage: React.FC = () => {
                         currentUserId === message.senderId ? "#fff" : "black",
                     }}
                   >
-                    <div>
-                      {message.isDeleted
-                        ? "Tin nhắn đã được thu hồi"
-                        : message.content}
-                    </div>
-                    {/* <div>{message.content}</div> */}
-                    {message.fileUrl ? (
-                      isImageFile(message.fileUrl[0]) ? (
-                        // isImageFile(message.fileUrl) ? (
+                    <div>{message.content}</div>
+                    {message.fileUrls && message.fileUrls.length > 0 ? (
+                      isImageFile(message.fileUrls[0]) ? (
+                       
                         <img
-                          src={message.fileUrl[0]}
+                          src={message.fileUrls[0]}
                           alt=""
                           style={{ maxWidth: "40%" }}
                         />
                       ) : (
                         <a
                           style={{ textDecoration: "none", color: "black" }}
-                          href={message.fileUrl[0]}
+                          href={message.fileUrls[0]}
                         >
                           {" "}
-                          {getFileName(message.fileUrl[0])}{" "}
+                          {getFileName(message.fileUrls[0])}{" "}
                         </a>
                       )
                     ) : (
@@ -655,15 +661,13 @@ const MessagePage: React.FC = () => {
                     )}
 
                     {/* Thu hồi */}
-                    {message.isDeleted ? (
-                      <div>Tin nhắn đã được thu hồi.</div>
-                    ) : (
+                    {
                       <Button
                         style={{ marginLeft: 5, marginTop: 10 }}
                         icon={<ReloadOutlined />}
                         onClick={() => handleRecallMessage(message._id)}
                       ></Button>
-                    )}
+                    }
                   </div>
                 </>
               ) : (
