@@ -128,7 +128,6 @@ const ModalShareData: React.FC<ModalConversation> = ({
   };
   const handleShareData = () => {
     try {
-      debugger;
       const updateListConversatoionIds: any[] = [...listConversationIds];
       // members.forEach((member) => {
       //   if (member.type === "SINGLE") {

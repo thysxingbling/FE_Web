@@ -30,7 +30,7 @@ const ListRequest: React.FC = ({}) => {
 
   useEffect(() => {
     const getaddFriendsReqs = async () => {
-      debugger
+ 
       try {
         const response = await axios.get(
           "http://localhost:8000/friend/list/req",

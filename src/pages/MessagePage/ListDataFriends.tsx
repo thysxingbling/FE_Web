@@ -26,7 +26,6 @@ const ListDataFriends: React.FC<ModalListFriends> = ({ users }) => {
     const config = {
       headers,
     };
-    debugger
     axios
       .post(`http://localhost:8000/friend/add/${_id}`, {}, config)
       .then((response) => {

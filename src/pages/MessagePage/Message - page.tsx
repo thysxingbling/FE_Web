@@ -96,7 +96,6 @@ const MessagePage: React.FC = () => {
   }, []);
 
   const fetchConversation = async () => {
-    // debugger;
     try {
       // id là user bị click
       if (id !== null && type === "SINGLE" && currentUserId !== id) {
@@ -306,8 +305,6 @@ const MessagePage: React.FC = () => {
       })
 
       .then((response) => {
-        debugger;
-
         console.log("Message sent successfully:", response.data);
         newMessage._id = response.data.message._id;
         newMessage.fileUrls = response.data.message.fileUrls ;
