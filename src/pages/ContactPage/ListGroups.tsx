@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Avatar, Layout, List, Row, Col, Input, message } from "antd";
 
 import { Content, Header } from "antd/es/layout/layout";
-import Component from "../../components/layouts/components/components";
+
 import MenuItem from "./Menu";
 import Siderbar from "../../components/layouts/siderbar/siderbar";
 import Search from "../../components/layouts/search/search";
@@ -16,52 +16,38 @@ const ListGroups: React.FC = () => {
   const [friends, setFriends] = useState<IFriends[] | null>(null);
   const [friendSearchs, setFriendSearchs] = useState<IFriends[] | null>(null);
   const [loading, setLoading] = useState(false);
-  const data = [
-    {
-      userName: "Nguyễn Ngọc Chính",
-      chat: "Bạn : Hello",
-    },
-    {
-      userName: "Nguyễn Ngọc Tuấn",
-      chat: "Bạn : Hello",
-    },
 
-    {
-      userName: "Nguyễn Ngọc Tuấn",
-      chat: "Bạn : Hello",
-    },
-  ];
-  const handleSearch = (e: any) => {
-    setLoading(true);
-    const token = localStorage.getItem("token");
+  // const handleSearch = (e: any) => {
+  //   setLoading(true);
+  //   const token = localStorage.getItem("token");
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    axios
-      .get(`http://localhost:8000/friend/find/${e}`, config)
-      .then((response) => {
-        const data = response.data;
-        console.log(data);
+  //   const config = {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   };
+  //   axios
+  //     .get(`http://localhost:8000/friend/find/${e}`, config)
+  //     .then((response) => {
+  //       const data = response.data;
+  //       console.log(data);
 
-        if (data.friend) {
-          setFriendSearchs([data.friend]);
-          console.log([data.friend]);
-        } else {
-          message.info("Friend not found.");
-        }
-      })
+  //       if (data.friend) {
+  //         setFriendSearchs([data.friend]);
+  //         console.log([data.friend]);
+  //       } else {
+  //         message.info("Friend not found.");
+  //       }
+  //     })
 
-      .catch((error) => {
-        console.error("Error searching friend:", error);
-        message.error("Failed to search for friend.");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
+  //     .catch((error) => {
+  //       console.error("Error searching friend:", error);
+  //       message.error("Failed to search for friend.");
+  //     })
+  //     .finally(() => {
+  //       setLoading(false);
+  //     });
+  // };
   return (
     <Row>
       <Col span={1} style={{ position: "fixed" }}>
@@ -87,7 +73,7 @@ const ListGroups: React.FC = () => {
                 setFriendSearchs(null);
               } else {
                 setPhoneNumber(e);
-                handleSearch(e);
+                // handleSearch(e);
               }
             }}
             loading={loading}
@@ -158,7 +144,7 @@ const ListGroups: React.FC = () => {
                   marginLeft: 0,
                 }}
                 itemLayout="horizontal"
-                dataSource={data}
+                // dataSource={data}
                 renderItem={(item, index) => (
                   <List.Item style={{ marginLeft: 40 }}>
                     <List.Item.Meta
@@ -167,7 +153,7 @@ const ListGroups: React.FC = () => {
                           src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`}
                         />
                       }
-                      title={item.userName}
+                      // title={item.userName}
                     />
                   </List.Item>
                 )}

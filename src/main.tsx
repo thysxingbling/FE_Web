@@ -1,22 +1,21 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import './index.css'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import { BrowserRouter } from "react-router-dom";
+import Router from "./routers/Router";
+import { SocketProvider } from "./Socket/SocketContext";
 
-import { BrowserRouter  } from 'react-router-dom'
-import Component from './components/layouts/components/components'
-import Login from './pages/Login/Login'
-import Router from './routers/Router'
-
-
-
-
-
-
-
+// import {UserContextProvider} from '../../FE_Web/src/Context/ContextUser'
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-      <BrowserRouter>
-            <Router/>
+    {/* <UserContextProvider> */}
+    <SocketProvider>
+    <BrowserRouter>
+        <Router />
       </BrowserRouter>
-  </React.StrictMode>,
-)
+    </SocketProvider>
+    
+  
+    {/* </UserContextProvider> */}
+  </React.StrictMode>
+);

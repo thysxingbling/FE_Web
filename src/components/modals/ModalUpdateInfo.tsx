@@ -5,14 +5,12 @@ import axios from "axios";
 const ModalUpdateInfo: React.FC<ModalProps & { user: any }> = ({
   open,
   onCancel,
-  onOk,
-  user,
 }) => {
-  const [newName, setNewName] = useState(user ? user.name : "");
-  const [token, setToken] = useState(""); 
-
+  const [newName, setNewName] = useState<string>("");
+  const token = localStorage.getItem("token");
   const handleUpdateName = async () => {
     try {
+      debugger
       const response = await axios.put(
         "http://localhost:8000/auth/updateName",
         {
@@ -22,10 +20,6 @@ const ModalUpdateInfo: React.FC<ModalProps & { user: any }> = ({
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      setNewName(response.data.user.name); 
-      // console.log(response.data.user.name);
-      
-      
       message.success(response.data.message); 
     } catch (error) {
       console.error("Error:", error);

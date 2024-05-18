@@ -8,7 +8,7 @@ import {
   Upload,
   Modal,
 } from "antd";
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState } from "react";
 import {
   SearchOutlined,
   UsergroupAddOutlined,
@@ -32,6 +32,8 @@ import { jwtDecode } from "jwt-decode";
 import ModalCreateGroupChat from "../../components/modals/ModalCreateGroupChat";
 import ModalAddMembers from "../../components/modals/ModalAddMembers";
 import ModalShareData from "../../components/modals/ModalShareData";
+import { useSocket } from "../../Socket/SocketContext";
+
 
 const { Header, Content, Sider, Footer } = Layout;
 
@@ -78,13 +80,13 @@ const MessagePage: React.FC = () => {
     useState(false);
   const [isOpenModalAddMember, setIsOpenModalAddMember] = useState(false);
   const [isOpenModalShareData, setIsOpenModalShareData] = useState(false);
-  // const [messageRecall, setMessageRecall] = useState(false);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [messageId, setMessageId] = useState<string | null>(null);
 
   const [members, setMembers] = useState<Member[]>([]);
   const [visible, setVisible] = useState(false);
   const token = localStorage.getItem("token");
+  const { socket } = useSocket();
 
   useEffect(() => {}, [informations]);
   useEffect(() => {
@@ -94,6 +96,7 @@ const MessagePage: React.FC = () => {
 
     fetchConversation();
   }, []);
+
 
   const fetchConversation = async () => {
     try {
@@ -126,7 +129,6 @@ const MessagePage: React.FC = () => {
                 });
                 setMessages(setValueDelete);
                 setInformations([data.nameAndAvatar]);
-                // console.log(data);
               })
               .catch((error) => {
                 console.log("lỗi get cuộc trò chuyện", error);
@@ -156,6 +158,32 @@ const MessagePage: React.FC = () => {
       console.error("Error fetching conversation:", error);
     }
   };
+  useEffect(() => {
+    if (socket) {
+      socket.on("message-received", (message: any) => {
+        setMessages((prevMessages) => [...prevMessages, message]);
+        console.log(message);
+        
+      });
+
+      socket.on("conversation-data", (data: any) => {
+        setMessages(data.messages);
+        useEffect(() => {
+          fetchConversation();
+        }, [conversationId]);
+      });
+    }
+  }, [socket]);
+  //  useEffect(()=>{
+  //     socket.on("updatethread",(data:any)=>{
+  //       console.log('respoen socket')
+  //       console.log(data)
+  //     })
+  //  },[socket])
+
+  //   useEffect(() => {
+  //     fetchConversation();
+  //   }, [conversationId]);
   // getList memeber
   const getListMembers = () => {
     axios
@@ -235,7 +263,6 @@ const MessagePage: React.FC = () => {
     customRequest: dummyRequest,
     accept: ".doc, .docx, .txt, .pdf",
     onChange(info) {
-      // console.log(info);
       setFile(info.file);
       if (info.file.status === "done") {
         message.success(`${info.file.name} file uploaded successfully`);
@@ -271,7 +298,6 @@ const MessagePage: React.FC = () => {
     const extension = parts[parts.length - 1].toLowerCase();
     const parts1 = extension.split(".");
     const extension1 = parts1[parts1.length - 1].toLowerCase();
-    // console.log(extension1);
     const validExtensions = ["doc", "txt", "pdf", "docx"];
     if (!validExtensions.includes(extension1)) {
       return false;
@@ -288,9 +314,6 @@ const MessagePage: React.FC = () => {
       senderId: currentUserId || "",
       content: inputText,
     };
-
-    console.log(inputText, file);
-
     const formData = new FormData();
 
     if (inputText.trim() !== "") formData.append("content", inputText);
@@ -305,17 +328,23 @@ const MessagePage: React.FC = () => {
       })
 
       .then((response) => {
+        debugger;
         console.log("Message sent successfully:", response.data);
         newMessage._id = response.data.message._id;
-        newMessage.fileUrls = response.data.message.fileUrls ;
+        newMessage.fileUrls = response.data.message.fileUrls;
         setMessages([...messages, newMessage]);
         setInputText("");
-        // console.log(response.data);
+        if (socket) { 
+          socket.emit('new-message', newMessage);  
+        } else {
+          console.error('Socket connection not established yet. Message not sent through socket.');
+        }
       })
       .catch((error) => {
         console.error("Error sending message:", error);
       });
   };
+  
   // xóa cuộc trò chuyện
 
   const deleteConversation = async (id: string) => {
@@ -613,7 +642,6 @@ const MessagePage: React.FC = () => {
                     <div>{message.content}</div>
                     {message.fileUrls && message.fileUrls.length > 0 ? (
                       isImageFile(message.fileUrls[0]) ? (
-                       
                         <img
                           src={message.fileUrls[0]}
                           alt=""

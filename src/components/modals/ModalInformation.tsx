@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 
 import { Modal, Row, Col, Space, Button, Avatar, Upload } from "antd";
@@ -37,7 +38,7 @@ const ModalInformation: React.FC<ModalInformationProps> = ({
   
     const formData = new FormData();
     formData.append("file", file);
-  
+  debugger
     axios.put("http://localhost:8000/auth/update", formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -45,7 +46,7 @@ const ModalInformation: React.FC<ModalInformationProps> = ({
       },
     })
       .then((response) => {
-    
+        debugger
           setAvatarUrl(response.data.user.avatar);
           console.log(response.data.user.avatar);
       })

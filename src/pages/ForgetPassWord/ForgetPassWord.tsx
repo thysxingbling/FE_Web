@@ -86,10 +86,10 @@ const ForgetPassWord: React.FC = () => {
         <Form.Item name="email" label="Nhập email">
           <Input onChange={(e) => setEmail(e.target.value)} />
         </Form.Item>
-        <Form.Item name="password" label="Nhập mật khẩu">
+        <Form.Item name="password" label="Nhập mật khẩu mới">
           <Input.Password onChange={(e) => setPassword(e.target.value)} />
         </Form.Item>
-        <Form.Item name="confirmPassword" label="Nhập lại mật khẩu">
+        <Form.Item name="confirmPassword" label="Nhập lại mật khẩu mới">
           <Input.Password onChange={(e) => setConfirmPassword(e.target.value)} />
         </Form.Item>
         <Form.Item {...tailFormItemLayout}>
