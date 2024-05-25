@@ -3,7 +3,6 @@ import {
   Col,
   Row,
   Input,
-//   ModalProps,
   Avatar,
   List,
   message,
@@ -103,6 +102,7 @@ const ModalAddMembers: React.FC<ModalConversation> = ({ conversationId ,onCancel
       .then((response) => {
         console.log("Members added:", response.data);
         message.success("Thành viên đã được thêm thành công.");
+        onCancel();
       })
       .catch((error) => {
         console.error("Error adding members:", error);

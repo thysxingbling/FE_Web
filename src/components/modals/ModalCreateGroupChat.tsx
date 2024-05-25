@@ -3,7 +3,6 @@ import {
   Col,
   Row,
   Input,
-  ModalProps,
   Avatar,
   Upload,
   List,
@@ -14,8 +13,17 @@ import {
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { IFriends } from "../models/friends";
+import fetchConversations from "../layouts/search/search";
 
-const ModalCreateGroupChat: React.FC<ModalProps> = ({ open, onCancel }) => {
+interface ModalCreateGroup {
+  onCancel: () => void;
+  open: boolean;
+  // fetchConversations :()=> void;
+}
+const ModalCreateGroupChat: React.FC<ModalCreateGroup> = ({
+  open,
+  onCancel,
+}) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [friends, setFriends] = useState<IFriends[] | null>(null);
   const [loading, setLoading] = useState(false);
@@ -23,12 +31,9 @@ const ModalCreateGroupChat: React.FC<ModalProps> = ({ open, onCancel }) => {
   const [memberIds, setMemberIds] = useState([]);
   const [file, setFile] = useState<any>(null);
   const token = localStorage.getItem("token");
-
-
   useEffect(() => {
     const getList = async () => {
       try {
-         ;
         const token = localStorage.getItem("token");
         const response = await axios.get("http://localhost:8000/friend/list", {
           headers: {
@@ -64,7 +69,6 @@ const ModalCreateGroupChat: React.FC<ModalProps> = ({ open, onCancel }) => {
           message.info("Friend not found.");
         }
       })
-
       .catch((error) => {
         console.error("Error searching friend:", error);
         message.error("Failed to search for friend.");
@@ -84,7 +88,7 @@ const ModalCreateGroupChat: React.FC<ModalProps> = ({ open, onCancel }) => {
     customRequest: dummyRequest,
     accept: "image/png,image/gif,image/jpeg",
     onChange(info) {
-      console.log(info);
+      // console.log(info);
       setFile(info.file);
       if (info.file.status === "done") {
         message.success(`${info.file.name} file uploaded successfully`);
@@ -96,15 +100,14 @@ const ModalCreateGroupChat: React.FC<ModalProps> = ({ open, onCancel }) => {
   const CreateGroupChat = async () => {
     const formData = new FormData();
     formData.append("chatName", chatName);
-    for(const item of memberIds){
-       formData.append("memberIds", item);
+    for (const item of memberIds) {
+      formData.append("memberIds", item);
     }
     console.log(formData);
 
     if (file) {
       formData.append("image", file.originFileObj);
     }
-     ;
     axios
       .post("http://localhost:8000/conversation/group", formData, {
         headers: {
@@ -113,26 +116,24 @@ const ModalCreateGroupChat: React.FC<ModalProps> = ({ open, onCancel }) => {
         },
       })
       .then((response) => {
-         ;
+        onCancel();
         console.log("Group chat created:", response.data);
         message.success("Group chat created successfully!");
-      
+        fetchConversations;
       })
       .catch((error) => {
-         ;
         console.error("Error creating group chat:", error);
         message.error("Failed to create group chat.");
       });
   };
 
   const handleCheckboxChange = (itemId: string): void => {
-    const updatedMemberIds: string[] = [...memberIds]; 
+    const updatedMemberIds: string[] = [...memberIds];
 
     if (memberIds.includes(itemId)) {
       const index = updatedMemberIds.indexOf(itemId);
       updatedMemberIds.splice(index, 1);
     } else {
-   
       updatedMemberIds.push(itemId);
     }
 
@@ -154,21 +155,25 @@ const ModalCreateGroupChat: React.FC<ModalProps> = ({ open, onCancel }) => {
       <div>
         <Row>
           <Col span={2}>
-          <Upload {...uploadImage}>
-          <Avatar
-            style={{
-              height: 30,
-              width: 30,
-              marginLeft: 5,
-              backgroundColor: "gray",
-              border: "none",
-            }}
-            // src={?.avatar}
-          />
-          </Upload>
+            <Upload {...uploadImage}>
+              <Avatar
+                style={{
+                  height: 30,
+                  width: 30,
+                  marginLeft: 5,
+                  backgroundColor: "gray",
+                  border: "none",
+                }}
+                // src={?.avatar}
+              />
+            </Upload>
           </Col>
           <Col span={22}>
-            <Input value={chatName} onChange={handleChatNameChange} placeholder="Nhập tên nhóm"></Input>
+            <Input
+              value={chatName}
+              onChange={handleChatNameChange}
+              placeholder="Nhập tên nhóm"
+            ></Input>
           </Col>
         </Row>
         <Row>

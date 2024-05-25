@@ -8,7 +8,7 @@ import {
   Upload,
   Modal,
 } from "antd";
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SearchOutlined,
   UsergroupAddOutlined,
@@ -33,8 +33,7 @@ import ModalCreateGroupChat from "../../components/modals/ModalCreateGroupChat";
 import ModalAddMembers from "../../components/modals/ModalAddMembers";
 import ModalShareData from "../../components/modals/ModalShareData";
 import { useSocket } from "../../Socket/SocketContext";
-
-
+import fetchConversations from "../../components/layouts/search/search"
 const { Header, Content, Sider, Footer } = Layout;
 
 enum MessageType {
@@ -88,6 +87,7 @@ const MessagePage: React.FC = () => {
   const token = localStorage.getItem("token");
   const { socket } = useSocket();
 
+
   useEffect(() => {}, [informations]);
   useEffect(() => {
     const decodedToken = jwtDecode(token);
@@ -96,8 +96,6 @@ const MessagePage: React.FC = () => {
 
     fetchConversation();
   }, []);
-
-
   const fetchConversation = async () => {
     try {
       // id là user bị click
@@ -114,6 +112,15 @@ const MessagePage: React.FC = () => {
             var conversationId =
               responseCreateChat.data.conversation.conversationId;
             setConversationId(conversationId);
+
+            // if (socket) {
+            //   socket.emit("join-conversation", conversationId);
+            // } else {
+            //   console.log(
+            //     "Error joining conversation room: Socket not connected"
+            //   );
+            // }
+
             axios
               .get(`http://localhost:8000/conversation/${conversationId}`, {
                 headers,
@@ -145,10 +152,16 @@ const MessagePage: React.FC = () => {
           })
           .then((response) => {
             const data = response.data;
-            setMessages(data.messages);
+            var messageList = data.messages;
+            var setValueDelete = messageList.map((item: any) => {
+              if (item.isDeleted == true) {
+                item.content = "Tin nhắn đã thu hồi";
+              }
+              return item;
+            });
+            setMessages(setValueDelete);
             setInformations(data.nameAndAvatar);
             setinformationGroup(data.conversation);
-            // console.log(data);
           })
           .catch((error) => {
             console.log("lỗi get cuộc trò chuyện", error);
@@ -158,32 +171,28 @@ const MessagePage: React.FC = () => {
       console.error("Error fetching conversation:", error);
     }
   };
+  // socket nhận
   useEffect(() => {
     if (socket) {
-      socket.on("message-received", (message: any) => {
-        setMessages((prevMessages) => [...prevMessages, message]);
-        console.log(message);
-        
-      });
-
-      socket.on("conversation-data", (data: any) => {
-        setMessages(data.messages);
-        useEffect(() => {
-          fetchConversation();
-        }, [conversationId]);
+      socket.on("message", (data: any) => {
+        if (data.action === "create" && data.conversationId === conversationId)
+          setMessages((prevMessages) => [...prevMessages, data.message]);
+        fetchConversation();
       });
     }
   }, [socket]);
-  //  useEffect(()=>{
-  //     socket.on("updatethread",(data:any)=>{
-  //       console.log('respoen socket')
-  //       console.log(data)
-  //     })
-  //  },[socket])
-
-  //   useEffect(() => {
-  //     fetchConversation();
-  //   }, [conversationId]);
+  // socket delete group
+  useEffect(() => {
+    if (socket) {
+      debugger
+      debugger;
+      socket.on("delete-group", (data: any) => {
+        if (data.action === "delete" && data.conversationId === conversationId)
+          debugger;
+          fetchConversations; 
+      });
+    }
+  }, [socket, fetchConversations,conversationId]);
   // getList memeber
   const getListMembers = () => {
     axios
@@ -195,7 +204,7 @@ const MessagePage: React.FC = () => {
         setMembers(data.users);
       })
       .catch((error) => {
-        console.log("lỗi get thành viên", error);
+        console.log("lỗi lấy danh sách  thành viên", error);
       });
   };
   const showModal = (conversationId: string) => {
@@ -214,7 +223,6 @@ const MessagePage: React.FC = () => {
           deleteUserId: memberId,
         },
       })
-
       .then((response) => {
         console.log("Member deleted:", response.data);
         message.success("Thành viên đã được xóa thành công.");
@@ -304,6 +312,7 @@ const MessagePage: React.FC = () => {
     }
     return true;
   }
+  //
 
   // gửi tin nhắn
   const sendMessage = async () => {
@@ -326,25 +335,18 @@ const MessagePage: React.FC = () => {
           Authorization: `Bearer ${token}`,
         },
       })
-
       .then((response) => {
-        debugger;
         console.log("Message sent successfully:", response.data);
         newMessage._id = response.data.message._id;
         newMessage.fileUrls = response.data.message.fileUrls;
         setMessages([...messages, newMessage]);
         setInputText("");
-        if (socket) { 
-          socket.emit('new-message', newMessage);  
-        } else {
-          console.error('Socket connection not established yet. Message not sent through socket.');
-        }
       })
       .catch((error) => {
         console.error("Error sending message:", error);
       });
   };
-  
+
   // xóa cuộc trò chuyện
 
   const deleteConversation = async (id: string) => {
@@ -382,26 +384,21 @@ const MessagePage: React.FC = () => {
         message.error("Đã xảy ra lỗi khi xóa tin nhắn.");
       });
   };
-
   //thu hồi tin nhắn
   const handleRecallMessage = async (messageId: string) => {
     axios
       .delete(`http://localhost:8000/message/delete/${messageId}`, {
         headers,
       })
-
       .then((response) => {
         console.log("Conversation deleted:", response.data);
         message.success("Tin nhắn đã được thu hồi thành công.");
-        // setMessageRecall();
       })
-
       .catch((error) => {
         console.error("Error deleting conversation:", error);
         message.error("Đã xảy ra lỗi khi thu hồi tin nhắn.");
       });
   };
-
   // rời nhóm
   const handleLeaveGroup = () => {
     axios
@@ -415,7 +412,6 @@ const MessagePage: React.FC = () => {
         console.log("Leave group:", response.data);
         message.success("Rời nhóm thành công.");
       })
-
       .catch((error) => {
         console.error("Error deleting conversation:", error);
         message.error("Đã xảy ra lỗi khi rời nhóm.");
@@ -431,6 +427,7 @@ const MessagePage: React.FC = () => {
         },
       })
       .then((response) => {
+        // window.location.href = '/home'; 
         console.log("Deleted conversation:", response.data);
         message.success("Nhóm đã được giải tán thành công.");
       })
@@ -439,13 +436,14 @@ const MessagePage: React.FC = () => {
         message.error("Đã xảy ra lỗi khi giải tán nhóm.");
       });
   };
+
   // show modal create group
   const openModalCreateGroupChat = () => {
     setIsOpenModalCreateGroupChat(true);
   };
   const handleOk = () => {
     setIsOpenModalCreateGroupChat(false);
-    setIsOpenModalAddMember(false);
+    // setIsOpenModalAddMember(false);
   };
 
   const handleCancel = () => {
@@ -469,12 +467,11 @@ const MessagePage: React.FC = () => {
     setVisible(false);
   };
   const handleOkModalShare = () => {
-    setIsOpenModalShareData(false);
+    // setIsOpenModalShareData(false);
   };
   // chuyển quyền leader
   const handleTransferLeader = (memberId: string) => {
     axios
-
       .patch(
         `http://localhost:8000/conversation/${conversationId}/member/${memberId}`,
         {},

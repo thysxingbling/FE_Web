@@ -166,11 +166,11 @@ const ModalShareData: React.FC<ModalConversation> = ({
             }
           )
           .then((response) => {
-            message.success("Chia sẽ thành công.");
+            message.success("Chia sẻ thành công.");
             handleCancelModalShare();
           })
           .catch((error) => {
-            message.error("Đã xảy ra lỗi khi chia sẽ.",error);
+            message.error("Đã xảy ra lỗi khi chia sẻ.",error);
           });
       });
     } catch (error) {
@@ -234,7 +234,7 @@ const ModalShareData: React.FC<ModalConversation> = ({
                       avatar={<Avatar src={item.avatar} />}
                       title={item.name}
                     />
-                    <Button />
+                    {/* <Button /> */}
                   </List.Item>
                 )}
               />
